@@ -1,5 +1,9 @@
 body {
     width: 88%;
-    padding-top:100px;
+    padding-top:30px;
     margin: 0 auto;
+}
+
+.mdl-tabs__tab-bar  {
+    justify-content: flex-start;
 }
