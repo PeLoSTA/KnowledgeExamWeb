@@ -21,9 +21,17 @@ var FirebaseModule = (function () {
         });
     }
 
+    function addSubject(name, description) {
+
+        'use strict';
+        var refString = '/subjects';
+        var newSubjectRef = db.ref(refString).push();
+        newSubjectRef.set({ "name": name, "description": description });
+    }
+
     return {
         init: init,
+        addSubject: addSubject,
         readListOfSubjects: readListOfSubjects
     };
-
 })();
