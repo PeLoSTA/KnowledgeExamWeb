@@ -1,105 +1,140 @@
-
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-        <title>Knowledge Exam Pro</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Knowledge Exam Pro</title>
 
-        <link rel="stylesheet" href="mdl/material.min.css">
-        <link rel="stylesheet" href="style.css" />
-        <script src="mdl/material.min.js"></script>
-    </head>
+    <link rel="stylesheet" href="mdl/material.min.css">
+    <link rel="stylesheet" href="style.css" />
+    <script type="text/javascript" src="mdl/material.min.js"></script>
+</head>
 
-    <body  class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
-            <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-                <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
-                <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-                    <h2>Knowledge Exam Pro</h2>
+        <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+            <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>
+            <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h2>Knowledge Exam Pro</h2>
+            </div>
+        </header>
+
+        <main class="mdl-layout__content">
+
+            <br></br>
+
+            <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+
+                <div class="mdl-tabs__tab-bar">
+                    <a href="#subjects-panel" class="mdl-tabs__tab is-active">Subjects (Kurse)</a>
+                    <a href="#exams-panel" class="mdl-tabs__tab">Exams (Prüfungen)</a>
+                    <a href="#students-panel" class="mdl-tabs__tab">Students (Studenten)</a>
+                    <a href="#questions-panel" class="mdl-tabs__tab">Questions (Fragen)</a>
+                    <a href="#results-of-exams-panel" class="mdl-tabs__tab">Results of Exams (Prüfungsergebnisse)</a>
                 </div>
-            </header>
 
-            <main class="mdl-layout__content">
+                <div class="mdl-tabs__panel is-active" id="subjects-panel">
+                    <br/>
+                    <div class="mdl-button-group">
 
-                <br></br>
+                        <button id="btnList" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            List
+                        </button>
+                        <button id="btnCreate" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            Create
+                        </button>
+                        <button id="btnModify" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            Modify
+                        </button>
+                        <button id="btnDelete" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            Delete
+                        </button>
 
-                <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+                    </div>
 
-                    <div class="mdl-tabs__tab-bar">
-                        <a href="#courses-panel" class="mdl-tabs__tab is-active">Courses (Kurse)</a>
-                        <a href="#exams-panel" class="mdl-tabs__tab">Exams (Prüfungen)</a>
-                        <a href="#students-panel" class="mdl-tabs__tab">Students (Studenten)</a>
-                        <a href="#questions-panel" class="mdl-tabs__tab">Questions (Fragen)</a>
-                        <a href="#results-of-exams-panel" class="mdl-tabs__tab">Results of Exams (Prüfungsergebnisse)</a>
-                    </div>
-        
-                    <div class="mdl-tabs__panel is-active" id="courses-panel">
-                        <br/>
-                        <p><b>The Beatles</b> were a four-piece musical group from Liverpool, England.
-                            Formed in 1960, their career spanned just over a decade, yet they are widely
-                            regarded as the most influential band in history.</p>
-                        <p>Their songs are among the best-loved music of all time. It is said that every
-                            minute of every day, a radio station somewhere is playing a Beatles song.</p>
-                    </div>
-                    <div class="mdl-tabs__panel" id="exams-panel">
-                        <br/>
-                        <p>The Beatles' members were:</p>
-                        <ul>
-                            <li>John Lennon (1940-1980)</li>
-                            <li>Paul McCartney (1942-)</li>
-                            <li>George Harrison (1943-2001)</li>
-                            <li>Ringo Starr (1940-)</li>
-                        </ul>
-                    </div>
-                    <div class="mdl-tabs__panel" id="students-panel">
-                        <br/>
-                        <p>Yeahhhhhhhhhhhh</p>
-                    </div>
-                    <div class="mdl-tabs__panel" id="questions-panel">
-                        <br/>
-                        <p>The Beatles' original UK LPs, in order of release:</p>
-                        <ol>
-                            <li>Please Please Me (1963)</li>
-                            <li>With the Beatles (1963)</li>
-                            <li>A Hard Day's Night (1964)</li>
-                            <li>Beatles for Sale (1964)</li>
-                            <li>Help! (1965)</li>
-                            <li>Rubber Soul (1965)</li>
-                            <li>Revolver (1966)</li>
-                            <li>Sgt. Pepper's Lonely Hearts Club Band (1967)</li>
-                            <li>The Beatles ("The White Album", 1968)</li>
-                            <li>Yellow Submarine (1969)</li>
-                            <li>Abbey Road (1969)</li>
-                            <li>Let It Be (1970)</li>
-                        </ol>
-                    </div>
-                    <div class="mdl-tabs__panel" id="results-of-exams-panel">
-                        <br/>
-                        <p>Yeahhhhhhhhhhhh</p>
-                    </div>
+                    <br/>
+
+                    <table id="tableSubjects" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+                        <thead>
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric">Subject</th>
+                                <th class="mdl-data-table__cell--non-numeric">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableSubjectsBody">
+                            <tr>
+                                <td class="mdl-data-table__cell--non-numeric">Mathe</td>
+                                <td class="mdl-data-table__cell--non-numeric">Yeaaaah</td>
+                            </tr>
+                            <tr>
+                                <td class="mdl-data-table__cell--non-numeric">C++</td>
+                                <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </main>
-        </div>
 
-        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+                <div class="mdl-tabs__panel" id="exams-panel">
+                    <br/>
+                    <p>The Beatles' members were:</p>
+                    <ul>
+                        <li>John Lennon (1940-1980)</li>
+                        <li>Paul McCartney (1942-)</li>
+                        <li>George Harrison (1943-2001)</li>
+                        <li>Ringo Starr (1940-)</li>
+                    </ul>
+                </div>
+                <div class="mdl-tabs__panel" id="students-panel">
+                    <br/>
+                    <p>Yeahhhhhhhhhhhh</p>
+                </div>
+                <div class="mdl-tabs__panel" id="questions-panel">
+                    <br/>
+                    <p>The Beatles' original UK LPs, in order of release:</p>
+                    <ol>
+                        <li>Please Please Me (1963)</li>
+                        <li>With the Beatles (1963)</li>
+                        <li>A Hard Day's Night (1964)</li>
+                        <li>Beatles for Sale (1964)</li>
+                        <li>Help! (1965)</li>
+                        <li>Rubber Soul (1965)</li>
+                        <li>Revolver (1966)</li>
+                        <li>Sgt. Pepper's Lonely Hearts Club Band (1967)</li>
+                        <li>The Beatles ("The White Album", 1968)</li>
+                        <li>Yellow Submarine (1969)</li>
+                        <li>Abbey Road (1969)</li>
+                        <li>Let It Be (1970)</li>
+                    </ol>
+                </div>
+                <div class="mdl-tabs__panel" id="results-of-exams-panel">
+                    <br/>
+                    <p>Yeahhhhhhhhhhhh</p>
+                </div>
+            </div>
+        </main>
+    </div>
 
-        <script>
-            // initialize Firebase
-            var config = {
-                apiKey: "AIzaSyCghee9cFypM0vVNrWve0LV9ZknwKBcaOo",
-                authDomain: "knowledgeexampro.firebaseapp.com",
-                databaseURL: "https://knowledgeexampro.firebaseio.com",
-                projectId: "knowledgeexampro",
-                storageBucket: "knowledgeexampro.appspot.com",
-                messagingSenderId: "965802398826"
-            };
-            firebase.initializeApp(config);
-        </script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
-        <script src="index.js"></script>
-    </body>
+    <script>
+        // initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCghee9cFypM0vVNrWve0LV9ZknwKBcaOo",
+            authDomain: "knowledgeexampro.firebaseapp.com",
+            databaseURL: "https://knowledgeexampro.firebaseio.com",
+            projectId: "knowledgeexampro",
+            storageBucket: "knowledgeexampro.appspot.com",
+            messagingSenderId: "965802398826"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+    <script type="text/javascript" src="app/firebase.js"></script>
+    <script type="text/javascript" src="app/subjects.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+
 </html>

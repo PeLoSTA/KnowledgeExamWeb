@@ -1,3 +1,4 @@
-// get a reference to the database service
-var db = firebase.database();
+FirebaseModule.init();
+SubjectsModule.init();
+
 
