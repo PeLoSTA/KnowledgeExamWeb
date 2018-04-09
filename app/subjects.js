@@ -3,7 +3,7 @@ var SubjectsModule = (function () {
     // retrieve HTML elements according to 'subjects' tab
     var btnList = document.getElementById('btnList');
     var btnCreate = document.getElementById('btnCreate');
-    var btnDelete = document.getElementById('btnModify');
+    var btnModify = document.getElementById('btnModify');
     var btnDelete = document.getElementById('btnDelete');
     var tableSubjectsBody = document.getElementById('tableSubjectsBody');
     var dialogCreate = document.getElementById('dialogCreation');
@@ -15,7 +15,7 @@ var SubjectsModule = (function () {
     var lastCheckedSubject;
 
     function init() {
-        lastCheckedSubject = '';
+        lastCheckedSubject = -1;
         bindUIActions();
     };
 
@@ -30,6 +30,16 @@ var SubjectsModule = (function () {
         btnCreate.addEventListener('click', () => {
             'use strict';
             dialogCreate.showModal();
+        });
+
+        btnModify.addEventListener('click', () => {
+            'use strict';
+            console.log("... modifiying ... " + lastCheckedSubject);
+        });
+
+        btnDelete.addEventListener('click', () => {
+            'use strict';
+            console.log("... deleting ... " + lastCheckedSubject);
         });
 
         dialogCreate.querySelector('.create').addEventListener('click', () => {
@@ -74,7 +84,7 @@ var SubjectsModule = (function () {
         rowCounterSubjects = 1;
         tableSubjectsBody.innerHTML = '';
         componentHandler.upgradeDom();
-    }
+    };
 
     function updateTableOfSubjectsNext(entry) {
         'use strict';
@@ -97,6 +107,7 @@ var SubjectsModule = (function () {
         var label = document.createElement('label');     // create <label> node
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attributes
         label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attributes
+        label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attributes
         var input = document.createElement('input');     // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input');  // set attributes
         input.setAttribute('type', 'checkbox');  // set attributes
@@ -123,68 +134,38 @@ var SubjectsModule = (function () {
         tableSubjectsBody.appendChild(node);        // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
-    }
-
-    // Erste Version -- zum Ausprobieren .....
-    // function checkboxHandler() {
-    //     'use strict';
-    //     console.log('id:      ' + this.id);
-    //     console.log('checked: ' + this.checked);
-
-    //     // uncheck all other check boxes - ignore unchecking
-
-    //     if (lastCheckedSubject === '') {
-
-    //         lastCheckedSubject = this.id;
-    //     }
-    //     else {
-
-    //         // TODO: Da fehlt die Hierarchie: Alle unterhalb der Tabelle ...
-    //         var boxes = document.getElementsByClassName('mdl-checkbox__input');
-
-    //         for (var k = 0; k < boxes.length; k++) {
-
-    //             if (boxes[k].checked) {
-    //                 console.log('   box:      ' + boxes[k].id);
-    //             }
-    //         }
-    //     }
-    // };
+    };
 
     function checkboxHandler() {
         'use strict';
-        console.log('id:      ' + this.id);
-        console.log('checked: ' + this.checked);
+        console.log('clicked at checkbox: ' + this.id);
+        console.log('checkbox is checked: ' + this.checked);
 
-        // uncheck all other check boxes - ignore unchecking
-        if (!this.checked) {
-            return;
-        }
+        // calculate index of row
+        var row = parseInt(this.id.substring(4));  // omitting 'row_'
 
-        lastCheckedSubject = this.id;
+        if (this.checked) {
 
-        // TODO: Da fehlt die Hierarchie: Alle unterhalb der Tabelle ...
-        var boxes = document.getElementsByClassName('mdl-checkbox__input');
+            lastCheckedSubject = row;
 
-        for (var k = 0; k < boxes.length; k++) {
+            // TODO: Da fehlt die Hierarchie: Alle unterhalb von genau dieser Tabelle ...
+            var boxes = document.getElementsByClassName('mdl-checkbox');
+            for (var k = 0; k < boxes.length; k++) {
 
-            if (boxes[k].id !== this.id) {
-                console.log('    setting at ' + k + " to zero ....");
-                boxes[k].checked = false;
+                if (k != lastCheckedSubject - 1) {
+                    var label = boxes[k];
+                    label.MaterialCheckbox.uncheck();
+                }
             }
         }
+        else {
 
-        // componentHandler.upgradeDom();   // eher nicht, die HTML widgekt sind schon sichtbar 
+            if (row === lastCheckedSubject) {
 
-        // for (var k = 0; k < boxes.length; k++) {
-
-        //     if (boxes[k].checked) {
-
-        //         if (boxes[k].id !== lastCheckedSubject) {
-        //             boxes[k].checked = false;
-        //         }
-        //     }
-        // }
+                // clear last selection
+                lastCheckedSubject = -1;
+            }
+        }
     };
 
     return {
