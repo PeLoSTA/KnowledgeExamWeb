@@ -7,9 +7,10 @@ var SubjectsModule = (function () {
     var btnDelete = document.getElementById('btnDelete');
     var tableSubjectsBody = document.getElementById('tableSubjectsBody');
     var dialogCreate = document.getElementById('dialogCreation');
-    if (!dialogCreate.showModal) {
-        dialogPolyfill.registerDialog(dialog);
-    }
+    var dialogDeletion = document.getElementById('dialogDeletion');
+    var txtSubject = document.getElementById('txtSubject');
+    var txtDescription = document.getElementById('txtDescription');
+    var txtSubjectToDelete = document.getElementById('txtSubjectToDelete');
 
     var rowCounterSubjects;
     var lastCheckedSubject;
@@ -21,6 +22,13 @@ var SubjectsModule = (function () {
 
     function bindUIActions() {
         'use strict';
+        if (!dialogCreate.showModal) {
+            dialogPolyfill.registerDialog(dialogCreate);
+        }
+        if (!dialogDeletion.showModal) {
+            dialogPolyfill.registerDialog(dialogDeletion);
+        }
+
         btnList.addEventListener('click', () => {
 
             updateTableOfSubjectsBegin();
@@ -39,11 +47,11 @@ var SubjectsModule = (function () {
 
         btnDelete.addEventListener('click', () => {
             'use strict';
-            console.log("... deleting ... " + lastCheckedSubject);
+            doDeletionEvent();
         });
 
         dialogCreate.querySelector('.create').addEventListener('click', () => {
-
+            'use strict';
             var subject = txtSubject.value;
             var description = txtDescription.value;
 
@@ -58,9 +66,25 @@ var SubjectsModule = (function () {
             dialogCreate.close();
         });
 
-        dialogCreate.querySelector('.cancel').addEventListener('click', () => {
-
+        dialogCreate.querySelector('.cancel_create').addEventListener('click', () => {
+            'use strict';
             dialogCreate.close();
+        });
+
+        dialogDeletion.querySelector('.delete').addEventListener('click', () => {
+            'use strict';
+            console.log("Subject to delete: " + txtSubjectToDelete.value);
+            FirebaseModule.deleteSubject(txtSubjectToDelete.value);
+
+            txtSubjectToDelete.value = '';
+            // txtDescription.value = '';
+
+            dialogDeletion.close();
+        });
+
+        dialogDeletion.querySelector('.cancel_delete').addEventListener('click', () => {
+            'use strict';
+            dialogDeletion.close();
         });
 
         // Funktioniert -- aber ich will das lieber mit checkboxes lösen
@@ -138,8 +162,7 @@ var SubjectsModule = (function () {
 
     function checkboxHandler() {
         'use strict';
-        console.log('clicked at checkbox: ' + this.id);
-        console.log('checkbox is checked: ' + this.checked);
+        console.log('clicked at checkbox: ' + this.id + '[checkbox is checked: ' + this.checked + ' ]');
 
         // calculate index of row
         var row = parseInt(this.id.substring(4));  // omitting 'row_'
@@ -167,6 +190,19 @@ var SubjectsModule = (function () {
             }
         }
     };
+
+    function doDeletionEvent() {
+        'use strict';
+        if (lastCheckedSubject === -1) {
+
+            console.log("Warning: No subject selected !");
+            return;
+        }
+
+        var subjectName = FirebaseModule.getSubjectName(lastCheckedSubject - 1);
+        txtSubjectToDelete.value = subjectName;
+        dialogDeletion.showModal();
+    }
 
     return {
         init: init,
