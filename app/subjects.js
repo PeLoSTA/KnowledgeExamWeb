@@ -14,9 +14,11 @@ var SubjectsModule = (function () {
 
     var rowCounterSubjects;
     var lastCheckedSubject;
+    var isActive;
 
     function init() {
         lastCheckedSubject = -1;
+        isActive = false;
         bindUIActions();
     };
 
@@ -30,9 +32,9 @@ var SubjectsModule = (function () {
         }
 
         btnList.addEventListener('click', () => {
-
+            'use strict';
             updateTableOfSubjectsBegin();
-            FirebaseModule.readListOfSubjects(callback);
+            FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
         });
 
         btnCreate.addEventListener('click', () => {
@@ -42,28 +44,17 @@ var SubjectsModule = (function () {
 
         btnModify.addEventListener('click', () => {
             'use strict';
-            console.log("... modifiying ... " + lastCheckedSubject);
+            console.log("... modifiying ... ");
         });
 
         btnDelete.addEventListener('click', () => {
             'use strict';
-            doDeletionEvent();
+            onDeletionEvent();
         });
 
         dialogCreate.querySelector('.create').addEventListener('click', () => {
             'use strict';
-            var subject = txtSubject.value;
-            var description = txtDescription.value;
-
-            console.log("Subject: " + txtSubject.value);
-            console.log("Description: " + txtDescription.value);
-
-            FirebaseModule.addSubject(subject, description);
-
-            txtSubject.value = '';
-            txtDescription.value = '';
-
-            dialogCreate.close();
+            doCreationEvent();
         });
 
         dialogCreate.querySelector('.cancel_create').addEventListener('click', () => {
@@ -73,18 +64,12 @@ var SubjectsModule = (function () {
 
         dialogDeletion.querySelector('.delete').addEventListener('click', () => {
             'use strict';
-            console.log("Subject to delete: " + txtSubjectToDelete.value);
-            FirebaseModule.deleteSubject(txtSubjectToDelete.value);
-
-            txtSubjectToDelete.value = '';
-            // txtDescription.value = '';
-
-            dialogDeletion.close();
+            doDeletionEvent();
         });
 
         dialogDeletion.querySelector('.cancel_delete').addEventListener('click', () => {
             'use strict';
-            dialogDeletion.close();
+            cancelDeletionEvent();
         });
 
         // Funktioniert -- aber ich will das lieber mit checkboxes lösen
@@ -97,20 +82,85 @@ var SubjectsModule = (function () {
         // }
     };
 
-    function callback(subject) {
+    function updateTableOfSubjects() {
         'use strict';
-        updateTableOfSubjectsNext(subject);
+        updateTableOfSubjectsBegin();
+        FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+    };
+
+    function updateTableOfSubjectsNext(subject) {
+        'use strict';
+        addEntryToSubjectTable(subject);
     };
 
     function updateTableOfSubjectsBegin() {
         'use strict';
+        if (isActive === true) {
+            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
+            return;
+        }
+
+        isActive = true;
         console.log("updateTableOfSubjectsBegin");
         rowCounterSubjects = 1;
+        lastCheckedSubject = -1;
         tableSubjectsBody.innerHTML = '';
         componentHandler.upgradeDom();
     };
 
-    function updateTableOfSubjectsNext(entry) {
+    function doCreationEvent() {
+        'use strict';
+        var subject = txtSubject.value;
+        var description = txtDescription.value;
+
+        if (subject === '' || description === '') {
+            window.alert("Name or Description field emtpy !");
+            txtSubject.value = '';
+            txtDescription.value = '';
+        }
+        else {
+            FirebaseModule.addSubject(subject, description);
+            txtSubject.value = '';
+            txtDescription.value = '';
+            tableSubjectsBody.innerHTML = '';
+            updateTableOfSubjects();
+        }
+        dialogCreate.close();
+    }
+
+    function onDeletionEvent() {
+        'use strict';
+        if (lastCheckedSubject === -1) {
+
+            console.log("Warning: No subject selected !");
+            return;
+        }
+
+        var subjectName = FirebaseModule.getNameOfSubject(lastCheckedSubject - 1);
+        txtSubjectToDelete.value = subjectName;
+        dialogDeletion.showModal();
+    }
+
+    function doDeletionEvent() {
+        'use strict';
+        console.log("Subject to delete: " + txtSubjectToDelete.value);
+        FirebaseModule.deleteSubject(txtSubjectToDelete.value);
+        txtSubjectToDelete.value = '';
+        dialogDeletion.close();
+
+        updateTableOfSubjectsBegin();
+        FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+    }
+
+    function cancelDeletionEvent() {
+        'use strict';
+        // clear checkbox
+        var checkboxLabel = document.getElementById('label_' + lastCheckedSubject);
+        checkboxLabel.MaterialCheckbox.uncheck();
+        dialogDeletion.close();
+    }
+
+    function addEntryToSubjectTable(entry) {
         'use strict';
 
         // adding dynamically a 'material design lite' node to a table, for example
@@ -160,6 +210,11 @@ var SubjectsModule = (function () {
         componentHandler.upgradeDom();
     };
 
+    function updateTableOfSubjectsDone() {
+        'use strict';
+        isActive = false;
+    }
+
     function checkboxHandler() {
         'use strict';
         console.log('clicked at checkbox: ' + this.id + '[checkbox is checked: ' + this.checked + ' ]');
@@ -191,22 +246,8 @@ var SubjectsModule = (function () {
         }
     };
 
-    function doDeletionEvent() {
-        'use strict';
-        if (lastCheckedSubject === -1) {
-
-            console.log("Warning: No subject selected !");
-            return;
-        }
-
-        var subjectName = FirebaseModule.getSubjectName(lastCheckedSubject - 1);
-        txtSubjectToDelete.value = subjectName;
-        dialogDeletion.showModal();
-    }
-
     return {
         init: init,
-        updateTableOfSubjectsBegin: updateTableOfSubjectsBegin,
-        updateTableOfSubjectsNext: updateTableOfSubjectsNext
+        updateTableOfSubjects: updateTableOfSubjects
     };
 })();
