@@ -6,10 +6,13 @@ var SubjectsModule = (function () {
     var btnModify = document.getElementById('btnModify');
     var btnDelete = document.getElementById('btnDelete');
     var tableSubjectsBody = document.getElementById('tableSubjectsBody');
-    var dialogCreate = document.getElementById('dialogCreation');
-    var dialogDeletion = document.getElementById('dialogDeletion');
+    var dialogCreate = document.getElementById('dialogCreate');
+    var dialogModify = document.getElementById('dialogModify');
+    var dialogDelete = document.getElementById('dialogDelete');
     var txtSubject = document.getElementById('txtSubject');
     var txtDescription = document.getElementById('txtDescription');
+    var txtSubjectModified = document.getElementById('txtSubjectModified');
+    var txtDescriptionModified = document.getElementById('txtDescriptionModified');
     var txtSubjectToDelete = document.getElementById('txtSubjectToDelete');
 
     var rowCounterSubjects;
@@ -27,49 +30,58 @@ var SubjectsModule = (function () {
         if (!dialogCreate.showModal) {
             dialogPolyfill.registerDialog(dialogCreate);
         }
-        if (!dialogDeletion.showModal) {
-            dialogPolyfill.registerDialog(dialogDeletion);
+        if (!dialogDelete.showModal) {
+            dialogPolyfill.registerDialog(dialogDelete);
         }
 
         btnList.addEventListener('click', () => {
             'use strict';
-            updateTableOfSubjectsBegin();
-            FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+            updateTableOfSubjects();
         });
 
         btnCreate.addEventListener('click', () => {
             'use strict';
-            dialogCreate.showModal();
+            onCreateEvent();
         });
 
         btnModify.addEventListener('click', () => {
             'use strict';
-            console.log("... modifiying ... ");
+            onModifyEvent();
         });
 
         btnDelete.addEventListener('click', () => {
             'use strict';
-            onDeletionEvent();
+            onDeleteEvent();
         });
 
         dialogCreate.querySelector('.create').addEventListener('click', () => {
             'use strict';
-            doCreationEvent();
+            doCreateEvent();
         });
 
         dialogCreate.querySelector('.cancel_create').addEventListener('click', () => {
             'use strict';
-            dialogCreate.close();
+            cancelCreateEvent();
         });
 
-        dialogDeletion.querySelector('.delete').addEventListener('click', () => {
+        dialogModify.querySelector('.modify').addEventListener('click', () => {
             'use strict';
-            doDeletionEvent();
+            doModifyEvent();
         });
 
-        dialogDeletion.querySelector('.cancel_delete').addEventListener('click', () => {
+        dialogModify.querySelector('.cancel_modify').addEventListener('click', () => {
             'use strict';
-            cancelDeletionEvent();
+            cancelModifyEvent();
+        });
+
+        dialogDelete.querySelector('.delete').addEventListener('click', () => {
+            'use strict';
+            doDeleteEvent();
+        });
+
+        dialogDelete.querySelector('.cancel_delete').addEventListener('click', () => {
+            'use strict';
+            cancelDeleteEvent();
         });
 
         // Funktioniert -- aber ich will das lieber mit checkboxes lösen
@@ -82,15 +94,14 @@ var SubjectsModule = (function () {
         // }
     };
 
+    /*
+     *  reading list of subjects asynchronously
+     */
+
     function updateTableOfSubjects() {
         'use strict';
         updateTableOfSubjectsBegin();
         FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
-    };
-
-    function updateTableOfSubjectsNext(subject) {
-        'use strict';
-        addEntryToSubjectTable(subject);
     };
 
     function updateTableOfSubjectsBegin() {
@@ -108,27 +119,56 @@ var SubjectsModule = (function () {
         componentHandler.upgradeDom();
     };
 
-    function doCreationEvent() {
+    function updateTableOfSubjectsNext(subject) {
         'use strict';
-        var subject = txtSubject.value;
+        addEntryToSubjectTable(subject);
+    };
+
+    function updateTableOfSubjectsDone() {
+        'use strict';
+        isActive = false;
+    }
+
+    /*
+     *  create new subject
+     */
+
+    function onCreateEvent() {
+        dialogCreate.showModal();
+    }
+
+    function doCreateEvent() {
+        'use strict';
+        var name = txtSubject.value;
         var description = txtDescription.value;
 
-        if (subject === '' || description === '') {
+        if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
-            txtSubject.value = '';
-            txtDescription.value = '';
+
         }
         else {
-            FirebaseModule.addSubject(subject, description);
-            txtSubject.value = '';
-            txtDescription.value = '';
-            tableSubjectsBody.innerHTML = '';
+            FirebaseModule.addSubject(name, description);
             updateTableOfSubjects();
         }
+
+        txtSubject.value = '';
+        txtDescription.value = '';
         dialogCreate.close();
     }
 
-    function onDeletionEvent() {
+    function cancelCreateEvent() {
+        'use strict';
+        txtSubject.value = '';
+        txtDescription.value = '';
+        lastCheckedSubject = -1;
+        dialogCreate.close();
+    }
+
+    /*
+     *  modify existing subject
+     */
+
+    function onModifyEvent() {
         'use strict';
         if (lastCheckedSubject === -1) {
 
@@ -136,29 +176,83 @@ var SubjectsModule = (function () {
             return;
         }
 
-        var subjectName = FirebaseModule.getNameOfSubject(lastCheckedSubject - 1);
-        txtSubjectToDelete.value = subjectName;
-        dialogDeletion.showModal();
+        var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
+        txtSubjectModified.value = subject.name;
+        txtDescriptionModified.value = subject.description;
+        dialogModify.showModal();
     }
 
-    function doDeletionEvent() {
+    function doModifyEvent() {
+        'use strict';
+        var name = txtSubjectModified.value;
+        var description = txtDescriptionModified.value;
+
+        if (subject === '' || description === '') {
+            window.alert("Name or Description field emtpy !");
+        }
+        else {
+            var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
+            subject.name = name;
+            subject.description = description;
+            FirebaseModule.updateSubject(subject);
+            updateTableOfSubjects();
+        }
+
+        txtSubjectModified.value = '';
+        txtDescriptionModified.value = '';
+        dialogModify.close();
+    }
+
+    function cancelModifyEvent() {
+        'use strict';
+        // clear checkbox
+        var checkboxLabel = document.getElementById('label_' + lastCheckedSubject);
+        checkboxLabel.MaterialCheckbox.uncheck();
+        txtSubjectModified.value = '';
+        txtDescriptionModified.value = '';
+        lastCheckedSubject = -1;
+        dialogModify.close();
+    }
+
+    /*
+     *  delete existing subject
+     */
+
+    function onDeleteEvent() {
+        'use strict';
+        if (lastCheckedSubject === -1) {
+
+            console.log("Warning: No subject selected !");
+            return;
+        }
+
+        var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
+        txtSubjectToDelete.value = subject.name;
+        dialogDelete.showModal();
+    }
+
+    function doDeleteEvent() {
         'use strict';
         console.log("Subject to delete: " + txtSubjectToDelete.value);
         FirebaseModule.deleteSubject(txtSubjectToDelete.value);
         txtSubjectToDelete.value = '';
-        dialogDeletion.close();
+        dialogDelete.close();
 
         updateTableOfSubjectsBegin();
         FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
     }
 
-    function cancelDeletionEvent() {
+    function cancelDeleteEvent() {
         'use strict';
         // clear checkbox
         var checkboxLabel = document.getElementById('label_' + lastCheckedSubject);
         checkboxLabel.MaterialCheckbox.uncheck();
-        dialogDeletion.close();
+        lastCheckedSubject = -1;
+        dialogDelete.close();
     }
+
+    // ============================================================================================
+    // private helper functions
 
     function addEntryToSubjectTable(entry) {
         'use strict';
@@ -200,20 +294,13 @@ var SubjectsModule = (function () {
         var textnode2 = document.createTextNode(entry.description);      // create third text node
         td2.appendChild(textnode1);                 // append text to <td>
         td3.appendChild(textnode2);                 // append text to <td>
-
         node.appendChild(td1);                      // append <td> to <tr>
         node.appendChild(td2);                      // append <td> to <tr>
         node.appendChild(td3);                      // append <td> to <tr>
-
         tableSubjectsBody.appendChild(node);        // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
     };
-
-    function updateTableOfSubjectsDone() {
-        'use strict';
-        isActive = false;
-    }
 
     function checkboxHandler() {
         'use strict';
@@ -245,6 +332,9 @@ var SubjectsModule = (function () {
             }
         }
     };
+
+    // ============================================================================================
+    // public functions
 
     return {
         init: init,

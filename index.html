@@ -13,7 +13,7 @@
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 
-    <dialog id="dialogCreation" class="mdl-dialog" style="width: 500px">
+    <dialog id="dialogCreate" class="mdl-dialog" style="width: 500px">
         <div>
             <h6 class="mdl-dialog__title">Add a new subject</h6>
             <br/>
@@ -47,7 +47,39 @@
         </div>
     </dialog>
 
-    <dialog id="dialogDeletion" class="mdl-dialog" style="width: 400px">
+    <dialog id="dialogModify" class="mdl-dialog" style="width: 500px">
+        <div>
+            <h6 class="mdl-dialog__title">Modify an existing subject</h6>
+            <br/>
+            <div>
+                <table class="mdl-data-table mdl-js-data-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtSubjectModified">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtDescriptionModified">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <div class="mdl-dialog__actions" style="width: 350px">
+                <button id="btnDlgCreate" type="button" class="mdl-button modify">Modify</button>
+                <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_modify">Cancel</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="dialogDelete" class="mdl-dialog" style="width: 400px">
         <div>
             <h6 class="mdl-dialog__title">Delete a subject</h6>
             <br/>

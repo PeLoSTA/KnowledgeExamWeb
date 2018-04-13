@@ -3,6 +3,9 @@ var FirebaseModule = (function () {
     var db;
     var subjectsList;
 
+    // ============================================================================================
+    // public functions
+
     function init() {
 
         db = firebase.database();  // get a reference to the database service
@@ -25,61 +28,50 @@ var FirebaseModule = (function () {
         });
     }
 
-    // function readListOfSubjects2(callback) {
-    //     'use strict';
-    //     subjectsList = [];
-    //     var refString = '/subjects';
-    //     db.ref(refString).on('value', function (snapshot) {
-    //         snapshot.forEach(function (childSnapshot) {
-    //             var snap = childSnapshot.val();
-    //             console.log("Got subject " + snap.name + ", Description = " + snap.description);
-    //             var subject = { name: snap.name, description: snap.description, key: childSnapshot.key };
-    //             subjectsList.push(subject);
-    //             callback(subject);
-    //         });
-    //     });
-    // }
-
     function addSubject(name, description) {
         'use strict';
         var refString = '/subjects';
-        var newSubjectRef = db.ref(refString).push();
-        newSubjectRef.set({ "name": name, "description": description });
+        var ref = db.ref(refString).push();
+        ref.set({ "name": name, "description": description });
+    }
+
+    function updateSubject(subject) {
+        'use strict';
+        var refString = '/subjects/' + subject.key;
+        var ref = db.ref(refString);
+        ref.update({ "name": subject.name, "description": subject.description });
     }
 
     function deleteSubject(name) {
         'use strict';
-        console.log("deleteSubject: TDB");
-
         for (var k = 0; k < subjectsList.length; k++) {
-            if (subjectsList[k].name === name) {
 
-                console.log("FOUND item to delete: " + subjectsList[k].key);
+            if (subjectsList[k].name === name) {
 
                 var refDeleteString = '/subjects/' + subjectsList[k].key;
                 db.ref(refDeleteString).remove(function (error) {
                     console.log(error ? "Deletion failed !!!" : "Success!");
                 });
-
                 break;
             }
         }
     }
 
-    function getNameOfSubject(index) {
+    function getSubject(index) {
         'use strict';
         if (index < 0 || index >= subjectsList.length) {
-            return "";
+            return null;
         }
 
-        return subjectsList[index].name;
+        return subjectsList[index];
     }
 
     return {
         init: init,
         addSubject: addSubject,
+        updateSubject: updateSubject,
         deleteSubject: deleteSubject,
         readListOfSubjects: readListOfSubjects,
-        getNameOfSubject: getNameOfSubject
+        getSubject: getSubject
     };
 })();
