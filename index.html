@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="mdl/material.min.css">
     <link rel="stylesheet" href="style.css" />
     <script type="text/javascript" src="mdl/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -120,10 +121,6 @@
                 <div class="mdl-tabs__panel is-active" id="subjects-panel">
                     <br/>
                     <div class="mdl-button-group">
-
-                        <button id="btnList" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                            List
-                        </button>
                         <button id="btnCreate" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             Create
                         </button>
@@ -133,11 +130,14 @@
                         <button id="btnDelete" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             Delete
                         </button>
-
+                        <!-- <button id="btnRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            List
+                        </button> -->
+                        <button id="btnRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <i class="material-icons">refresh</i>
+                        </button>
                     </div>
-
                     <br/>
-
                     <table id="tableSubjects" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
                         <thead>
                             <tr>

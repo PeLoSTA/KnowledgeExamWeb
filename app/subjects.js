@@ -1,7 +1,7 @@
 var SubjectsModule = (function () {
 
     // retrieve HTML elements according to 'subjects' tab
-    var btnList = document.getElementById('btnList');
+    var btnRefresh = document.getElementById('btnRefresh');
     var btnCreate = document.getElementById('btnCreate');
     var btnModify = document.getElementById('btnModify');
     var btnDelete = document.getElementById('btnDelete');
@@ -34,7 +34,7 @@ var SubjectsModule = (function () {
             dialogPolyfill.registerDialog(dialogDelete);
         }
 
-        btnList.addEventListener('click', () => {
+        btnRefresh.addEventListener('click', () => {
             'use strict';
             updateTableOfSubjects();
         });
