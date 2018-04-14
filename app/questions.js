@@ -13,6 +13,8 @@ var HtmlQuestionsModule = (function () {
     var listItem5 = document.getElementById('list-num-answers-5');
     var listItem6 = document.getElementById('list-num-answers-6');
     var listItem7 = document.getElementById('list-num-answers-7');
+    var listItem8 = document.getElementById('list-num-answers-8');
+    var listItem9 = document.getElementById('list-num-answers-9');
 
     // miscellaneous data
     var numAnswers;
@@ -49,64 +51,29 @@ var HtmlQuestionsModule = (function () {
             cancelCreateQuestion();
         });
 
-        // TODO: Das ganze irgendwie mit einem Array machen ... oder 7 Funktionen mit veschiedenem Closure !!!
-        listItem2.addEventListener('click', () => {
-
-            'use strict';
-            if (numAnswers != 2) {
-                numAnswers = 2;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
-            }
-        });
-
-        listItem3.addEventListener('click', () => {
-
-            'use strict';
-            if (numAnswers != 3) {
-                numAnswers = 3;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
-            }
-        });
-
-        listItem4.addEventListener('click', () => {
-
-            'use strict';
-            if (numAnswers != 4) {
-                numAnswers = 4;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
-            }
-        });
-
-        listItem5.addEventListener('click', () => {
-
-            'use strict';
-            if (numAnswers != 5) {
-                numAnswers = 5;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
-            }
-        });
-
-        listItem6.addEventListener('click', () => {
-
-            'use strict';
-            if (numAnswers != 6) {
-                numAnswers = 6;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
-            }
-        });
-
-        listItem7.addEventListener('click', () => {
-
-            'use strict';
-            if (numAnswers != 7) {
-                numAnswers = 7;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
-            }
-        });
+        listItem2.addEventListener('click', helperDialogDisplay(2));
+        listItem3.addEventListener('click', helperDialogDisplay(3));
+        listItem4.addEventListener('click', helperDialogDisplay(4));
+        listItem5.addEventListener('click', helperDialogDisplay(5));
+        listItem6.addEventListener('click', helperDialogDisplay(6));
+        listItem7.addEventListener('click', helperDialogDisplay(7));
+        listItem8.addEventListener('click', helperDialogDisplay(8));
+        listItem9.addEventListener('click', helperDialogDisplay(9));
 
         createAnswersList(numAnswers, divAnchorAnswers);
         createAnswersToCheckboxesList(numAnswers, divAnchorCorrectAnswers);
     };
+
+    function helperDialogDisplay (number) {
+        'use strict';
+        // note: the outer function returns an inner function, the variable 'number' is part of the closure (!)
+        return function () {
+            if (numAnswers != number) {
+                numAnswers = number;
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
+            }
+        }
+    }
 
     // ============================================================================================
     // questions
@@ -136,20 +103,19 @@ var HtmlQuestionsModule = (function () {
             var divOuterNode = document.createElement('div');           // create outer <div> node
             var divInnerNode = document.createElement('div');           // create inner <div> node
 
-            divInnerNode.setAttribute('class', 'mdl-textfield mdl-js-textfield');
+            divInnerNode.setAttribute('class', 'mdl-textfield mdl-js-textfield');      // set attribute
             var textareaNode = document.createElement('textarea');      // create inner <textarea> node
-            textareaNode.setAttribute('class', 'mdl-textfield__input');
-            textareaNode.setAttribute('type', 'text');
-            textareaNode.setAttribute('rows', '1');
-            textareaNode.setAttribute('id', 'answer' + (i + 1));
+            textareaNode.setAttribute('class', 'mdl-textfield__input'); // set attribute
+            textareaNode.setAttribute('type', 'text');                  // set attribute
+            textareaNode.setAttribute('rows', '1');                     // set attribute
+            textareaNode.setAttribute('id', 'answer' + (i + 1));        // set attribute
 
             var labelNode = document.createElement('label');            // create inner <label> node
-            labelNode.setAttribute('class', 'mdl-textfield__label');
-            labelNode.setAttribute('for', 'answer' + (i + 1));
+            labelNode.setAttribute('class', 'mdl-textfield__label');    // set attribute
+            labelNode.setAttribute('for', 'answer' + (i + 1));          // set attribute
 
             var textnode = document.createTextNode('...');  // create inner text node
             labelNode.appendChild(textnode);                // append text to <label>
-
             divInnerNode.appendChild(textareaNode);  // append <textarea> to <div>
             divInnerNode.appendChild(labelNode);     // append <label> to <div>
             divOuterNode.appendChild(divInnerNode);  // append inner <div> to outer <div> node

@@ -102,7 +102,6 @@
     <dialog id="dialogCreateQuestion" class="mdl-dialog" style="width: 800px">
 
         <div>
-
             <h6 class="mdl-dialog__title">Add a new Question</h6>
             <br/>
             <div>
@@ -114,11 +113,9 @@
             </div>
             <div>
                 <label class="mdl-textfield mdl-js-textfield">Anzahl der Antworten:</label>
-
                 <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon">
                     <i class="material-icons">more_vert</i>
                 </button>
-
                 <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left">
                     <li id="list-num-answers-2" class="mdl-menu__item">2</li>
                     <li id="list-num-answers-3" class="mdl-menu__item">3</li>
@@ -126,40 +123,26 @@
                     <li id="list-num-answers-5" class="mdl-menu__item">5</li>
                     <li id="list-num-answers-6" class="mdl-menu__item">6</li>
                     <li id="list-num-answers-7" class="mdl-menu__item">7</li>
+                    <li id="list-num-answers-8" class="mdl-menu__item">8</li>
+                    <li id="list-num-answers-9" class="mdl-menu__item">9</li>
                 </ul>
-
                 <label id='labelNumAnswers' class="mdl-textfield mdl-js-textfield" style="margin-left: 10px; width: 50px">2</label>
             </div>
-
             <div id="divAnchorAnswers">
             </div>
-
             <div>
                 <label class="mdl-textfield mdl-js-textfield">Richtige Antwort(en):</label>
             </div>
-
             <div id="divAnchorCorrectAnswers">
-
-                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="android">
-                    <input type="checkbox" id="android" class="mdl-checkbox__input" />
-                    <span class="mdl-checkbox__label">Android</span>
-                    <!-- Checkbox Label -->
-                </label>
-
-                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="iOS">
-                    <input type="checkbox" id="iOS" class="mdl-checkbox__input" />
-                    <span class="mdl-checkbox__label">iOS</span>
-                    <!-- Checkbox Label -->
-                </label>
-
             </div>
-
             <div class="mdl-dialog__actions" style="width: 350px">
                 <button type="button" class="mdl-button create_question">Add</button>
                 <button type="button" class="mdl-button cancel_question">Cancel</button>
             </div>
         </div>
     </dialog>
+
+    <!-- begin of page ===================================================================== -->
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
@@ -178,9 +161,9 @@
 
                 <div class="mdl-tabs__tab-bar">
                     <a href="#subjects-panel" class="mdl-tabs__tab is-active">Subjects (Kurse)</a>
-                    <a href="#exams-panel" class="mdl-tabs__tab">Exams (Prüfungen)</a>
+                    <a href="#questions-panel-admin" class="mdl-tabs__tab">Questions Administration (Fragen)</a>
                     <a href="#students-panel" class="mdl-tabs__tab">Students (Studenten)</a>
-                    <a href="#questions-panel" class="mdl-tabs__tab">Questions (Fragen)</a>
+                    <a href="#questions-panel-survey" class="mdl-tabs__tab">Questions Survey (Fragen)</a>
                     <a href="#results-of-exams-panel" class="mdl-tabs__tab">Results of Exams (Prüfungsergebnisse)</a>
                 </div>
 
@@ -214,7 +197,7 @@
                     </table>
                 </div>
 
-                <div class="mdl-tabs__panel" id="exams-panel">
+                <div class="mdl-tabs__panel" id="questions-panel-admin">
                     <br/>
                     <button id="btnEnterQuestion" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                         Enter Question
@@ -225,7 +208,7 @@
                     <br/>
                     <p>Yeahhhhhhhhhhhh</p>
                 </div>
-                <div class="mdl-tabs__panel" id="questions-panel">
+                <div class="mdl-tabs__panel" id="questions-panel-survey">
                     <br/>
                     <p>The Beatles' original UK LPs, in order of release:</p>
                     <ol>
