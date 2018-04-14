@@ -4,12 +4,9 @@ var HtmlQuestionsModule = (function () {
     var dialogCreateQuestion = document.getElementById('dialogCreateQuestion');
     var btnEnterQuestion = document.getElementById('btnEnterQuestion');
     var textareaQuestion = document.getElementById('textareaQuestion');
-
-    var divAnchorAnswers = document.getElementById('anchorAnswers');
-    var divCorrectAnswers = document.getElementById('anchorCorrectAnswers');  // TODO: Namen nicht einheitlich !!!
-
-    var labelNumAnswers = document.getElementById('labelNumAnswers2');   // 2 und nicht 2 anpassen !!!!!!!!!!
-
+    var divAnchorAnswers = document.getElementById('divAnchorAnswers');
+    var divAnchorCorrectAnswers = document.getElementById('divAnchorCorrectAnswers');
+    var labelNumAnswers = document.getElementById('labelNumAnswers');
     var listItem2 = document.getElementById('list-num-answers-2');
     var listItem3 = document.getElementById('list-num-answers-3');
     var listItem4 = document.getElementById('list-num-answers-4');
@@ -39,7 +36,6 @@ var HtmlQuestionsModule = (function () {
 
         btnEnterQuestion.addEventListener('click', () => {
             'use strict';
-            console.log("Arghhhhh");
             onCreateQuestion();
         });
 
@@ -59,7 +55,7 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             if (numAnswers != 2) {
                 numAnswers = 2;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
             }
         });
 
@@ -68,7 +64,7 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             if (numAnswers != 3) {
                 numAnswers = 3;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
             }
         });
 
@@ -77,7 +73,7 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             if (numAnswers != 4) {
                 numAnswers = 4;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
             }
         });
 
@@ -86,7 +82,7 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             if (numAnswers != 5) {
                 numAnswers = 5;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
             }
         });
 
@@ -95,7 +91,7 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             if (numAnswers != 6) {
                 numAnswers = 6;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
             }
         });
 
@@ -104,12 +100,12 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             if (numAnswers != 7) {
                 numAnswers = 7;
-                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
+                updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
             }
         });
 
         createAnswersList(numAnswers, divAnchorAnswers);
-        createAnswersToCheckboxesList(numAnswers, divCorrectAnswers);
+        createAnswersToCheckboxesList(numAnswers, divAnchorCorrectAnswers);
     };
 
     // ============================================================================================
@@ -122,8 +118,6 @@ var HtmlQuestionsModule = (function () {
 
     function doCreateQuestion() {
         'use strict';
-        var question = textareaQuestion.value;
-        console.log("Question: " + textareaQuestion.value);
         addQuestion();
         dialogCreateQuestion.close();
         clearDialog();
@@ -135,11 +129,8 @@ var HtmlQuestionsModule = (function () {
     }
 
     function createAnswersList(number, outerDiv) {
-
         'use strict';
-
         outerDiv.innerHTML = '';
-
         for (var i = 0; i < number; i++) {
 
             var divOuterNode = document.createElement('div');           // create outer <div> node
@@ -169,11 +160,8 @@ var HtmlQuestionsModule = (function () {
     }
 
     function createAnswersToCheckboxesList(number, outerDiv) {
-
         'use strict';
-
         outerDiv.innerHTML = '';
-
         for (var i = 0; i < number; i++) {
 
             var label = document.createElement('label');      // create <label> node
@@ -200,25 +188,62 @@ var HtmlQuestionsModule = (function () {
     }
 
     function updateNumAnswersDisplay(number, label) {
-
         'use strict';
-
         label.innerHTML = '';
         var textnode = document.createTextNode('' + number);  // create new text node
         label.appendChild(textnode);  // insert text into <label> node
     }
 
-    function updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers) {
-
+    function updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers) {
         'use strict';
         updateNumAnswersDisplay(numAnswers, labelNumAnswers);
         createAnswersList(numAnswers, divAnchorAnswers);
-        createAnswersToCheckboxesList(numAnswers, divCorrectAnswers);
+        createAnswersToCheckboxesList(numAnswers, divAnchorCorrectAnswers);
     }
 
     // ============================================================================================
     // private helper functions
 
+    function addQuestion() {
+        'use strict';
+        var question = textareaQuestion.value;
+        if (question === "") {
+            window.alert("Empty Question !");
+            return;
+        }
+
+        var answers = [];
+        var childrenAnswers = divAnchorAnswers.getElementsByTagName('textarea');
+        for (var i = 0; i < childrenAnswers.length; i++) {
+            answers.push(childrenAnswers[i].value);
+        }
+
+        var correctAnswers = [];
+        var numCorrectAnswers = 0;
+        var childrenCorrectAnswers = divAnchorCorrectAnswers.getElementsByClassName('mdl-checkbox');
+        for (var i = 0; i < childrenCorrectAnswers.length; i++) {
+
+            var label = childrenCorrectAnswers[i];
+            var classAttributes = label.getAttribute("class");
+            var result = classAttributes.includes('is-checked');
+
+            if (result === true) {
+                numCorrectAnswers++;
+                correctAnswers.push(true);
+            } else {
+                correctAnswers.push(false);
+            }
+        }
+
+        FirebaseQuestionsModule.addQuestion(question, answers, correctAnswers);
+    }
+
+    function clearDialog() {
+        'use strict';
+        textareaQuestion.value = '';
+        numAnswers = 2;
+        updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
+    }
 
     // ============================================================================================
     // public functions
