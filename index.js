@@ -1,5 +1,6 @@
-FirebaseModule.init();
-SubjectsModule.init();
-QuestionsModule.init();
+FirebaseSubjectsModule.init();
+FirebaseQuestionsModule.init();
+HtmlSubjectsModule.init();
+HtmlQuestionsModule.init();
 
-SubjectsModule.updateTableOfSubjects();
+HtmlSubjectsModule.updateTableOfSubjects();

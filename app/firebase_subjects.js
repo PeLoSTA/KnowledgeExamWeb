@@ -1,4 +1,4 @@
-var FirebaseModule = (function () {
+var FirebaseSubjectsModule = (function () {
 
     var db;
     var subjectsList;
@@ -65,6 +65,9 @@ var FirebaseModule = (function () {
 
         return subjectsList[index];
     }
+
+    // ============================================================================================
+    // public interface
 
     return {
         init: init,

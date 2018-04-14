@@ -1,20 +1,4 @@
-var QuestionsModule = (function () {
-
-    // retrieve HTML elements according to 'subjects' tab
-    // var btnRefresh = document.getElementById('btnRefresh');
-    // var btnCreate = document.getElementById('btnCreate');
-    // var btnModify = document.getElementById('btnModify');
-    // var btnDelete = document.getElementById('btnDelete');
-    // var tableSubjectsBody = document.getElementById('tableSubjectsBody');
-    // var dialogCreateSubject = document.getElementById('dialogCreateSubject');
-    // var dialogModifySubject = document.getElementById('dialogModifySubject');
-    // var dialogDeleteSubject = document.getElementById('dialogDeleteSubject');
-
-    // var txtSubject = document.getElementById('txtSubject');
-    // var txtDescription = document.getElementById('txtDescription');
-    // var txtSubjectModified = document.getElementById('txtSubjectModified');
-    // var txtDescriptionModified = document.getElementById('txtDescriptionModified');
-    // var txtSubjectToDelete = document.getElementById('txtSubjectToDelete');
+var HtmlQuestionsModule = (function () {
 
     // retrieve HTML elements according to 'questions' tab
     var dialogCreateQuestion = document.getElementById('dialogCreateQuestion');
@@ -33,12 +17,8 @@ var QuestionsModule = (function () {
     var listItem6 = document.getElementById('list-num-answers-6');
     var listItem7 = document.getElementById('list-num-answers-7');
 
-    var numAnswers;
-
     // miscellaneous data
-    // var rowCounterSubjects;
-    // var lastCheckedSubject;
-    // var isActive;
+    var numAnswers;
 
     // ============================================================================================
     // initialization
@@ -82,45 +62,45 @@ var QuestionsModule = (function () {
                 updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
             }
         });
-        
+
         listItem3.addEventListener('click', () => {
-        
+
             'use strict';
             if (numAnswers != 3) {
                 numAnswers = 3;
                 updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
             }
         });
-        
+
         listItem4.addEventListener('click', () => {
-        
+
             'use strict';
             if (numAnswers != 4) {
                 numAnswers = 4;
                 updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
             }
         });
-        
+
         listItem5.addEventListener('click', () => {
-        
+
             'use strict';
             if (numAnswers != 5) {
                 numAnswers = 5;
                 updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
             }
         });
-        
+
         listItem6.addEventListener('click', () => {
-        
+
             'use strict';
             if (numAnswers != 6) {
                 numAnswers = 6;
                 updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divCorrectAnswers);
             }
         });
-        
+
         listItem7.addEventListener('click', () => {
-        
+
             'use strict';
             if (numAnswers != 7) {
                 numAnswers = 7;
@@ -146,7 +126,7 @@ var QuestionsModule = (function () {
         console.log("Question: " + textareaQuestion.value);
         addQuestion();
         dialogCreateQuestion.close();
-        clearDialog ();
+        clearDialog();
     }
 
     function cancelCreateQuestion() {

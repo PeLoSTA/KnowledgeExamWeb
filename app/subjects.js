@@ -1,4 +1,4 @@
-var SubjectsModule = (function () {
+var HtmlSubjectsModule = (function () {
 
     // retrieve HTML elements according to 'subjects' tab
     var btnRefresh = document.getElementById('btnRefresh');
@@ -112,7 +112,7 @@ var SubjectsModule = (function () {
     function updateTableOfSubjects() {
         'use strict';
         updateTableOfSubjectsBegin();
-        FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+        FirebaseSubjectsModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
     };
 
     function updateTableOfSubjectsBegin() {
@@ -158,7 +158,7 @@ var SubjectsModule = (function () {
 
         }
         else {
-            FirebaseModule.addSubject(name, description);
+            FirebaseSubjectsModule.addSubject(name, description);
             updateTableOfSubjects();
         }
 
@@ -187,7 +187,7 @@ var SubjectsModule = (function () {
             return;
         }
 
-        var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
+        var subject = FirebaseSubjectsModule.getSubject(lastCheckedSubject - 1);
         txtSubjectModified.value = subject.name;
         txtDescriptionModified.value = subject.description;
         dialogModifySubject.showModal();
@@ -202,10 +202,10 @@ var SubjectsModule = (function () {
             window.alert("Name or Description field emtpy !");
         }
         else {
-            var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
+            var subject = FirebaseSubjectsModule.getSubject(lastCheckedSubject - 1);
             subject.name = name;
             subject.description = description;
-            FirebaseModule.updateSubject(subject);
+            FirebaseSubjectsModule.updateSubject(subject);
             updateTableOfSubjects();
         }
 
@@ -237,7 +237,7 @@ var SubjectsModule = (function () {
             return;
         }
 
-        var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
+        var subject = FirebaseSubjectsModule.getSubject(lastCheckedSubject - 1);
         txtSubjectToDelete.value = subject.name;
         dialogDeleteSubject.showModal();
     }
@@ -245,12 +245,12 @@ var SubjectsModule = (function () {
     function doDeleteEvent() {
         'use strict';
         console.log("Subject to delete: " + txtSubjectToDelete.value);
-        FirebaseModule.deleteSubject(txtSubjectToDelete.value);
+        FirebaseSubjectsModule.deleteSubject(txtSubjectToDelete.value);
         txtSubjectToDelete.value = '';
         dialogDeleteSubject.close();
 
         updateTableOfSubjectsBegin();
-        FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+        FirebaseSubjectsModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
     }
 
     function cancelDeleteEvent() {
@@ -282,25 +282,24 @@ var SubjectsModule = (function () {
 
         var node = document.createElement('tr');    // create <tr> node
         var td1 = document.createElement('td');     // create first <td> node
-
         var label = document.createElement('label');     // create <label> node
-        label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attributes
-        label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attributes
-        label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attributes
+
+        label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
+        label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attribute
+        label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attribute
         var input = document.createElement('input');     // create <input> node
-        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_subject');  // set attributes
+        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_subject');  // set attribute
         input.setAttribute('type', 'checkbox');  // set attributes
-        input.setAttribute('id', 'row_' + rowCounterSubjects);  // set attributes
+        input.setAttribute('id', 'row_' + rowCounterSubjects);  // set attribute
         input.addEventListener('click', checkboxHandler);
         rowCounterSubjects++;
-
         label.appendChild(input);
         td1.appendChild(label);
 
         var td2 = document.createElement('td');     // create second <td> node
         var td3 = document.createElement('td');     // create third <td> node
-        td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attributes
-        td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attributes
+        td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         var textnode1 = document.createTextNode(entry.name);             // create second text node
         var textnode2 = document.createTextNode(entry.description);      // create third text node
         td2.appendChild(textnode1);                 // append text to <td>
