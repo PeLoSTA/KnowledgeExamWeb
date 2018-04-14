@@ -14,7 +14,9 @@
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 
-    <dialog id="dialogCreate" class="mdl-dialog" style="width: 500px">
+    <!-- subject dialog ===================================================================== -->
+
+    <dialog id="dialogCreateSubject" class="mdl-dialog" style="width: 500px">
         <div>
             <h6 class="mdl-dialog__title">Add a new subject</h6>
             <br/>
@@ -48,7 +50,7 @@
         </div>
     </dialog>
 
-    <dialog id="dialogModify" class="mdl-dialog" style="width: 500px">
+    <dialog id="dialogModifySubject" class="mdl-dialog" style="width: 500px">
         <div>
             <h6 class="mdl-dialog__title">Modify an existing subject</h6>
             <br/>
@@ -80,7 +82,7 @@
         </div>
     </dialog>
 
-    <dialog id="dialogDelete" class="mdl-dialog" style="width: 400px">
+    <dialog id="dialogDeleteSubject" class="mdl-dialog" style="width: 400px">
         <div>
             <h6 class="mdl-dialog__title">Delete a subject</h6>
             <br/>
@@ -91,6 +93,70 @@
             <div class="mdl-dialog__actions">
                 <button type="button" class="mdl-button delete">Delete</button>
                 <button type="button" class="mdl-button cancel_delete">Cancel</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- questions dialog ===================================================================== -->
+
+    <dialog id="dialogCreateQuestion" class="mdl-dialog" style="width: 800px">
+
+        <div>
+
+            <h6 class="mdl-dialog__title">Add a new Question</h6>
+            <br/>
+            <div>
+                <label class="mdl-textfield mdl-js-textfield">Bitte geben Sie hier die Frage ein:</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield">
+                <textarea class="mdl-textfield__input" type="text" rows="2" id="textareaQuestion"></textarea>
+                <label class="mdl-textfield__label" for="textareaQuestion">...</label>
+            </div>
+            <div>
+                <label id='labelNumAnswers' class="mdl-textfield mdl-js-textfield">Anzahl der Antworten:</label>
+
+                <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">more_vert</i>
+                </button>
+
+                <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left">
+                    <li id="list-num-answers-2" class="mdl-menu__item">2</li>
+                    <li id="list-num-answers-3" class="mdl-menu__item">3</li>
+                    <li id="list-num-answers-4" class="mdl-menu__item">4</li>
+                    <li id="list-num-answers-5" class="mdl-menu__item">5</li>
+                    <li id="list-num-answers-6" class="mdl-menu__item">6</li>
+                    <li id="list-num-answers-7" class="mdl-menu__item">7</li>
+                </ul>
+
+                <label id='labelNumAnswers2' class="mdl-textfield mdl-js-textfield" style="margin-left: 10px; width: 50px">2</label>
+            </div>
+
+            <div id="anchorAnswers">
+            </div>
+
+            <div>
+                <label class="mdl-textfield mdl-js-textfield">Richtige Antwort(en):</label>
+            </div>
+
+            <div id="anchorCorrectAnswers">
+
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="android">
+                    <input type="checkbox" id="android" class="mdl-checkbox__input" />
+                    <span class="mdl-checkbox__label">Android</span>
+                    <!-- Checkbox Label -->
+                </label>
+
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="iOS">
+                    <input type="checkbox" id="iOS" class="mdl-checkbox__input" />
+                    <span class="mdl-checkbox__label">iOS</span>
+                    <!-- Checkbox Label -->
+                </label>
+
+            </div>
+
+            <div class="mdl-dialog__actions" style="width: 350px">
+                <button type="button" class="mdl-button create_question">Add</button>
+                <button type="button" class="mdl-button cancel_question">Cancel</button>
             </div>
         </div>
     </dialog>
@@ -130,9 +196,6 @@
                         <button id="btnDelete" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             Delete
                         </button>
-                        <!-- <button id="btnRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                            List
-                        </button> -->
                         <button id="btnRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             <i class="material-icons">refresh</i>
                         </button>
@@ -153,14 +216,11 @@
 
                 <div class="mdl-tabs__panel" id="exams-panel">
                     <br/>
-                    <p>The Beatles' members were:</p>
-                    <ul>
-                        <li>John Lennon (1940-1980)</li>
-                        <li>Paul McCartney (1942-)</li>
-                        <li>George Harrison (1943-2001)</li>
-                        <li>Ringo Starr (1940-)</li>
-                    </ul>
+                    <button id="btnEnterQuestion" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                        Enter Question
+                    </button>
                 </div>
+
                 <div class="mdl-tabs__panel" id="students-panel">
                     <br/>
                     <p>Yeahhhhhhhhhhhh</p>
@@ -208,6 +268,7 @@
 
     <script type="text/javascript" src="app/firebase.js"></script>
     <script type="text/javascript" src="app/subjects.js"></script>
+    <script type="text/javascript" src="app/questions.js"></script>
     <script type="text/javascript" src="index.js"></script>
 </body>
 

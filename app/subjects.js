@@ -6,38 +6,41 @@ var SubjectsModule = (function () {
     var btnModify = document.getElementById('btnModify');
     var btnDelete = document.getElementById('btnDelete');
     var tableSubjectsBody = document.getElementById('tableSubjectsBody');
-    var dialogCreate = document.getElementById('dialogCreate');
-    var dialogModify = document.getElementById('dialogModify');
-    var dialogDelete = document.getElementById('dialogDelete');
+    var dialogCreateSubject = document.getElementById('dialogCreateSubject');
+    var dialogModifySubject = document.getElementById('dialogModifySubject');
+    var dialogDeleteSubject = document.getElementById('dialogDeleteSubject');
+
     var txtSubject = document.getElementById('txtSubject');
     var txtDescription = document.getElementById('txtDescription');
     var txtSubjectModified = document.getElementById('txtSubjectModified');
     var txtDescriptionModified = document.getElementById('txtDescriptionModified');
     var txtSubjectToDelete = document.getElementById('txtSubjectToDelete');
 
+    // miscellaneous data
     var rowCounterSubjects;
     var lastCheckedSubject;
     var isActive;
 
+    // ============================================================================================
+    // initialization
+
     function init() {
+        // subjects
         lastCheckedSubject = -1;
         isActive = false;
+
+        // connect ui elements with event handlers
         bindUIActions();
     };
 
     function bindUIActions() {
         'use strict';
-        if (!dialogCreate.showModal) {
-            dialogPolyfill.registerDialog(dialogCreate);
+        if (!dialogCreateSubject.showModal) {
+            dialogPolyfill.registerDialog(dialogCreateSubject);
         }
-        if (!dialogDelete.showModal) {
-            dialogPolyfill.registerDialog(dialogDelete);
+        if (!dialogDeleteSubject.showModal) {
+            dialogPolyfill.registerDialog(dialogDeleteSubject);
         }
-
-        btnRefresh.addEventListener('click', () => {
-            'use strict';
-            updateTableOfSubjects();
-        });
 
         btnCreate.addEventListener('click', () => {
             'use strict';
@@ -54,32 +57,37 @@ var SubjectsModule = (function () {
             onDeleteEvent();
         });
 
-        dialogCreate.querySelector('.create').addEventListener('click', () => {
+        btnRefresh.addEventListener('click', () => {
+            'use strict';
+            updateTableOfSubjects();
+        });
+
+        dialogCreateSubject.querySelector('.create').addEventListener('click', () => {
             'use strict';
             doCreateEvent();
         });
 
-        dialogCreate.querySelector('.cancel_create').addEventListener('click', () => {
+        dialogCreateSubject.querySelector('.cancel_create').addEventListener('click', () => {
             'use strict';
             cancelCreateEvent();
         });
 
-        dialogModify.querySelector('.modify').addEventListener('click', () => {
+        dialogModifySubject.querySelector('.modify').addEventListener('click', () => {
             'use strict';
             doModifyEvent();
         });
 
-        dialogModify.querySelector('.cancel_modify').addEventListener('click', () => {
+        dialogModifySubject.querySelector('.cancel_modify').addEventListener('click', () => {
             'use strict';
             cancelModifyEvent();
         });
 
-        dialogDelete.querySelector('.delete').addEventListener('click', () => {
+        dialogDeleteSubject.querySelector('.delete').addEventListener('click', () => {
             'use strict';
             doDeleteEvent();
         });
 
-        dialogDelete.querySelector('.cancel_delete').addEventListener('click', () => {
+        dialogDeleteSubject.querySelector('.cancel_delete').addEventListener('click', () => {
             'use strict';
             cancelDeleteEvent();
         });
@@ -93,6 +101,9 @@ var SubjectsModule = (function () {
         //     console.log('Yeahhhhhhhh: ' + index);
         // }
     };
+
+    // ============================================================================================
+    // subjects
 
     /*
      *  reading list of subjects asynchronously
@@ -134,7 +145,7 @@ var SubjectsModule = (function () {
      */
 
     function onCreateEvent() {
-        dialogCreate.showModal();
+        dialogCreateSubject.showModal();
     }
 
     function doCreateEvent() {
@@ -153,7 +164,7 @@ var SubjectsModule = (function () {
 
         txtSubject.value = '';
         txtDescription.value = '';
-        dialogCreate.close();
+        dialogCreateSubject.close();
     }
 
     function cancelCreateEvent() {
@@ -161,7 +172,7 @@ var SubjectsModule = (function () {
         txtSubject.value = '';
         txtDescription.value = '';
         lastCheckedSubject = -1;
-        dialogCreate.close();
+        dialogCreateSubject.close();
     }
 
     /*
@@ -179,7 +190,7 @@ var SubjectsModule = (function () {
         var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
         txtSubjectModified.value = subject.name;
         txtDescriptionModified.value = subject.description;
-        dialogModify.showModal();
+        dialogModifySubject.showModal();
     }
 
     function doModifyEvent() {
@@ -200,7 +211,7 @@ var SubjectsModule = (function () {
 
         txtSubjectModified.value = '';
         txtDescriptionModified.value = '';
-        dialogModify.close();
+        dialogModifySubject.close();
     }
 
     function cancelModifyEvent() {
@@ -211,7 +222,7 @@ var SubjectsModule = (function () {
         txtSubjectModified.value = '';
         txtDescriptionModified.value = '';
         lastCheckedSubject = -1;
-        dialogModify.close();
+        dialogModifySubject.close();
     }
 
     /*
@@ -228,7 +239,7 @@ var SubjectsModule = (function () {
 
         var subject = FirebaseModule.getSubject(lastCheckedSubject - 1);
         txtSubjectToDelete.value = subject.name;
-        dialogDelete.showModal();
+        dialogDeleteSubject.showModal();
     }
 
     function doDeleteEvent() {
@@ -236,7 +247,7 @@ var SubjectsModule = (function () {
         console.log("Subject to delete: " + txtSubjectToDelete.value);
         FirebaseModule.deleteSubject(txtSubjectToDelete.value);
         txtSubjectToDelete.value = '';
-        dialogDelete.close();
+        dialogDeleteSubject.close();
 
         updateTableOfSubjectsBegin();
         FirebaseModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
@@ -248,7 +259,7 @@ var SubjectsModule = (function () {
         var checkboxLabel = document.getElementById('label_' + lastCheckedSubject);
         checkboxLabel.MaterialCheckbox.uncheck();
         lastCheckedSubject = -1;
-        dialogDelete.close();
+        dialogDeleteSubject.close();
     }
 
     // ============================================================================================
@@ -277,7 +288,7 @@ var SubjectsModule = (function () {
         label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attributes
         label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attributes
         var input = document.createElement('input');     // create <input> node
-        input.setAttribute('class', 'mdl-checkbox__input');  // set attributes
+        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_subject');  // set attributes
         input.setAttribute('type', 'checkbox');  // set attributes
         input.setAttribute('id', 'row_' + rowCounterSubjects);  // set attributes
         input.addEventListener('click', checkboxHandler);
@@ -314,12 +325,12 @@ var SubjectsModule = (function () {
             lastCheckedSubject = row;
 
             // TODO: Da fehlt die Hierarchie: Alle unterhalb von genau dieser Tabelle ...
-            var boxes = document.getElementsByClassName('mdl-checkbox');
+            var boxes = document.getElementsByClassName('checkbox_select_subject');
             for (var k = 0; k < boxes.length; k++) {
 
                 if (k != lastCheckedSubject - 1) {
                     var label = boxes[k];
-                    label.MaterialCheckbox.uncheck();
+                    label.parentElement.MaterialCheckbox.uncheck();
                 }
             }
         }
