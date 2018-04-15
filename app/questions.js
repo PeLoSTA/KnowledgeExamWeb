@@ -1,6 +1,6 @@
 var HtmlQuestionsModule = (function () {
 
-    // retrieve HTML elements according to 'questions' tab
+    // retrieve HTML elements according to 'questions administrations' tab
     var dialogCreateQuestion = document.getElementById('dialogCreateQuestion');
     var btnEnterQuestion = document.getElementById('btnEnterQuestion');
     var textareaQuestion = document.getElementById('textareaQuestion');
@@ -16,8 +16,15 @@ var HtmlQuestionsModule = (function () {
     var listItem8 = document.getElementById('list-num-answers-8');
     var listItem9 = document.getElementById('list-num-answers-9');
 
+    // retrieve HTML elements according to 'questions viewer' tab
+    var tabQuestionsSurvey = document.getElementById('#questions-panel-survey');
+    var tableQuestionsSurvey = document.getElementById('tableQuestionsSurvey');  // TODO: Wird das gebraucht ?????
+    var tableQuestionsBody = document.getElementById('tableQuestionsBody');
+
     // miscellaneous data
     var numAnswers;
+    var rowCounterQuestions;
+    var isActive;
 
     // ============================================================================================
     // initialization
@@ -62,9 +69,14 @@ var HtmlQuestionsModule = (function () {
 
         createAnswersList(numAnswers, divAnchorAnswers);
         createAnswersToCheckboxesList(numAnswers, divAnchorCorrectAnswers);
+
+        tabQuestionsSurvey.addEventListener('click', () => {
+            'use strict';
+            onLoadQuestionsSurvey();
+        });
     };
 
-    function helperDialogDisplay (number) {
+    function helperDialogDisplay(number) {
         'use strict';
         // note: the outer function returns an inner function, the variable 'number' is part of the closure (!)
         return function () {
@@ -77,6 +89,52 @@ var HtmlQuestionsModule = (function () {
 
     // ============================================================================================
     // questions
+
+    /*
+     *  reading list of questions asynchronously
+     */
+
+    function onLoadQuestionsSurvey() {
+        'use strict';
+        console.log("onLoadQuestionsSurvey");
+        updateTableOfQuestions();
+    }
+
+    function updateTableOfQuestions() {
+        'use strict';
+        updateTableOfQuestionsBegin();
+        FirebaseQuestionsModule.readListOfQuestions(updateTableOfQuestionsNext, updateTableOfQuestionsDone);
+    };
+
+    function updateTableOfQuestionsBegin() {
+        'use strict';
+        if (isActive === true) {
+            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
+            return;
+        }
+
+        isActive = true;
+        console.log("updateTableOfQuestionsBegin");
+        rowCounterQuestions = 1;
+        // lastCheckedSubject = -1;
+        tableQuestionsBody.innerHTML = '';
+        componentHandler.upgradeDom();
+    };
+
+    function updateTableOfQuestionsNext(counter, question) {
+        'use strict';
+        addEntryToQuestionsTable(counter, question);
+    };
+
+    function updateTableOfQuestionsDone() {
+        'use strict';
+        isActive = false;
+        console.log('done................................');
+    }
+
+    /*
+     *  create single question
+     */
 
     function onCreateQuestion() {
         'use strict';
@@ -168,7 +226,7 @@ var HtmlQuestionsModule = (function () {
     }
 
     // ============================================================================================
-    // private helper functions
+    // private helper functions (administration)
 
     function addQuestion() {
         'use strict';
@@ -201,6 +259,11 @@ var HtmlQuestionsModule = (function () {
             }
         }
 
+        // assertion: lists must have same size
+        if (answers.length != correctAnswers.length) {
+            window.alert("Internal Error: Lists of answers and their solutions have different size !");
+        }
+
         FirebaseQuestionsModule.addQuestion(question, answers, correctAnswers);
     }
 
@@ -210,6 +273,86 @@ var HtmlQuestionsModule = (function () {
         numAnswers = 2;
         updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
     }
+
+    // ============================================================================================
+    // private helper functions (viewer)
+
+    function addEntryToQuestionsTable(counter, entry) {
+        'use strict';
+
+        console.log('addEntryToQuestionsTable .................');
+
+        // adding dynamically a 'material design lite' node to a table, for example
+        //
+        // <tr>
+        //     <td>Frage 1</td>
+        //     <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word;  white-space: normal;">
+        //         Tables are a ubiquitous feature of most user interfaces, regardless of a site's content or function. Their design and use
+        //         is therefore an important factor in the overall user experience. See the data-table
+        //         component's Material Design specifications page for details
+        //     </td>
+        //     <td>Mathe</td>
+        // </tr>
+        //     <tr>
+        //         <td>Anwort 1</td>
+        //         <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word;  white-space: normal;">
+        //             Nein
+        //         </td>
+        //         <td>
+        //             <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+        //                 <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+        //             </label>
+        //         </td>
+        //     </tr>
+
+        var node = document.createElement('tr');    // create <tr> node
+        var td1 = document.createElement('td');     // create first <td> node
+        var td2 = document.createElement('td');     // create second <td> node
+        var td3 = document.createElement('td');     // create third <td> node
+
+        var header = 'Frage ' + counter + ':';
+        var textnode1 = document.createTextNode(header);          // create first text node
+        var textnode2 = document.createTextNode(entry.question);  // create second text node
+        var textnode3 = document.createTextNode('Mathe');         // create third text node
+
+        td1.appendChild(textnode1);   // append text to <td>
+        td2.appendChild(textnode2);   // append text to <td>
+        td3.appendChild(textnode3);   // append text to <td>
+
+        node.appendChild(td1);  // append <td> to <tr>
+        node.appendChild(td2);  // append <td> to <tr>
+        node.appendChild(td3);  // append <td> to <tr>
+        tableQuestionsBody.appendChild(node);    // append <tr> to <tbody>
+
+        // var label = document.createElement('label');     // create <label> node
+
+        // label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
+        // label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attribute
+        // label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attribute
+        // var input = document.createElement('input');     // create <input> node
+        // input.setAttribute('class', 'mdl-checkbox__input checkbox_select_subject');  // set attribute
+        // input.setAttribute('type', 'checkbox');  // set attributes
+        // input.setAttribute('id', 'row_' + rowCounterSubjects);  // set attribute
+        // input.addEventListener('click', checkboxHandler);
+        // rowCounterSubjects++;
+        // label.appendChild(input);
+        // td1.appendChild(label);
+
+        // var td2 = document.createElement('td');     // create second <td> node
+        // var td3 = document.createElement('td');     // create third <td> node
+        // td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        // td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        // var textnode1 = document.createTextNode(entry.name);             // create second text node
+        // var textnode2 = document.createTextNode(entry.description);      // create third text node
+        // td2.appendChild(textnode1);                 // append text to <td>
+        // td3.appendChild(textnode2);                 // append text to <td>
+        // node.appendChild(td1);                      // append <td> to <tr>
+        // node.appendChild(td2);                      // append <td> to <tr>
+        // node.appendChild(td3);                      // append <td> to <tr>
+        // tableSubjectsBody.appendChild(node);        // append <tr> to <tbody>
+
+        // componentHandler.upgradeDom();
+    };
 
     // ============================================================================================
     // public functions

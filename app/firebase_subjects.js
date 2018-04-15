@@ -32,14 +32,14 @@ var FirebaseSubjectsModule = (function () {
         'use strict';
         var refString = '/subjects';
         var ref = db.ref(refString).push();
-        ref.set({ "name": name, "description": description });
+        return ref.set({ "name": name, "description": description });
     }
 
     function updateSubject(subject) {
         'use strict';
         var refString = '/subjects/' + subject.key;
         var ref = db.ref(refString);
-        ref.update({ "name": subject.name, "description": subject.description });
+        return ref.update({ "name": subject.name, "description": subject.description });
     }
 
     function deleteSubject(name) {

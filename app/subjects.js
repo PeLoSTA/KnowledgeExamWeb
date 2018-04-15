@@ -271,11 +271,11 @@ var HtmlSubjectsModule = (function () {
         // adding dynamically a 'material design lite' node to a table, for example
         //
         //  <tr>
-        //      <td>
-        //          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
-        //              <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
-        //          </label>
-        //      </td>
+        //  <td>
+        //      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+        //          <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+        //      </label>
+        //  </td>
         //      <td class="mdl-data-table__cell--non-numeric">C++</td>
         //      <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
         //  </tr>

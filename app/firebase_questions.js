@@ -1,6 +1,7 @@
 var FirebaseQuestionsModule = (function () {
 
     var db;
+    var questionsList;
 
     // ============================================================================================
     // public functions
@@ -13,34 +14,72 @@ var FirebaseQuestionsModule = (function () {
     // ============================================================================================
     // public interface
 
-    function addQuestion(question, answers, correctAnswers) {
+    function readListOfQuestions(callback, done) {
         'use strict';
-        var ref = db.ref('questions').push();
-        ref.set({ "question": question, "num-answers": answers.length });
+        questionsList = [];
+        var refString = '/questions';
+        var counter = 1;
+        db.ref(refString).once('value').then(function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                var snap = childSnapshot.val();
 
-        var refAnswers = ref.child('answers').push();
+                var question = {};
+                var numAnswers = parseInt(snap['num-answers']);
+                question['question'] = snap['question'];
+                question['num-answers'] = numAnswers;
+                question['num-correct-answers'] = parseInt(snap['num-correct-answers']);
+
+                var answers = snap['answers'];
+                question['answers'] = [];
+                for (var k = 0; k < numAnswers; k++) {
+                    question['answers'].push(answers['answer' + (k + 1)]);
+                }
+
+                var correctAnswers = snap['correct-answers'];
+                question['correct-answers'] = [];
+                for (var k = 0; k < numAnswers; k++) {
+                    question['correct-answers'].push(correctAnswers['answer' + (k + 1)]);
+                }
+
+                callback(counter, question);
+                counter++;
+            });
+            done();
+        });
+    }
+
+    function addQuestion(text, answers, correctAnswers) {
+        'use strict';
+
+        // build JSON object
+        var question = {};
+        question['/question'] = text;
+        question['/num-answers'] = answers.length;
+
         for (var i = 0; i < answers.length; i++) {
-            refAnswers.child('answer' + (i + 1)).set(answers[i]);
+            question['/answers/answer' + (i + 1)] = answers[i];
         }
 
-        var refCorrect = ref.child('correct-answers').push();
         var numCorrectAnswers = 0;
         for (var i = 0; i < correctAnswers.length; i++) {
-
-            // TODO: das lässt sich mit dem ?: kompakter schreiben ....
             if (correctAnswers[i] === true) {
                 numCorrectAnswers++;
-                refCorrect.child('answer' + (i + 1)).set(true);
+                question['/correct-answers/answer' + (i + 1)] = true;
             } else {
-                refCorrect.child('answer' + (i + 1)).set(false);
+                question['/correct-answers/answer' + (i + 1)] = false;
             }
         }
 
-        ref.child('num-correct-answers').set(numCorrectAnswers);
+        question['/num-correct-answers'] = numCorrectAnswers;
+
+        // write data into firebase
+        var ref = db.ref('questions').push();
+        return ref.update(question);
     }
 
     return {
         init: init,
+        readListOfQuestions: readListOfQuestions,
         addQuestion: addQuestion
     };
 })();
