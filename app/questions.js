@@ -302,7 +302,34 @@ var HtmlQuestionsModule = (function () {
         //         </td>
         //     </tr>
 
-        // add row for questions
+        // add single row for question itself
+        var node = createQuestion(counter, entry.question);
+        tableQuestionsBody.appendChild(node);
+
+        // add rows for answers
+        var numAnswers = entry['num-answers'];
+        var numCorrectAnswers = entry['num-correct-answers'];
+        var useRadioButton = (numCorrectAnswers === 1);
+
+        for (var row = 0; row < numAnswers; row++) {
+
+            var nodeAnswer = createAnswer(
+                row,
+                entry.answers[row],
+                useRadioButton,
+                entry['correct-answers'][row]
+            );
+
+            tableQuestionsBody.appendChild(nodeAnswer);
+        }
+        componentHandler.upgradeDom();
+    };
+
+    // ============================================================================================
+    // private helper functions (ui)
+
+    function createQuestion(counter, text) {
+
         var node = document.createElement('tr');    // create <tr> node
         var td1 = document.createElement('td');     // create first <td> node
         var td2 = document.createElement('td');     // create second <td> node
@@ -316,7 +343,7 @@ var HtmlQuestionsModule = (function () {
 
         var header = 'Frage ' + counter + ':';
         var textnode1 = document.createTextNode(header);          // create first text node
-        var textnode2 = document.createTextNode(entry.question);  // create second text node
+        var textnode2 = document.createTextNode(text);  // create second text node
         var textnode3 = document.createTextNode('Mathe');         // create third text node
 
         td1.appendChild(textnode1);   // append text to <td>
@@ -326,85 +353,100 @@ var HtmlQuestionsModule = (function () {
         node.appendChild(td1);  // append <td> to <tr>
         node.appendChild(td2);  // append <td> to <tr>
         node.appendChild(td3);  // append <td> to <tr>
-        tableQuestionsBody.appendChild(node);    // append <tr> to <tbody>
 
-        // add rows for answers
-        var numAnswers = entry['num-answers'];
-        var numCorrectAnswers = entry['num-correct-answers'];
+        return node;
+    }
 
-        if (numCorrectAnswers == 1) {
-            // should choose radio buttons
-        }
+    function createAnswer(number, question_text, useRadioButton, isCorrect) {
 
-        for (var k = 0; k < numAnswers; k++) {
+        var nodeAnswer = document.createElement('tr');    // create <tr> node
 
-            var nodeAnswer = document.createElement('tr');    // create <tr> node
-            var td1Answer = document.createElement('td');     // create first <td> node
-            var td2Answer = document.createElement('td');     // create second <td> node
-            var td3Answer = document.createElement('td');     // create third <td> node
+        var td1Answer = document.createElement('td');     // create first <td> node
+        var td2Answer = document.createElement('td');     // create second <td> node
+        var td3Answer = document.createElement('td');     // create third <td> node
 
-            td2Answer.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-            td2Answer.setAttribute('style', 'word-wrap: break-word;  white-space: normal;');  // set attribute
+        td2Answer.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td2Answer.setAttribute('style', 'word-wrap: break-word;  white-space: normal;');  // set attribute
 
-            var headerAnswer = 'Antwort ' + (k + 1) + ':';
-            var textNodeAnswer1 = document.createTextNode(headerAnswer);       // create first text node
-            var textnodeAnswer2 = document.createTextNode(entry.answers[k]);  // create second text node
+        var headerAnswer = 'Antwort ' + (number + 1) + ':';
+        var textNodeAnswer1 = document.createTextNode(headerAnswer);  // create first text node
+        var textnodeAnswer2 = document.createTextNode(question_text); // create second text node
 
-            td1Answer.appendChild(textNodeAnswer1);   // append text to <td>
-            td2Answer.appendChild(textnodeAnswer2);   // append text to <td>
+        td1Answer.appendChild(textNodeAnswer1);   // append text to <td>
+        td2Answer.appendChild(textnodeAnswer2);   // append text to <td>
 
-            var label = document.createElement('label');     // create <label> node
-            label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-            label.setAttribute('is-checked', '');  // set attribute
-            label.setAttribute('for', 'row__' + rowCounterQuestions);   // set attribute
-            label.setAttribute('id', 'label__' + rowCounterQuestions);  // set attribute
+        // create third node
+        var label = (useRadioButton) ?
+            createRadioButton(rowCounterQuestions, isCorrect) :
+            createCheckBox(rowCounterQuestions, isCorrect);
 
-            var input = document.createElement('input');         // create <input> node
-            input.setAttribute('class', 'mdl-checkbox__input');  // set attribute
-            input.setAttribute('type', 'checkbox');  // set attribute
-            input.setAttribute('id', 'row__' + rowCounterQuestions);    // set attribute
-            rowCounterQuestions++;
+        td3Answer.appendChild(label);       // append <label> to <td>
+        rowCounterQuestions++;
 
-            label.appendChild(input);           // append <input> to <label>
-            td3Answer.appendChild(label);       // append <label> to <td>
+        nodeAnswer.appendChild(td1Answer);  // append <td> to <tr>
+        nodeAnswer.appendChild(td2Answer);  // append <td> to <tr>
+        nodeAnswer.appendChild(td3Answer);  // append <td> to <tr>
 
-            nodeAnswer.appendChild(td1Answer);  // append <td> to <tr>
-            nodeAnswer.appendChild(td2Answer);  // append <td> to <tr>
-            nodeAnswer.appendChild(td3Answer);  // append <td> to <tr>
-            tableQuestionsBody.appendChild(nodeAnswer);    // append <tr> to <tbody>
+        return nodeAnswer;
+    }
 
-            // ZUSATZ: Need to check check box : 101 approach ...
-            var mdlComp = new MaterialCheckbox(label);
-            mdlComp.check();
-            mdlComp.disable();
-        }
+    function createRadioButton(id, checked) {
 
-        //         <td>
-        //             <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
-        //                 <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
-        //             </label>
-        //         </td>
+        // <td>
+        //     <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect mdl-data-table__select" for="row_1">
+        //         <input type="checkbox" id="row_1" class="mdl-radio__button" />
+        //     </label>
+        // </td>
 
-        // componentHandler.upgradeDom();
+        'use strict';
+        var label = document.createElement('label');  // create <label> node
+        label.setAttribute('class', 'mdl-radio mdl-js-radio mdl-js-ripple-effect mdl-data-table__select');
+        label.setAttribute('for', 'row__' + id);  // set attribute
 
-        // for (var j = 0; j < rowCounterQuestions; j++) {
+        var input = document.createElement('input');       // create <input> node
+        input.setAttribute('class', 'mdl-radio__button');  // set attribute
+        input.setAttribute('type', 'radio');     // set attribute
+        input.setAttribute('id', 'row__' + id);  // set attribute
 
-        //     var iddd = 'label__' + j;
-        //     var label = document.getElementById('label__' + j);
-        //     label.parentElement.MaterialCheckbox.check();
-        // }
+        label.appendChild(input);  // append <input> to <label>
 
-        // GEHT !!!
-        // var mdlComp = new MaterialCheckbox(null);
+        // https://stackoverflow.com/questions/31413042/toggle-material-design-lite-checkbox
+        var mdlRadio = new MaterialRadio(label);
+        (checked) ? mdlRadio.check() : mdlRadio.uncheck();
+        // mdlRadio.check();
+        mdlRadio.disable();
 
-        componentHandler.upgradeDom();
+        return label;
+    }
 
-        // // var iddd = 'label__' + 17;   id="label__17"
-        // var iddd = 'label__17';
-        // var label = document.getElementById(iddd);
-        // label.parentElement.MaterialCheckbox.check();
+    function createCheckBox(id, checked) {
 
-    };
+        // <td>
+        //     <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+        //         <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+        //     </label>
+        // </td>
+
+        'use strict';
+        var label = document.createElement('label');  // create <label> node
+        label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');
+        label.setAttribute('for', 'row__' + id);   // set attribute
+
+        var input = document.createElement('input');         // create <input> node
+        input.setAttribute('class', 'mdl-checkbox__input');  // set attribute
+        input.setAttribute('type', 'checkbox');  // set attribute
+        input.setAttribute('id', 'row__' + id);  // set attribute
+
+        label.appendChild(input);  // append <input> to <label>
+
+        // https://stackoverflow.com/questions/31413042/toggle-material-design-lite-checkbox
+        var mdlCheckbox = new MaterialCheckbox(label);
+        (checked) ? mdlCheckbox.check() : mdlCheckbox.uncheck();
+        // mdlCheckbox.check();
+        mdlCheckbox.disable();
+
+        return label;
+    }
 
     // ============================================================================================
     // public functions
