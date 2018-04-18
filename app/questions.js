@@ -116,7 +116,6 @@ var HtmlQuestionsModule = (function () {
         isActive = true;
         console.log("updateTableOfQuestionsBegin");
         rowCounterQuestions = 1;
-        // lastCheckedSubject = -1;
         tableQuestionsBody.innerHTML = '';
         componentHandler.upgradeDom();
     };
@@ -287,9 +286,7 @@ var HtmlQuestionsModule = (function () {
         // <tr>
         //     <td>Frage 1</td>
         //     <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word;  white-space: normal;">
-        //         Tables are a ubiquitous feature of most user interfaces, regardless of a site's content or function. Their design and use
-        //         is therefore an important factor in the overall user experience. See the data-table
-        //         component's Material Design specifications page for details
+        //         Tables are a ubiquitous feature of most user interfaces, regardless of a ...
         //     </td>
         //     <td>Mathe</td>
         // </tr>
@@ -305,10 +302,17 @@ var HtmlQuestionsModule = (function () {
         //         </td>
         //     </tr>
 
+        // add row for questions
         var node = document.createElement('tr');    // create <tr> node
         var td1 = document.createElement('td');     // create first <td> node
         var td2 = document.createElement('td');     // create second <td> node
         var td3 = document.createElement('td');     // create third <td> node
+
+        td1.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td1.setAttribute('style', 'text-align:left;');  // set attribute
+
+        td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td2.setAttribute('style', 'text-align:left;');  // set attribute
 
         var header = 'Frage ' + counter + ':';
         var textnode1 = document.createTextNode(header);          // create first text node
@@ -324,34 +328,82 @@ var HtmlQuestionsModule = (function () {
         node.appendChild(td3);  // append <td> to <tr>
         tableQuestionsBody.appendChild(node);    // append <tr> to <tbody>
 
-        // var label = document.createElement('label');     // create <label> node
+        // add rows for answers
+        var numAnswers = entry['num-answers'];
+        var numCorrectAnswers = entry['num-correct-answers'];
 
-        // label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        // label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attribute
-        // label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attribute
-        // var input = document.createElement('input');     // create <input> node
-        // input.setAttribute('class', 'mdl-checkbox__input checkbox_select_subject');  // set attribute
-        // input.setAttribute('type', 'checkbox');  // set attributes
-        // input.setAttribute('id', 'row_' + rowCounterSubjects);  // set attribute
-        // input.addEventListener('click', checkboxHandler);
-        // rowCounterSubjects++;
-        // label.appendChild(input);
-        // td1.appendChild(label);
+        if (numCorrectAnswers == 1) {
+            // should choose radio buttons
+        }
 
-        // var td2 = document.createElement('td');     // create second <td> node
-        // var td3 = document.createElement('td');     // create third <td> node
-        // td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-        // td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-        // var textnode1 = document.createTextNode(entry.name);             // create second text node
-        // var textnode2 = document.createTextNode(entry.description);      // create third text node
-        // td2.appendChild(textnode1);                 // append text to <td>
-        // td3.appendChild(textnode2);                 // append text to <td>
-        // node.appendChild(td1);                      // append <td> to <tr>
-        // node.appendChild(td2);                      // append <td> to <tr>
-        // node.appendChild(td3);                      // append <td> to <tr>
-        // tableSubjectsBody.appendChild(node);        // append <tr> to <tbody>
+        for (var k = 0; k < numAnswers; k++) {
+
+            var nodeAnswer = document.createElement('tr');    // create <tr> node
+            var td1Answer = document.createElement('td');     // create first <td> node
+            var td2Answer = document.createElement('td');     // create second <td> node
+            var td3Answer = document.createElement('td');     // create third <td> node
+
+            td2Answer.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+            td2Answer.setAttribute('style', 'word-wrap: break-word;  white-space: normal;');  // set attribute
+
+            var headerAnswer = 'Antwort ' + (k + 1) + ':';
+            var textNodeAnswer1 = document.createTextNode(headerAnswer);       // create first text node
+            var textnodeAnswer2 = document.createTextNode(entry.answers[k]);  // create second text node
+
+            td1Answer.appendChild(textNodeAnswer1);   // append text to <td>
+            td2Answer.appendChild(textnodeAnswer2);   // append text to <td>
+
+            var label = document.createElement('label');     // create <label> node
+            label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
+            label.setAttribute('is-checked', '');  // set attribute
+            label.setAttribute('for', 'row__' + rowCounterQuestions);   // set attribute
+            label.setAttribute('id', 'label__' + rowCounterQuestions);  // set attribute
+
+            var input = document.createElement('input');         // create <input> node
+            input.setAttribute('class', 'mdl-checkbox__input');  // set attribute
+            input.setAttribute('type', 'checkbox');  // set attribute
+            input.setAttribute('id', 'row__' + rowCounterQuestions);    // set attribute
+            rowCounterQuestions++;
+
+            label.appendChild(input);           // append <input> to <label>
+            td3Answer.appendChild(label);       // append <label> to <td>
+
+            nodeAnswer.appendChild(td1Answer);  // append <td> to <tr>
+            nodeAnswer.appendChild(td2Answer);  // append <td> to <tr>
+            nodeAnswer.appendChild(td3Answer);  // append <td> to <tr>
+            tableQuestionsBody.appendChild(nodeAnswer);    // append <tr> to <tbody>
+
+            // ZUSATZ: Need to check check box : 101 approach ...
+            var mdlComp = new MaterialCheckbox(label);
+            mdlComp.check();
+            mdlComp.disable();
+        }
+
+        //         <td>
+        //             <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+        //                 <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+        //             </label>
+        //         </td>
 
         // componentHandler.upgradeDom();
+
+        // for (var j = 0; j < rowCounterQuestions; j++) {
+
+        //     var iddd = 'label__' + j;
+        //     var label = document.getElementById('label__' + j);
+        //     label.parentElement.MaterialCheckbox.check();
+        // }
+
+        // GEHT !!!
+        // var mdlComp = new MaterialCheckbox(null);
+
+        componentHandler.upgradeDom();
+
+        // // var iddd = 'label__' + 17;   id="label__17"
+        // var iddd = 'label__17';
+        // var label = document.getElementById(iddd);
+        // label.parentElement.MaterialCheckbox.check();
+
     };
 
     // ============================================================================================
