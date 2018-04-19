@@ -15,16 +15,19 @@ var HtmlQuestionsModule = (function () {
     var listItem7 = document.getElementById('list-num-answers-7');
     var listItem8 = document.getElementById('list-num-answers-8');
     var listItem9 = document.getElementById('list-num-answers-9');
+    var menuSubjects = document.getElementById('menuSubjects');
+    var textfieldCurrentSubject = document.getElementById('textfieldCurrentSubject');
 
     // retrieve HTML elements according to 'questions viewer' tab
     var tabQuestionsSurvey = document.getElementById('#questions-panel-survey');
-    var tableQuestionsSurvey = document.getElementById('tableQuestionsSurvey');  // TODO: Wird das gebraucht ?????
+    var tabQuestionsAdmin = document.getElementById('#questions-panel-admin');
     var tableQuestionsBody = document.getElementById('tableQuestionsBody');
 
     // miscellaneous data
-    var numAnswers;
-    var rowCounterQuestions;
-    var isActive;
+    var numAnswers;           // TODO: unclear if really needed
+    var rowCounterQuestions;  // needed to create unique id for each table row
+    var isActive;             // needed to prevent double clicks
+    var currentSubject;       // needed to assign question input to this subject
 
     // ============================================================================================
     // initialization
@@ -32,6 +35,8 @@ var HtmlQuestionsModule = (function () {
     function init() {
         // questions
         numAnswers = 2;
+
+        currentSubject = null;
 
         // connect ui elements with event handlers
         bindUIActions();
@@ -69,6 +74,11 @@ var HtmlQuestionsModule = (function () {
 
         createAnswersList(numAnswers, divAnchorAnswers);
         createAnswersToCheckboxesList(numAnswers, divAnchorCorrectAnswers);
+
+        tabQuestionsAdmin.addEventListener('click', () => {
+            'use strict';
+            onLoadQuestionsAdmin();
+        });
 
         tabQuestionsSurvey.addEventListener('click', () => {
             'use strict';
@@ -137,6 +147,11 @@ var HtmlQuestionsModule = (function () {
 
     function onCreateQuestion() {
         'use strict';
+        if (currentSubject === null) {
+            alert("Please choose subject !");
+            return;
+        }
+
         dialogCreateQuestion.showModal();
     }
 
@@ -263,7 +278,7 @@ var HtmlQuestionsModule = (function () {
             window.alert("Internal Error: Lists of answers and their solutions have different size !");
         }
 
-        FirebaseQuestionsModule.addQuestion(question, answers, correctAnswers);
+        FirebaseQuestionsModule.addQuestion(question, currentSubject.key, answers, correctAnswers);
     }
 
     function clearDialog() {
@@ -326,7 +341,7 @@ var HtmlQuestionsModule = (function () {
     };
 
     // ============================================================================================
-    // private helper functions (ui)
+    // private helper functions (ui - questions table)
 
     function createQuestion(counter, text) {
 
@@ -449,9 +464,45 @@ var HtmlQuestionsModule = (function () {
     }
 
     // ============================================================================================
+    // private helper functions (ui - subjects menu)  
+
+    function onLoadQuestionsAdmin() {
+        'use strict';
+        FirebaseSubjectsModule.readListOfSubjects(addMenuEntry, doneMenu);
+    }
+
+    function addMenuEntry(subject) {
+        'use strict';
+
+        // <li>
+        //     <p class="mdl-menu__item">Subject</p>
+        // </li>
+
+        var listitem = document.createElement('li');   // create <li> node
+        var para = document.createElement('p');        // create <p> node
+        para.setAttribute('class', 'mdl-menu__item');  // set attribute
+        var textnode = document.createTextNode(subject.name);  // create text node
+        para.appendChild(textnode);          // append text to <p>
+        listitem.appendChild(para);          // append <p> to <li>
+        menuSubjects.appendChild(listitem);  // append <li> to <ul>
+
+        listitem.addEventListener('click', () => {
+            'use strict';
+            // retrieving selected subject from closure
+            currentSubject = subject;
+            textfieldCurrentSubject.value = currentSubject.name;
+        });
+    }
+
+    function doneMenu() {
+        'use strict';
+        componentHandler.upgradeDom();
+    }
+
+    // ============================================================================================
     // public functions
 
     return {
-        init: init,
+        init: init
     };
 })();

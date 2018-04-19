@@ -48,12 +48,13 @@ var FirebaseQuestionsModule = (function () {
         });
     }
 
-    function addQuestion(text, answers, correctAnswers) {
+    function addQuestion(text, subjectKey, answers, correctAnswers) {
         'use strict';
 
         // build JSON object
         var question = {};
         question['/question'] = text;
+        question['/subject'] = subjectKey;
         question['/num-answers'] = answers.length;
 
         for (var i = 0; i < answers.length; i++) {

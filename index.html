@@ -199,16 +199,51 @@
 
                 <div class="mdl-tabs__panel" id="questions-panel-admin">
                     <br/>
+
+                    <p>Select Subject:</p>
+
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn-subjects">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" id="textfieldCurrentSubject" disabled>
+
+                    </div>
+
+                    <br/>
+
+                    <ul id="menuSubjects" class="mdl-menu mdl-js-menu mdl-menu--bottom-left" for="btn-subjects" style="height:200px;overflow: scroll;">
+                        <!-- <li>
+                            <p class="mdl-menu__item">Arghhhhh</p>
+                        </li>
+                        <li>
+                            <p class="mdl-menu__item">Twitter</p>
+                        </li>
+                        <li>
+                            <p class="mdl-menu__item">Twitter</p>
+                        </li>
+                        <li>
+                            <p class="mdl-menu__item">Google</p>
+                        </li>
+                        <li>
+                            <p id="test-id-menu-entry" class="mdl-menu__item">Noooooooooooooooooooo</p>
+                        </li> -->
+                    </ul>
+
+                    <br/>
+
                     <button id="btnEnterQuestion" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                         Enter Question
                     </button>
+
                 </div>
 
                 <div class="mdl-tabs__panel" id="questions-panel-survey">
                     <br/>
 
                     <!--   hier tut es ein style="overflow: auto; height: 500px"  um einen zweiten Schiebebalken hinzubekommen !!!   -->
-                    <div class="mdl-card__supporting-text" style="overflow: auto; height: 500px; width: 1000px;" >
+                    <div class="mdl-card__supporting-text" style="overflow: auto; height: 500px; width: 1000px;">
 
                         <table id="tableQuestionsSurvey" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
                             <thead>
@@ -221,7 +256,7 @@
                             <tbody id="tableQuestionsBody">
                             </tbody>
                         </table>
-                        
+
                     </div>
                 </div>
 
