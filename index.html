@@ -168,6 +168,7 @@
                 </div>
 
                 <div class="mdl-tabs__panel is-active" id="subjects-panel">
+                    <!-- tab 'subjects admin' -->
                     <br/>
                     <div class="mdl-button-group">
                         <button id="btnCreate" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
@@ -198,6 +199,7 @@
                 </div>
 
                 <div class="mdl-tabs__panel" id="questions-panel-admin">
+                    <!-- tab 'questions admin' -->
                     <br/>
 
                     <p>Select Subject:</p>
@@ -208,27 +210,10 @@
 
                     <div class="mdl-textfield mdl-js-textfield">
                         <input class="mdl-textfield__input" type="text" id="textfieldCurrentSubject" disabled>
-
                     </div>
 
                     <br/>
-
                     <ul id="menuSubjects" class="mdl-menu mdl-js-menu mdl-menu--bottom-left" for="btn-subjects" style="height:200px;overflow: scroll;">
-                        <!-- <li>
-                            <p class="mdl-menu__item">Arghhhhh</p>
-                        </li>
-                        <li>
-                            <p class="mdl-menu__item">Twitter</p>
-                        </li>
-                        <li>
-                            <p class="mdl-menu__item">Twitter</p>
-                        </li>
-                        <li>
-                            <p class="mdl-menu__item">Google</p>
-                        </li>
-                        <li>
-                            <p id="test-id-menu-entry" class="mdl-menu__item">Noooooooooooooooooooo</p>
-                        </li> -->
                     </ul>
 
                     <br/>
@@ -240,6 +225,23 @@
                 </div>
 
                 <div class="mdl-tabs__panel" id="questions-panel-survey">
+                    <!-- tab 'questions survey' -->
+                    <br/>
+
+                    <p>Select Subject:</p>
+
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn-subjects_survey">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" id="textfieldCurrentSubjectSurvey" disabled>
+                    </div>
+
+                    <br/>
+                    <ul id="menuSubjectsSurvey" class="mdl-menu mdl-js-menu mdl-menu--bottom-left" for="btn-subjects_survey" style="height:200px;overflow: scroll;">
+                    </ul>
+
                     <br/>
 
                     <!--   hier tut es ein style="overflow: auto; height: 500px"  um einen zweiten Schiebebalken hinzubekommen !!!   -->

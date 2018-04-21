@@ -23,11 +23,15 @@ var HtmlQuestionsModule = (function () {
     var tabQuestionsAdmin = document.getElementById('#questions-panel-admin');
     var tableQuestionsBody = document.getElementById('tableQuestionsBody');
 
+    var menuSubjectsSurvey = document.getElementById('menuSubjectsSurvey');
+    var textfieldCurrentSubjectSurvey = document.getElementById('textfieldCurrentSubjectSurvey');
+
     // miscellaneous data
     var numAnswers;           // TODO: unclear if really needed
     var rowCounterQuestions;  // needed to create unique id for each table row
     var isActive;             // needed to prevent double clicks
-    var currentSubject;       // needed to assign question input to this subject
+    var currentSubjectAdmin;  // needed to assign question input to this subject (admin)
+    var currentSubjectSurvey; // needed to assign question input to this subject (survey)
 
     // ============================================================================================
     // initialization
@@ -36,7 +40,8 @@ var HtmlQuestionsModule = (function () {
         // questions
         numAnswers = 2;
 
-        currentSubject = null;
+        currentSubjectAdmin = null;
+        currentSubjectSurvey = null;
 
         // connect ui elements with event handlers
         bindUIActions();
@@ -77,11 +82,12 @@ var HtmlQuestionsModule = (function () {
 
         tabQuestionsAdmin.addEventListener('click', () => {
             'use strict';
-            onLoadQuestionsAdmin();
+            onLoadListOfSubjectsAdmin();
         });
 
         tabQuestionsSurvey.addEventListener('click', () => {
             'use strict';
+            onLoadListOfSubjectsSurvey();
             onLoadQuestionsSurvey();
         });
     };
@@ -147,7 +153,7 @@ var HtmlQuestionsModule = (function () {
 
     function onCreateQuestion() {
         'use strict';
-        if (currentSubject === null) {
+        if (currentSubjectAdmin === null) {
             alert("Please choose subject !");
             return;
         }
@@ -278,7 +284,7 @@ var HtmlQuestionsModule = (function () {
             window.alert("Internal Error: Lists of answers and their solutions have different size !");
         }
 
-        FirebaseQuestionsModule.addQuestion(question, currentSubject.key, answers, correctAnswers);
+        FirebaseQuestionsModule.addQuestion(question, currentSubjectAdmin.key, answers, correctAnswers);
     }
 
     function clearDialog() {
@@ -464,9 +470,9 @@ var HtmlQuestionsModule = (function () {
     }
 
     // ============================================================================================
-    // private helper functions (ui - subjects menu)  
+    // private helper functions (ui - subjects menu - admin tab)  
 
-    function onLoadQuestionsAdmin() {
+    function onLoadListOfSubjectsAdmin() {
         'use strict';
         FirebaseSubjectsModule.readListOfSubjects(addMenuEntry, doneMenu);
     }
@@ -489,12 +495,49 @@ var HtmlQuestionsModule = (function () {
         listitem.addEventListener('click', () => {
             'use strict';
             // retrieving selected subject from closure
-            currentSubject = subject;
-            textfieldCurrentSubject.value = currentSubject.name;
+            currentSubjectAdmin = subject;
+            textfieldCurrentSubject.value = currentSubjectAdmin.name;
         });
     }
 
     function doneMenu() {
+        'use strict';
+        componentHandler.upgradeDom();
+    }
+
+    // ============================================================================================
+    // private helper functions (ui - subjects menu - survey tab)  
+
+    function onLoadListOfSubjectsSurvey() {
+        'use strict';
+        addMenuEntrySurvey({ name: 'Alle', description: '', key: '' });
+        FirebaseSubjectsModule.readListOfSubjects(addMenuEntrySurvey, doneMenuSurvey);
+    }
+
+    function addMenuEntrySurvey(subject) {
+        'use strict';
+
+        // <li>
+        //     <p class="mdl-menu__item">Subject</p>
+        // </li>
+
+        var listitem = document.createElement('li');   // create <li> node
+        var para = document.createElement('p');        // create <p> node
+        para.setAttribute('class', 'mdl-menu__item');  // set attribute
+        var textnode = document.createTextNode(subject.name);  // create text node
+        para.appendChild(textnode);                    // append text to <p>
+        listitem.appendChild(para);                    // append <p> to <li>
+        menuSubjectsSurvey.appendChild(listitem);      // append <li> to <ul>
+
+        listitem.addEventListener('click', () => {
+            'use strict';
+            // retrieving selected subject from closure
+            currentSubjectSurvey = subject;
+            textfieldCurrentSubjectSurvey.value = currentSubjectSurvey.name;
+        });
+    }
+
+    function doneMenuSurvey() {
         'use strict';
         componentHandler.upgradeDom();
     }
