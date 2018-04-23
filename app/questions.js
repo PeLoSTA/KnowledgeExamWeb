@@ -33,6 +33,13 @@ var HtmlQuestionsModule = (function () {
     var currentSubjectAdmin;  // needed to assign question input to this subject (admin)
     var currentSubjectSurvey; // needed to assign question input to this subject (survey)
 
+
+
+    var btnXXXXX = document.getElementById('btnXXXXX');
+
+
+
+
     // ============================================================================================
     // initialization
 
@@ -89,6 +96,17 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             onLoadListOfSubjectsSurvey();
             onLoadQuestionsSurvey();
+        });
+
+        btnXXXXX.addEventListener('click', () => {
+            'use strict';
+            console.log("dsfsdfdsfds");
+            if (currentSubjectSurvey === null) {
+                alert("no subject choosen !!!");
+                return;
+            }
+
+            FirebaseQuestionsModule.readXXXXX();
         });
     };
 
@@ -534,6 +552,8 @@ var HtmlQuestionsModule = (function () {
             // retrieving selected subject from closure
             currentSubjectSurvey = subject;
             textfieldCurrentSubjectSurvey.value = currentSubjectSurvey.name;
+
+            FirebaseSubjectsModule.readListOfQuestionsFromSubject(currentSubjectSurvey.key, addMenuEntrySurvey, doneMenuSurvey);
         });
     }
 
