@@ -19,8 +19,8 @@ var HtmlQuestionsModule = (function () {
     var textfieldCurrentSubject = document.getElementById('textfieldCurrentSubject');
 
     // retrieve HTML elements according to 'questions viewer' tab
-    var tabQuestionsSurvey = document.getElementById('#questions-panel-survey');
-    var tabQuestionsAdmin = document.getElementById('#questions-panel-admin');
+    var tabQuestionsSurvey = document.getElementById('questions-panel-survey');
+    var tabQuestionsAdmin = document.getElementById('questions-panel-admin');
     var tableQuestionsBody = document.getElementById('tableQuestionsBody');
 
     var menuSubjectsSurvey = document.getElementById('menuSubjectsSurvey');
@@ -32,12 +32,6 @@ var HtmlQuestionsModule = (function () {
     var isActive;             // needed to prevent double clicks
     var currentSubjectAdmin;  // needed to assign question input to this subject (admin)
     var currentSubjectSurvey; // needed to assign question input to this subject (survey)
-
-
-
-    var btnXXXXX = document.getElementById('btnXXXXX');
-
-
 
 
     // ============================================================================================
@@ -96,17 +90,6 @@ var HtmlQuestionsModule = (function () {
             'use strict';
             onLoadListOfSubjectsSurvey();
             onLoadQuestionsSurvey();
-        });
-
-        btnXXXXX.addEventListener('click', () => {
-            'use strict';
-            console.log("dsfsdfdsfds");
-            if (currentSubjectSurvey === null) {
-                alert("no subject choosen !!!");
-                return;
-            }
-
-            FirebaseQuestionsModule.readXXXXX();
         });
     };
 
@@ -342,7 +325,10 @@ var HtmlQuestionsModule = (function () {
         //     </tr>
 
         // add single row for question itself
-        var node = createQuestion(counter, entry.question);
+
+        var keyOfSubject = entry['subject-key'];
+        var nameOfSubject = FirebaseSubjectsModule.getNameOfSubject(keyOfSubject);
+        var node = createQuestion(counter, entry.question, nameOfSubject);
         tableQuestionsBody.appendChild(node);
 
         // add rows for answers
@@ -367,7 +353,7 @@ var HtmlQuestionsModule = (function () {
     // ============================================================================================
     // private helper functions (ui - questions table)
 
-    function createQuestion(counter, text) {
+    function createQuestion(counter, text, name) {
 
         var node = document.createElement('tr');    // create <tr> node
         var td1 = document.createElement('td');     // create first <td> node
@@ -380,10 +366,13 @@ var HtmlQuestionsModule = (function () {
         td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td2.setAttribute('style', 'text-align:left;');  // set attribute
 
+        td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td3.setAttribute('style', 'text-align:right;');  // set attribute
+
         var header = 'Frage ' + counter + ':';
-        var textnode1 = document.createTextNode(header);          // create first text node
-        var textnode2 = document.createTextNode(text);  // create second text node
-        var textnode3 = document.createTextNode('Mathe');         // create third text node
+        var textnode1 = document.createTextNode(header); // create first text node
+        var textnode2 = document.createTextNode(text);   // create second text node
+        var textnode3 = document.createTextNode(name);   // create third text node
 
         td1.appendChild(textnode1);   // append text to <td>
         td2.appendChild(textnode2);   // append text to <td>
@@ -553,7 +542,7 @@ var HtmlQuestionsModule = (function () {
             currentSubjectSurvey = subject;
             textfieldCurrentSubjectSurvey.value = currentSubjectSurvey.name;
 
-            FirebaseSubjectsModule.readListOfQuestionsFromSubject(currentSubjectSurvey.key, addMenuEntrySurvey, doneMenuSurvey);
+            FirebaseQuestionsModule.readListOfQuestionsFromSubject(currentSubjectSurvey.key, addMenuEntrySurvey, doneMenuSurvey);
         });
     }
 

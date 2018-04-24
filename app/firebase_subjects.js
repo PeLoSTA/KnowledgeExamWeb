@@ -66,6 +66,18 @@ var FirebaseSubjectsModule = (function () {
         return subjectsList[index];
     }
 
+    function getNameOfSubject(key) {
+        'use strict';
+        for (var k = 0; k < subjectsList.length; k++) {
+
+            if (subjectsList[k].key === key) {
+                return subjectsList[k].name;
+            }
+        }
+
+        return "";
+    }
+
     // ============================================================================================
     // public interface
 
@@ -75,6 +87,7 @@ var FirebaseSubjectsModule = (function () {
         updateSubject: updateSubject,
         deleteSubject: deleteSubject,
         readListOfSubjects: readListOfSubjects,
+        getNameOfSubject: getNameOfSubject,
         getSubject: getSubject
     };
 })();

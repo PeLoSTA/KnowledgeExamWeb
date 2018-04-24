@@ -14,27 +14,27 @@ var FirebaseQuestionsModule = (function () {
     // ============================================================================================
     // public interface
 
-    // function readXXXXX() {
-    //     'use strict';
-    //     var refString = '/questions';
-    //     db.ref(refString).orderByChild('subject').equalTo('-LAbK5Q3YCjl_IRRi3O0').once('value').then((snapshot) => {
-    //         snapshot.forEach((childSnapshot) => {
-    //             var snap = childSnapshot.val();
-    //             var question = readQuestion(snap);
-    //             callback(counter, question);
-    //             counter++;
-    //         });
-    //     });
-    // }
-
     function readListOfQuestionsFromSubject(subjectKey, callback, done) {
         'use strict';
+
+        console.log("===========> readListOfQuestionsFromSubject");
+
+        questionsList = [];
         var refString = '/questions';
+        var counter = 1;
         db.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
             snapshot.forEach((childSnapshot) => {
+
+                console.log("===========> X1");
                 var snap = childSnapshot.val();
+
+                console.log("===========> X2");
                 var question = readQuestion(snap);
+
+                console.log("===========> X3");
                 callback(counter, question);
+
+                console.log("===========> X4");
                 counter++;
             });
             done();
@@ -43,7 +43,6 @@ var FirebaseQuestionsModule = (function () {
 
     function readListOfQuestions(callback, done) {
         'use strict';
-        console.log("asdasdasdasdsadsada");
         questionsList = [];
         var refString = '/questions';
         var counter = 1;
