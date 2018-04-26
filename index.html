@@ -14,7 +14,7 @@
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 
-    <!-- subject dialog ===================================================================== -->
+    <!-- subject dialog (creation) ===================================================================== -->
 
     <dialog id="dialogCreateSubject" class="mdl-dialog" style="width: 500px">
         <div>
@@ -50,6 +50,8 @@
         </div>
     </dialog>
 
+    <!-- subject dialog (modification) ===================================================================== -->
+
     <dialog id="dialogModifySubject" class="mdl-dialog" style="width: 500px">
         <div>
             <h6 class="mdl-dialog__title">Modify an existing subject</h6>
@@ -82,6 +84,8 @@
         </div>
     </dialog>
 
+    <!-- subject dialog (deletion) ===================================================================== -->
+
     <dialog id="dialogDeleteSubject" class="mdl-dialog" style="width: 400px">
         <div>
             <h6 class="mdl-dialog__title">Delete a subject</h6>
@@ -97,7 +101,7 @@
         </div>
     </dialog>
 
-    <!-- questions dialog ===================================================================== -->
+    <!-- questions dialog (creation) ===================================================================== -->
 
     <dialog id="dialogCreateQuestion" class="mdl-dialog" style="width: 800px">
 
@@ -142,7 +146,7 @@
         </div>
     </dialog>
 
-    <!-- begin of page ===================================================================== -->
+    <!-- begin of main page ===================================================================== -->
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
@@ -167,8 +171,8 @@
                     <a id="#results-of-exams-panel" href="#results-of-exams-panel" class="mdl-tabs__tab">Results of Exams (Prüfungsergebnisse)</a>
                 </div>
 
+                <!-- tab 'subjects admin' -->
                 <div class="mdl-tabs__panel is-active" id="subjects-panel">
-                    <!-- tab 'subjects admin' -->
                     <br/>
                     <div class="mdl-button-group">
                         <button id="btnCreate" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
@@ -198,12 +202,11 @@
                     </table>
                 </div>
 
+                <!-- tab 'questions admin' -->
                 <div class="mdl-tabs__panel" id="questions-panel-admin">
-                    <!-- tab 'questions admin' -->
+
                     <br/>
-
                     <p>Select Subject:</p>
-
                     <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn-subjects">
                         <i class="material-icons">more_vert</i>
                     </button>
@@ -217,17 +220,16 @@
                     </ul>
 
                     <br/>
-
                     <button id="btnEnterQuestion" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                         Enter Question
                     </button>
 
                 </div>
 
+                <!-- tab 'questions survey' -->
                 <div class="mdl-tabs__panel" id="questions-panel-survey">
-                    <!-- tab 'questions survey' -->
-                    <br/>
 
+                    <br/>
                     <p>Select Subject:</p>
 
                     <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn-subjects_survey">
@@ -292,8 +294,9 @@
 
     <script type="text/javascript" src="app/firebase_subjects.js"></script>
     <script type="text/javascript" src="app/firebase_questions.js"></script>
-    <script type="text/javascript" src="app/subjects.js"></script>
-    <script type="text/javascript" src="app/questions.js"></script>
+    <script type="text/javascript" src="app/tab_subjects.js"></script>
+    <script type="text/javascript" src="app/tab_questions_admin.js"></script>
+    <script type="text/javascript" src="app/tab_questions_viewer.js"></script>
     <script type="text/javascript" src="index.js"></script>
 </body>
 

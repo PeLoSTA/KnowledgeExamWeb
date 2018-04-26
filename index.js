@@ -1,13 +1,9 @@
 FirebaseSubjectsModule.init();
 FirebaseQuestionsModule.init();
-HtmlSubjectsModule.init();
-HtmlQuestionsModule.init();
+HtmlTabSubjectsModule.init();
+HtmlTabQuestionsAdminModule.init();
+HtmlTabQuestionsViewerModule.init();
 
-HtmlSubjectsModule.updateTableOfSubjects();
+// HtmlTabSubjectsModule.updateTableOfSubjects();
 
-// TODO: Hmmm, can be removed ....
-window.onload = function(){
-    
-    'use strict';
-    console.log('================> onload');
-};
+HtmlTabSubjectsModule.updateTableOfSubjects_P();

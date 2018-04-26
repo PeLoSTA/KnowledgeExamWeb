@@ -1,10 +1,10 @@
-var HtmlSubjectsModule = (function () {
+var HtmlTabSubjectsModule = (function () {
 
     // retrieve HTML elements according to 'subjects' tab
-    var btnRefresh = document.getElementById('btnRefresh');
     var btnCreate = document.getElementById('btnCreate');
     var btnModify = document.getElementById('btnModify');
     var btnDelete = document.getElementById('btnDelete');
+    var btnRefresh = document.getElementById('btnRefresh');
     var tableSubjectsBody = document.getElementById('tableSubjectsBody');
     var dialogCreateSubject = document.getElementById('dialogCreateSubject');
     var dialogModifySubject = document.getElementById('dialogModifySubject');
@@ -42,25 +42,10 @@ var HtmlSubjectsModule = (function () {
             dialogPolyfill.registerDialog(dialogDeleteSubject);
         }
 
-        btnCreate.addEventListener('click', () => {
-            'use strict';
-            onCreateEvent();
-        });
-
-        btnModify.addEventListener('click', () => {
-            'use strict';
-            onModifyEvent();
-        });
-
-        btnDelete.addEventListener('click', () => {
-            'use strict';
-            onDeleteEvent();
-        });
-
-        btnRefresh.addEventListener('click', () => {
-            'use strict';
-            updateTableOfSubjects();
-        });
+        btnCreate.addEventListener('click', onClickEvent);
+        btnModify.addEventListener('click', onClickEvent);
+        btnDelete.addEventListener('click', onClickEvent);
+        btnRefresh.addEventListener('click', onClickEvent);
 
         dialogCreateSubject.querySelector('.create').addEventListener('click', () => {
             'use strict';
@@ -103,11 +88,40 @@ var HtmlSubjectsModule = (function () {
     };
 
     // ============================================================================================
+    // click event dispatching routine
+
+    function onClickEvent() {
+        'use strict';
+        var sender = this.id;
+
+        switch (sender) {
+            case "btnCreate":
+                onCreateEvent();
+                break;
+            case "btnModify":
+                onModifyEvent();
+                break;
+            case "btnDelete":
+                onDeleteEvent();
+                break;
+            case "btnRefresh":
+                onRefreshEvent();
+                break;
+        }
+    };
+
+
+    // ============================================================================================
     // subjects
 
     /*
-     *  reading list of subjects asynchronously
+     *  reading list of subjects (asynchronously) - using callbacks
      */
+
+    function onRefreshEvent() {
+        'use strict';
+        updateTableOfSubjects();
+    };
 
     function updateTableOfSubjects() {
         'use strict';
@@ -139,6 +153,39 @@ var HtmlSubjectsModule = (function () {
         'use strict';
         isActive = false;
     }
+
+    /*
+     *  reading list of subjects (synchronously)- using promises
+     */
+
+    function updateTableOfSubjects_P() {
+        'use strict';
+        if (isActive === true) {
+            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
+            return;
+        }
+
+        isActive = true;
+        console.log("updateTableOfSubjectsBegin");
+        rowCounterSubjects = 1;
+        lastCheckedSubject = -1;
+        tableSubjectsBody.innerHTML = '';
+
+        FirebaseSubjectsModule.readListOfSubjects_P().then(function (fromResolve) {
+            for (var i = 0; i < fromResolve.length; i++) {
+                var subject = fromResolve[i]
+                console.log("    ===> " + subject.name);
+                addEntryToSubjectTable(subject);
+            }
+
+        }).catch(function () {
+            console.log('Reading list of subjects failed !!!!!!!!!!!!!');
+
+            isActive = false;
+        });
+
+        isActive = false;
+    };
 
     /*
      *  create new subject
@@ -348,6 +395,8 @@ var HtmlSubjectsModule = (function () {
 
     return {
         init: init,
-        updateTableOfSubjects: updateTableOfSubjects
+        updateTableOfSubjects: updateTableOfSubjects,
+
+        updateTableOfSubjects_P: updateTableOfSubjects_P
     };
 })();

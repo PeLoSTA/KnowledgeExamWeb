@@ -28,6 +28,29 @@ var FirebaseSubjectsModule = (function () {
         });
     }
 
+    function readListOfSubjects_P() {
+        'use strict';
+        return new Promise(function (resolve, reject) {
+            let list = [];
+            var refString = '/subjects';
+
+            db.ref(refString).once('value').then(function (snapshot) {
+
+                snapshot.forEach(function (childSnapshot) {
+                    var snap = childSnapshot.val();
+                    console.log("Got subject " + snap.name + ", Description = " + snap.description);
+                    var subject = { name: snap.name, description: snap.description, key: childSnapshot.key };
+                    list.push(subject);
+                });
+
+                resolve(list);
+            }).catch(function () {
+                console.log('Reading list of subjects failed !!!');
+                reject([]);
+            });
+        });
+    }
+
     function addSubject(name, description) {
         'use strict';
         var refString = '/subjects';
@@ -88,6 +111,8 @@ var FirebaseSubjectsModule = (function () {
         deleteSubject: deleteSubject,
         readListOfSubjects: readListOfSubjects,
         getNameOfSubject: getNameOfSubject,
-        getSubject: getSubject
+        getSubject: getSubject,
+
+        readListOfSubjects_P: readListOfSubjects_P
     };
 })();
