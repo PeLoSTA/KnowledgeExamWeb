@@ -20,6 +20,8 @@ var FirebaseStudentsModule = (function () {
     // ============================================================================================
     // public interface
 
+    // just a comment
+
     return {
         init: init,
     };
