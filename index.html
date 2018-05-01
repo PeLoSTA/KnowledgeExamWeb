@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="style.css" />
     <script type="text/javascript" src="mdl/material.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- Material Design Lite selectfield component (https://github.com/google/material-design-lite) -->
+    <link rel="stylesheet" href="selectfield/node_modules/mdl-selectfield/dist/mdl-selectfield.min.css">
+
+
+
 </head>
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -146,7 +152,9 @@
         </div>
     </dialog>
 
+    <!-- ======================================================================================== -->
     <!-- begin of main page ===================================================================== -->
+    <!-- ======================================================================================== -->
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
@@ -175,16 +183,16 @@
                 <div class="mdl-tabs__panel is-active" id="subjects-panel">
                     <br/>
                     <div class="mdl-button-group">
-                        <button id="btnCreate" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                        <button id="btnCreateSubject" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             Create
                         </button>
-                        <button id="btnModify" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                        <button id="btnModifySubject" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             Modify
                         </button>
-                        <button id="btnDelete" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                        <button id="btnDeleteSubject" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             Delete
                         </button>
-                        <button id="btnRefresh" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                        <button id="btnRefreshSubjects" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                             <i class="material-icons">refresh</i>
                         </button>
                     </div>
@@ -263,21 +271,71 @@
                     </div>
                 </div>
 
+                <!-- tab 'students survey' -->
                 <div class="mdl-tabs__panel" id="students-panel">
                     <br/>
-                    <p>Yeahhhhhhhhhhhh</p>
+                    <div class="mdl-button-group">
+                        <button id="btnCreateStudent" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            Create
+                        </button>
+                        <button id="btnModifyStudent" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            Modify
+                        </button>
+                        <button id="btnDeleteStudent" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            Delete
+                        </button>
+                        <button id="btnRefreshStudents" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <i class="material-icons">refresh</i>
+                        </button>
+                    </div>
                 </div>
 
-
+                <!-- tab 'testing survey' -->
                 <div class="mdl-tabs__panel" id="results-of-exams-panel">
                     <br/>
-                    <p>Nooo</p>
+                    <div class="mdl-grid">
+
+                        <div class="mdl-cell mdl-cell--8-col">
+                            <div class="mdl-button-group">
+                                <button id="btnCreateStudent" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                                    Create
+                                </button>
+                                <button id="btnModifyStudent" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                                    Modify
+                                </button>
+                                <button id="btnDeleteStudent" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                                    Delete
+                                </button>
+                                <button id="btnRefreshStudents" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                                    <i class="material-icons">refresh</i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mdl-cell mdl-cell--4-col">
+                            <h5>Choose Subject</h5>
+                            <div class="mdl-selectfield mdl-js-selectfield">
+                                <select class="mdl-selectfield__select" id="selectStudentsSubjects" name="professsion">
+                                    <option value="option0"></option>
+                                    <option value="option1">option 1</option>
+                                    <option value="option2">option 2</option>
+                                    <option value="option3">option 3</option>
+                                    <option value="option4">option 4</option>
+                                    <option value="option5">option 5</option>
+                                </select>
+                                <label class="mdl-selectfield__label" for="professsion1">Subject</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>testing</p>
                 </div>
             </div>
         </main>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script src="selectfield/node_modules/mdl-selectfield/dist/mdl-selectfield.min.js"></script>
 
     <script>
         // initialize Firebase
@@ -294,9 +352,11 @@
 
     <script type="text/javascript" src="app/firebase_subjects.js"></script>
     <script type="text/javascript" src="app/firebase_questions.js"></script>
+    <script type="text/javascript" src="app/firebase_students.js"></script>
     <script type="text/javascript" src="app/tab_subjects.js"></script>
     <script type="text/javascript" src="app/tab_questions_admin.js"></script>
     <script type="text/javascript" src="app/tab_questions_viewer.js"></script>
+    <script type="text/javascript" src="app/tab_students.js"></script>
     <script type="text/javascript" src="index.js"></script>
 </body>
 

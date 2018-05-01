@@ -1,10 +1,10 @@
 var HtmlTabSubjectsModule = (function () {
 
     // retrieve HTML elements according to 'subjects' tab
-    var btnCreate = document.getElementById('btnCreate');
-    var btnModify = document.getElementById('btnModify');
-    var btnDelete = document.getElementById('btnDelete');
-    var btnRefresh = document.getElementById('btnRefresh');
+    var btnCreateSubject = document.getElementById('btnCreateSubject');
+    var btnModifySubject = document.getElementById('btnModifySubject');
+    var btnDeleteSubject = document.getElementById('btnDeleteSubject');
+    var btnRefreshSubjects = document.getElementById('btnRefreshSubjects');
     var tableSubjectsBody = document.getElementById('tableSubjectsBody');
     var dialogCreateSubject = document.getElementById('dialogCreateSubject');
     var dialogModifySubject = document.getElementById('dialogModifySubject');
@@ -42,10 +42,10 @@ var HtmlTabSubjectsModule = (function () {
             dialogPolyfill.registerDialog(dialogDeleteSubject);
         }
 
-        btnCreate.addEventListener('click', onClickEvent);
-        btnModify.addEventListener('click', onClickEvent);
-        btnDelete.addEventListener('click', onClickEvent);
-        btnRefresh.addEventListener('click', onClickEvent);
+        btnCreateSubject.addEventListener('click', onClickEvent);
+        btnModifySubject.addEventListener('click', onClickEvent);
+        btnDeleteSubject.addEventListener('click', onClickEvent);
+        btnRefreshSubjects.addEventListener('click', onClickEvent);
 
         dialogCreateSubject.querySelector('.create').addEventListener('click', () => {
             'use strict';
@@ -95,16 +95,16 @@ var HtmlTabSubjectsModule = (function () {
         var sender = this.id;
 
         switch (sender) {
-            case "btnCreate":
+            case "btnCreateSubject":
                 onCreateEvent();
                 break;
-            case "btnModify":
+            case "btnModifySubject":
                 onModifyEvent();
                 break;
-            case "btnDelete":
+            case "btnDeleteSubject":
                 onDeleteEvent();
                 break;
-            case "btnRefresh":
+            case "btnRefreshSubjects":
                 onRefreshEvent();
                 break;
         }
