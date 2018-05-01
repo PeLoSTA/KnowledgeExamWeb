@@ -1,6 +1,10 @@
 var FirebaseSubjectsModule = (function () {
 
-    var db;
+    // firebase
+    const refSubjects = '/subjects';
+    var database;
+
+    // (last read) list of subjects
     var subjectsList;
 
     // ============================================================================================
@@ -8,15 +12,14 @@ var FirebaseSubjectsModule = (function () {
 
     function init() {
 
-        db = firebase.database();  // get a reference to the database service
-        subjectsList = [];         // empty list of subjects
+        database = firebase.database();  // get a reference to the database service
+        subjectsList = [];               // empty list of subjects
     };
 
-    function readListOfSubjects(callback, done) {
+    function readListOfSubjectsCb(callback, done) {
         'use strict';
         subjectsList = [];
-        var refString = '/subjects';
-        db.ref(refString).once('value').then(function (snapshot) {
+        database.ref(refSubjects).once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 var snap = childSnapshot.val();
                 console.log("Got subject " + snap.name + ", Description = " + snap.description);
@@ -28,39 +31,37 @@ var FirebaseSubjectsModule = (function () {
         });
     }
 
-    function readListOfSubjects_P() {
+    function readListOfSubjectsPr() {
         'use strict';
-        return new Promise(function (resolve, reject) {
-            let list = [];
-            var refString = '/subjects';
-
-            db.ref(refString).once('value').then(function (snapshot) {
-
+        return database.ref(refSubjects).once('value')
+            .then((snapshot) => {
+                let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
                     console.log("Got subject " + snap.name + ", Description = " + snap.description);
-                    var subject = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                    list.push(subject);
+                    let subject = { name: snap.name, description: snap.description, key: childSnapshot.key };
+                    localList.push(subject);
+                    subjectsList.push(subject);
                 });
-
-                resolve(list);
-            }).catch(function () {
-                console.log('Reading list of subjects failed !!!');
-                reject([]);
+                return localList;
+            }).catch((err) => {
+                let msg = "FirebaseSubjectsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('Reading list of subjects failed! [' + msg + ']');
+                throw err;
             });
-        });
     }
+
+    // NOCH NICHT UMGESTELLT :::::::::::::::::.
 
     function addSubject(name, description) {
         'use strict';
-        var refString = '/subjects';
-        var ref = db.ref(refString).push();
+        var ref = db.ref(refSubjects).push();
         return ref.set({ "name": name, "description": description });
     }
 
     function updateSubject(subject) {
         'use strict';
-        var refString = '/subjects/' + subject.key;
+        var refString = refSubjects + '/' + subject.key;
         var ref = db.ref(refString);
         return ref.update({ "name": subject.name, "description": subject.description });
     }
@@ -109,10 +110,10 @@ var FirebaseSubjectsModule = (function () {
         addSubject: addSubject,
         updateSubject: updateSubject,
         deleteSubject: deleteSubject,
-        readListOfSubjects: readListOfSubjects,
         getNameOfSubject: getNameOfSubject,
         getSubject: getSubject,
 
-        readListOfSubjects_P: readListOfSubjects_P
+        readListOfSubjectsCb: readListOfSubjectsCb,
+        readListOfSubjectsPr: readListOfSubjectsPr
     };
 })();

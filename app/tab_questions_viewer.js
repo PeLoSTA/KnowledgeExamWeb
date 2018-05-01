@@ -22,7 +22,6 @@ var HtmlTabQuestionsViewerModule = (function () {
         bindUIActions();
     };
 
-
     function bindUIActions() {
         'use strict';
         tabQuestionsSurvey.addEventListener('click', () => {

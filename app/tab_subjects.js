@@ -123,10 +123,10 @@ var HtmlTabSubjectsModule = (function () {
         updateTableOfSubjects();
     };
 
-    function updateTableOfSubjects() {
+    function updateTableOfSubjectsCb() {
         'use strict';
         updateTableOfSubjectsBegin();
-        FirebaseSubjectsModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+        FirebaseSubjectsModule.readListOfSubjectsCb(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
     };
 
     function updateTableOfSubjectsBegin() {
@@ -158,7 +158,7 @@ var HtmlTabSubjectsModule = (function () {
      *  reading list of subjects (synchronously)- using promises
      */
 
-    function updateTableOfSubjects_P() {
+    function updateTableOfSubjectsPr() {
         'use strict';
         if (isActive === true) {
             console.log("Another asynchronous invocation still pending ... just ignoring click event!");
@@ -166,22 +166,22 @@ var HtmlTabSubjectsModule = (function () {
         }
 
         isActive = true;
+
         console.log("updateTableOfSubjectsBegin");
         rowCounterSubjects = 1;
         lastCheckedSubject = -1;
         tableSubjectsBody.innerHTML = '';
 
-        FirebaseSubjectsModule.readListOfSubjects_P().then(function (fromResolve) {
-            for (var i = 0; i < fromResolve.length; i++) {
-                var subject = fromResolve[i]
+        FirebaseSubjectsModule.readListOfSubjectsPr().then((listOfSubjects) => {
+            for (var i = 0; i < listOfSubjects.length; i++) {
+                var subject = listOfSubjects[i]
                 console.log("    ===> " + subject.name);
                 addEntryToSubjectTable(subject);
             }
 
-        }).catch(function () {
+        }).catch((err) => {
             console.log('Reading list of subjects failed !!!!!!!!!!!!!');
-
-            isActive = false;
+            console.log('    ' + err);
         });
 
         isActive = false;
@@ -297,7 +297,7 @@ var HtmlTabSubjectsModule = (function () {
         dialogDeleteSubject.close();
 
         updateTableOfSubjectsBegin();
-        FirebaseSubjectsModule.readListOfSubjects(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+        FirebaseSubjectsModule.readListOfSubjectsCb(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
     }
 
     function cancelDeleteEvent() {
@@ -395,8 +395,7 @@ var HtmlTabSubjectsModule = (function () {
 
     return {
         init: init,
-        updateTableOfSubjects: updateTableOfSubjects,
-
-        updateTableOfSubjects_P: updateTableOfSubjects_P
+        updateTableOfSubjectsCb: updateTableOfSubjectsCb,
+        updateTableOfSubjectsPr: updateTableOfSubjectsPr
     };
 })();

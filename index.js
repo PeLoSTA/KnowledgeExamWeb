@@ -7,5 +7,5 @@ HtmlTabQuestionsAdminModule.init();
 HtmlTabQuestionsViewerModule.init();
 HtmlTabStudentsModule.init();
 
-// HtmlTabSubjectsModule.updateTableOfSubjects();
-HtmlTabSubjectsModule.updateTableOfSubjects_P();
+// HtmlTabSubjectsModule.updateTableOfSubjectsCb();
+HtmlTabSubjectsModule.updateTableOfSubjectsPr();
