@@ -1,11 +1,11 @@
-FirebaseSubjectsModule.init();
+FirebaseCoursesModule.init();
 FirebaseQuestionsModule.init();
 FirebaseStudentsModule.init();
 
-HtmlTabSubjectsModule.init();
+HtmlTabCoursesModule.init();
 HtmlTabQuestionsAdminModule.init();
 HtmlTabQuestionsViewerModule.init();
 HtmlTabStudentsModule.init();
 
-// HtmlTabSubjectsModule.updateTableOfSubjectsCb();
-HtmlTabSubjectsModule.updateTableOfSubjectsPr();
+// HtmlTabCoursesModule.updateTableOfCoursesCb();
+HtmlTabCoursesModule.updateTableOfCoursesPr();

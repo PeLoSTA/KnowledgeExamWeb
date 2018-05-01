@@ -1,32 +1,32 @@
-var HtmlTabSubjectsModule = (function () {
+var HtmlTabCoursesModule = (function () {
 
-    // retrieve HTML elements according to 'subjects' tab
-    var btnCreateSubject = document.getElementById('btnCreateSubject');
-    var btnModifySubject = document.getElementById('btnModifySubject');
-    var btnDeleteSubject = document.getElementById('btnDeleteSubject');
-    var btnRefreshSubjects = document.getElementById('btnRefreshSubjects');
-    var tableSubjectsBody = document.getElementById('tableSubjectsBody');
-    var dialogCreateSubject = document.getElementById('dialogCreateSubject');
-    var dialogModifySubject = document.getElementById('dialogModifySubject');
-    var dialogDeleteSubject = document.getElementById('dialogDeleteSubject');
+    // retrieve HTML elements according to 'Courses' tab
+    var btnCreateCourse = document.getElementById('btnCreateCourse');
+    var btnModifyCourse = document.getElementById('btnModifyCourse');
+    var btnDeleteCourse = document.getElementById('btnDeleteCourse');
+    var btnRefreshCourses = document.getElementById('btnRefreshCourses');
+    var tableCoursesBody = document.getElementById('tableCoursesBody');
+    var dialogCreateCourse = document.getElementById('dialogCreateCourse');
+    var dialogModifyCourse = document.getElementById('dialogModifyCourse');
+    var dialogDeleteCourse = document.getElementById('dialogDeleteCourse');
 
-    var txtSubject = document.getElementById('txtSubject');
+    var txtCourse = document.getElementById('txtCourse');
     var txtDescription = document.getElementById('txtDescription');
-    var txtSubjectModified = document.getElementById('txtSubjectModified');
+    var txtCourseModified = document.getElementById('txtCourseModified');
     var txtDescriptionModified = document.getElementById('txtDescriptionModified');
-    var txtSubjectToDelete = document.getElementById('txtSubjectToDelete');
+    var txtCourseToDelete = document.getElementById('txtCourseToDelete');
 
     // miscellaneous data
-    var rowCounterSubjects;
-    var lastCheckedSubject;
+    var rowCounterCourses;
+    var lastCheckedCourse;
     var isActive;
 
     // ============================================================================================
     // initialization
 
     function init() {
-        // subjects
-        lastCheckedSubject = -1;
+        // courses
+        lastCheckedCourse = -1;
         isActive = false;
 
         // connect ui elements with event handlers
@@ -35,44 +35,44 @@ var HtmlTabSubjectsModule = (function () {
 
     function bindUIActions() {
         'use strict';
-        if (!dialogCreateSubject.showModal) {
-            dialogPolyfill.registerDialog(dialogCreateSubject);
+        if (!dialogCreateCourse.showModal) {
+            dialogPolyfill.registerDialog(dialogCreateCourse);
         }
-        if (!dialogDeleteSubject.showModal) {
-            dialogPolyfill.registerDialog(dialogDeleteSubject);
+        if (!dialogDeleteCourse.showModal) {
+            dialogPolyfill.registerDialog(dialogDeleteCourse);
         }
 
-        btnCreateSubject.addEventListener('click', onClickEvent);
-        btnModifySubject.addEventListener('click', onClickEvent);
-        btnDeleteSubject.addEventListener('click', onClickEvent);
-        btnRefreshSubjects.addEventListener('click', onClickEvent);
+        btnCreateCourse.addEventListener('click', onClickEvent);
+        btnModifyCourse.addEventListener('click', onClickEvent);
+        btnDeleteCourse.addEventListener('click', onClickEvent);
+        btnRefreshCourses.addEventListener('click', onClickEvent);
 
-        dialogCreateSubject.querySelector('.create').addEventListener('click', () => {
+        dialogCreateCourse.querySelector('.create').addEventListener('click', () => {
             'use strict';
             doCreateEvent();
         });
 
-        dialogCreateSubject.querySelector('.cancel_create').addEventListener('click', () => {
+        dialogCreateCourse.querySelector('.cancel_create').addEventListener('click', () => {
             'use strict';
             cancelCreateEvent();
         });
 
-        dialogModifySubject.querySelector('.modify').addEventListener('click', () => {
+        dialogModifyCourse.querySelector('.modify').addEventListener('click', () => {
             'use strict';
             doModifyEvent();
         });
 
-        dialogModifySubject.querySelector('.cancel_modify').addEventListener('click', () => {
+        dialogModifyCourse.querySelector('.cancel_modify').addEventListener('click', () => {
             'use strict';
             cancelModifyEvent();
         });
 
-        dialogDeleteSubject.querySelector('.delete').addEventListener('click', () => {
+        dialogDeleteCourse.querySelector('.delete').addEventListener('click', () => {
             'use strict';
             doDeleteEvent();
         });
 
-        dialogDeleteSubject.querySelector('.cancel_delete').addEventListener('click', () => {
+        dialogDeleteCourse.querySelector('.cancel_delete').addEventListener('click', () => {
             'use strict';
             cancelDeleteEvent();
         });
@@ -95,16 +95,16 @@ var HtmlTabSubjectsModule = (function () {
         var sender = this.id;
 
         switch (sender) {
-            case "btnCreateSubject":
+            case "btnCreateCourse":
                 onCreateEvent();
                 break;
-            case "btnModifySubject":
+            case "btnModifyCourse":
                 onModifyEvent();
                 break;
-            case "btnDeleteSubject":
+            case "btnDeleteCourse":
                 onDeleteEvent();
                 break;
-            case "btnRefreshSubjects":
+            case "btnRefreshCourses":
                 onRefreshEvent();
                 break;
         }
@@ -112,24 +112,24 @@ var HtmlTabSubjectsModule = (function () {
 
 
     // ============================================================================================
-    // subjects
+    // courses
 
     /*
-     *  reading list of subjects (asynchronously) - using callbacks
+     *  reading list of courses (asynchronously) - using callbacks
      */
 
     function onRefreshEvent() {
         'use strict';
-        updateTableOfSubjects();
+        updateTableOfCourses();
     };
 
-    function updateTableOfSubjectsCb() {
+    function updateTableOfCoursesCb() {
         'use strict';
-        updateTableOfSubjectsBegin();
-        FirebaseSubjectsModule.readListOfSubjectsCb(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+        updateTableOfCoursesBegin();
+        FirebaseCoursesModule.readListOfCoursesCb(updateTableOfCoursesNext, updateTableOfCoursesDone);
     };
 
-    function updateTableOfSubjectsBegin() {
+    function updateTableOfCoursesBegin() {
         'use strict';
         if (isActive === true) {
             console.log("Another asynchronous invocation still pending ... just ignoring click event!");
@@ -137,28 +137,28 @@ var HtmlTabSubjectsModule = (function () {
         }
 
         isActive = true;
-        console.log("updateTableOfSubjectsBegin");
-        rowCounterSubjects = 1;
-        lastCheckedSubject = -1;
-        tableSubjectsBody.innerHTML = '';
+        console.log("updateTableOfCoursesBegin");
+        rowCounterCourses = 1;
+        lastCheckedCourse = -1;
+        tableCoursesBody.innerHTML = '';
         componentHandler.upgradeDom();
     };
 
-    function updateTableOfSubjectsNext(subject) {
+    function updateTableOfCoursesNext(course) {
         'use strict';
-        addEntryToSubjectTable(subject);
+        addEntryToCourseTable(course);
     };
 
-    function updateTableOfSubjectsDone() {
+    function updateTableOfCoursesDone() {
         'use strict';
         isActive = false;
     }
 
     /*
-     *  reading list of subjects (synchronously)- using promises
+     *  reading list of Courses (synchronously)- using promises
      */
 
-    function updateTableOfSubjectsPr() {
+    function updateTableOfCoursesPr() {
         'use strict';
         if (isActive === true) {
             console.log("Another asynchronous invocation still pending ... just ignoring click event!");
@@ -167,20 +167,20 @@ var HtmlTabSubjectsModule = (function () {
 
         isActive = true;
 
-        console.log("updateTableOfSubjectsBegin");
-        rowCounterSubjects = 1;
-        lastCheckedSubject = -1;
-        tableSubjectsBody.innerHTML = '';
+        console.log("updateTableOfCoursesBegin");
+        rowCounterCourses = 1;
+        lastCheckedCourse = -1;
+        tableCoursesBody.innerHTML = '';
 
-        FirebaseSubjectsModule.readListOfSubjectsPr().then((listOfSubjects) => {
-            for (var i = 0; i < listOfSubjects.length; i++) {
-                var subject = listOfSubjects[i]
-                console.log("    ===> " + subject.name);
-                addEntryToSubjectTable(subject);
+        FirebaseCoursesModule.readListOfCoursesPr().then((listOfCourses) => {
+            for (var i = 0; i < listOfCourses.length; i++) {
+                var course = listOfCourses[i]
+                console.log("    ===> " + course.name);
+                addEntryToCourseTable(course);
             }
 
         }).catch((err) => {
-            console.log('Reading list of subjects failed !!!!!!!!!!!!!');
+            console.log('Reading list of courses failed !!!!!!!!!!!!!');
             console.log('    ' + err);
         });
 
@@ -188,16 +188,16 @@ var HtmlTabSubjectsModule = (function () {
     };
 
     /*
-     *  create new subject
+     *  create new course
      */
 
     function onCreateEvent() {
-        dialogCreateSubject.showModal();
+        dialogCreateCourse.showModal();
     }
 
     function doCreateEvent() {
         'use strict';
-        var name = txtSubject.value;
+        var name = txtCourse.value;
         var description = txtDescription.value;
 
         if (name === '' || description === '') {
@@ -205,114 +205,114 @@ var HtmlTabSubjectsModule = (function () {
 
         }
         else {
-            FirebaseSubjectsModule.addSubject(name, description);
-            updateTableOfSubjects();
+            FirebaseCoursesModule.addCourse(name, description);
+            updateTableOfCourses();
         }
 
-        txtSubject.value = '';
+        txtCourse.value = '';
         txtDescription.value = '';
-        dialogCreateSubject.close();
+        dialogCreateCourse.close();
     }
 
     function cancelCreateEvent() {
         'use strict';
-        txtSubject.value = '';
+        txtCourse.value = '';
         txtDescription.value = '';
-        lastCheckedSubject = -1;
-        dialogCreateSubject.close();
+        lastCheckedCourse = -1;
+        dialogCreateCourse.close();
     }
 
     /*
-     *  modify existing subject
+     *  modify existing course
      */
 
     function onModifyEvent() {
         'use strict';
-        if (lastCheckedSubject === -1) {
+        if (lastCheckedCourse === -1) {
 
-            console.log("Warning: No subject selected !");
+            console.log("Warning: No course selected !");
             return;
         }
 
-        var subject = FirebaseSubjectsModule.getSubject(lastCheckedSubject - 1);
-        txtSubjectModified.value = subject.name;
-        txtDescriptionModified.value = subject.description;
-        dialogModifySubject.showModal();
+        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse - 1);
+        txtCourseModified.value = course.name;
+        txtDescriptionModified.value = course.description;
+        dialogModifyCourse.showModal();
     }
 
     function doModifyEvent() {
         'use strict';
-        var name = txtSubjectModified.value;
+        var name = txtCourseModified.value;
         var description = txtDescriptionModified.value;
 
-        if (subject === '' || description === '') {
+        if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
         }
         else {
-            var subject = FirebaseSubjectsModule.getSubject(lastCheckedSubject - 1);
-            subject.name = name;
-            subject.description = description;
-            FirebaseSubjectsModule.updateSubject(subject);
-            updateTableOfSubjects();
+            var course = FirebaseCoursesModule.getCourse(lastCheckedCourse - 1);
+            course.name = name;
+            course.description = description;
+            FirebaseCoursesModule.updateCourse(course);
+            updateTableOfCourses();
         }
 
-        txtSubjectModified.value = '';
+        txtCourseModified.value = '';
         txtDescriptionModified.value = '';
-        dialogModifySubject.close();
+        dialogModifyCourse.close();
     }
 
     function cancelModifyEvent() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label_' + lastCheckedSubject);
+        var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
         checkboxLabel.MaterialCheckbox.uncheck();
-        txtSubjectModified.value = '';
+        txtCourseModified.value = '';
         txtDescriptionModified.value = '';
-        lastCheckedSubject = -1;
-        dialogModifySubject.close();
+        lastCheckedCourse = -1;
+        dialogModifyCourse.close();
     }
 
     /*
-     *  delete existing subject
+     *  delete existing course
      */
 
     function onDeleteEvent() {
         'use strict';
-        if (lastCheckedSubject === -1) {
+        if (lastCheckedCourse === -1) {
 
-            console.log("Warning: No subject selected !");
+            console.log("Warning: No course selected !");
             return;
         }
 
-        var subject = FirebaseSubjectsModule.getSubject(lastCheckedSubject - 1);
-        txtSubjectToDelete.value = subject.name;
-        dialogDeleteSubject.showModal();
+        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse - 1);
+        txtCourseToDelete.value = course.name;
+        dialogDeleteCourse.showModal();
     }
 
     function doDeleteEvent() {
         'use strict';
-        console.log("Subject to delete: " + txtSubjectToDelete.value);
-        FirebaseSubjectsModule.deleteSubject(txtSubjectToDelete.value);
-        txtSubjectToDelete.value = '';
-        dialogDeleteSubject.close();
+        console.log("Course to delete: " + txtCourseToDelete.value);
+        FirebaseCoursesModule.deleteCourse(txtCourseToDelete.value);
+        txtCourseToDelete.value = '';
+        dialogDeleteCourse.close();
 
-        updateTableOfSubjectsBegin();
-        FirebaseSubjectsModule.readListOfSubjectsCb(updateTableOfSubjectsNext, updateTableOfSubjectsDone);
+        updateTableOfCoursesBegin();
+        FirebaseCoursesModule.readListOfCoursesCb(updateTableOfCoursesNext, updateTableOfCoursesDone);
     }
 
     function cancelDeleteEvent() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label_' + lastCheckedSubject);
+        var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
         checkboxLabel.MaterialCheckbox.uncheck();
-        lastCheckedSubject = -1;
-        dialogDeleteSubject.close();
+        lastCheckedCourse = -1;
+        dialogDeleteCourse.close();
     }
 
     // ============================================================================================
     // private helper functions
 
-    function addEntryToSubjectTable(entry) {
+    function addEntryToCourseTable(entry) {
         'use strict';
 
         // adding dynamically a 'material design lite' node to a table, for example
@@ -332,14 +332,14 @@ var HtmlTabSubjectsModule = (function () {
         var label = document.createElement('label');     // create <label> node
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        label.setAttribute('for', 'row_' + rowCounterSubjects);  // set attribute
-        label.setAttribute('id', 'label_' + rowCounterSubjects);  // set attribute
+        label.setAttribute('for', 'row_' + rowCounterCourses);  // set attribute
+        label.setAttribute('id', 'label_' + rowCounterCourses);  // set attribute
         var input = document.createElement('input');     // create <input> node
-        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_subject');  // set attribute
+        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
         input.setAttribute('type', 'checkbox');  // set attributes
-        input.setAttribute('id', 'row_' + rowCounterSubjects);  // set attribute
+        input.setAttribute('id', 'row_' + rowCounterCourses);  // set attribute
         input.addEventListener('click', checkboxHandler);
-        rowCounterSubjects++;
+        rowCounterCourses++;
         label.appendChild(input);
         td1.appendChild(label);
 
@@ -354,7 +354,7 @@ var HtmlTabSubjectsModule = (function () {
         node.appendChild(td1);                      // append <td> to <tr>
         node.appendChild(td2);                      // append <td> to <tr>
         node.appendChild(td3);                      // append <td> to <tr>
-        tableSubjectsBody.appendChild(node);        // append <tr> to <tbody>
+        tableCoursesBody.appendChild(node);        // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
     };
@@ -368,13 +368,13 @@ var HtmlTabSubjectsModule = (function () {
 
         if (this.checked) {
 
-            lastCheckedSubject = row;
+            lastCheckedCourse = row;
 
             // TODO: Da fehlt die Hierarchie: Alle unterhalb von genau dieser Tabelle ...
-            var boxes = document.getElementsByClassName('checkbox_select_subject');
+            var boxes = document.getElementsByClassName('checkbox_select_course');
             for (var k = 0; k < boxes.length; k++) {
 
-                if (k != lastCheckedSubject - 1) {
+                if (k != lastCheckedCourse - 1) {
                     var label = boxes[k];
                     label.parentElement.MaterialCheckbox.uncheck();
                 }
@@ -382,10 +382,10 @@ var HtmlTabSubjectsModule = (function () {
         }
         else {
 
-            if (row === lastCheckedSubject) {
+            if (row === lastCheckedCourse) {
 
                 // clear last selection
-                lastCheckedSubject = -1;
+                lastCheckedCourse = -1;
             }
         }
     };
@@ -395,7 +395,7 @@ var HtmlTabSubjectsModule = (function () {
 
     return {
         init: init,
-        updateTableOfSubjectsCb: updateTableOfSubjectsCb,
-        updateTableOfSubjectsPr: updateTableOfSubjectsPr
+        updateTableOfCoursesCb: updateTableOfCoursesCb,
+        updateTableOfCoursesPr: updateTableOfCoursesPr
     };
 })();

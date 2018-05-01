@@ -1,11 +1,11 @@
-var FirebaseSubjectsModule = (function () {
+var FirebaseCoursesModule = (function () {
 
     // firebase
-    const refSubjects = '/subjects';
+    const refCourses = '/subjects';  // ??????????????? TBD: Das sollten jetzt auch courses sein ....
     var database;
 
-    // (last read) list of subjects
-    var subjectsList;
+    // (last read) list of courses
+    var coursesList;
 
     // ============================================================================================
     // public functions
@@ -13,66 +13,66 @@ var FirebaseSubjectsModule = (function () {
     function init() {
 
         database = firebase.database();  // get a reference to the database service
-        subjectsList = [];               // empty list of subjects
+        coursesList = [];               // empty list of courses
     };
 
-    function readListOfSubjectsCb(callback, done) {
+    function readListOfCoursesCb(callback, done) {
         'use strict';
-        subjectsList = [];
-        database.ref(refSubjects).once('value').then(function (snapshot) {
+        coursesList = [];
+        database.ref(refCourses).once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 var snap = childSnapshot.val();
-                console.log("Got subject " + snap.name + ", Description = " + snap.description);
-                var subject = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                subjectsList.push(subject);
-                callback(subject);
+                console.log("Got course " + snap.name + ", Description = " + snap.description);
+                var course = { name: snap.name, description: snap.description, key: childSnapshot.key };
+                coursesList.push(course);
+                callback(course);
             });
             done();
         });
     }
 
-    function readListOfSubjectsPr() {
+    function readListOfCoursesPr() {
         'use strict';
-        return database.ref(refSubjects).once('value')
+        return database.ref(refCourses).once('value')
             .then((snapshot) => {
                 let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
-                    console.log("Got subject " + snap.name + ", Description = " + snap.description);
-                    let subject = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                    localList.push(subject);
-                    subjectsList.push(subject);
+                    console.log("Got course " + snap.name + ", Description = " + snap.description);
+                    let course = { name: snap.name, description: snap.description, key: childSnapshot.key };
+                    localList.push(course);
+                    coursesList.push(course);
                 });
                 return localList;
             }).catch((err) => {
-                let msg = "FirebaseSubjectsModule: ERROR " + err.code + ", Message: " + err.message;
-                console.log('Reading list of subjects failed! [' + msg + ']');
+                let msg = "FirebaseCoursesModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('Reading list of courses failed! [' + msg + ']');
                 throw err;
             });
     }
 
     // NOCH NICHT UMGESTELLT :::::::::::::::::.
 
-    function addSubject(name, description) {
+    function addCourse(name, description) {
         'use strict';
-        var ref = db.ref(refSubjects).push();
+        var ref = db.ref(refCourses).push();
         return ref.set({ "name": name, "description": description });
     }
 
-    function updateSubject(subject) {
+    function updateCourse(course) {
         'use strict';
-        var refString = refSubjects + '/' + subject.key;
+        var refString = refCourses + '/' + course.key;
         var ref = db.ref(refString);
-        return ref.update({ "name": subject.name, "description": subject.description });
+        return ref.update({ "name": course.name, "description": course.description });
     }
 
-    function deleteSubject(name) {
+    function deleteCourse(name) {
         'use strict';
-        for (var k = 0; k < subjectsList.length; k++) {
+        for (var k = 0; k < coursesList.length; k++) {
 
-            if (subjectsList[k].name === name) {
+            if (coursesList[k].name === name) {
 
-                var refDeleteString = '/subjects/' + subjectsList[k].key;
+                var refDeleteString = refCourses + '/' + coursesList[k].key;
                 db.ref(refDeleteString).remove(function (error) {
                     console.log(error ? "Deletion failed !!!" : "Success!");
                 });
@@ -81,21 +81,21 @@ var FirebaseSubjectsModule = (function () {
         }
     }
 
-    function getSubject(index) {
+    function getCourse(index) {
         'use strict';
-        if (index < 0 || index >= subjectsList.length) {
+        if (index < 0 || index >= coursesList.length) {
             return null;
         }
 
-        return subjectsList[index];
+        return coursesList[index];
     }
 
-    function getNameOfSubject(key) {
+    function getNameOfCourse(key) {
         'use strict';
-        for (var k = 0; k < subjectsList.length; k++) {
+        for (var k = 0; k < coursesList.length; k++) {
 
-            if (subjectsList[k].key === key) {
-                return subjectsList[k].name;
+            if (coursesList[k].key === key) {
+                return coursesList[k].name;
             }
         }
 
@@ -107,13 +107,13 @@ var FirebaseSubjectsModule = (function () {
 
     return {
         init: init,
-        addSubject: addSubject,
-        updateSubject: updateSubject,
-        deleteSubject: deleteSubject,
-        getNameOfSubject: getNameOfSubject,
-        getSubject: getSubject,
+        addCourse: addCourse,
+        updateCourse: updateCourse,
+        deleteCourse: deleteCourse,
+        getNameOfCourse: getNameOfCourse,
+        getCourse: getCourse,
 
-        readListOfSubjectsCb: readListOfSubjectsCb,
-        readListOfSubjectsPr: readListOfSubjectsPr
+        readListOfCoursesCb: readListOfCoursesCb,
+        readListOfCoursesPr: readListOfCoursesPr
     };
 })();
