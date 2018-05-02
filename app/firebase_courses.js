@@ -1,7 +1,7 @@
 var FirebaseCoursesModule = (function () {
 
     // firebase
-    const refCourses = '/subjects';  // ??????????????? TBD: Das sollten jetzt auch courses sein ....
+    const refCourses = '/courses';
     var database;
 
     // (last read) list of courses
@@ -35,13 +35,14 @@ var FirebaseCoursesModule = (function () {
         'use strict';
         return database.ref(refCourses).once('value')
             .then((snapshot) => {
+                coursesList = [];
                 let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
                     console.log("Got course " + snap.name + ", Description = " + snap.description);
                     let course = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                    localList.push(course);
                     coursesList.push(course);
+                    localList.push(course);
                 });
                 return localList;
             }).catch((err) => {
@@ -55,14 +56,14 @@ var FirebaseCoursesModule = (function () {
 
     function addCourse(name, description) {
         'use strict';
-        var ref = db.ref(refCourses).push();
+        var ref = database.ref(refCourses).push();
         return ref.set({ "name": name, "description": description });
     }
 
     function updateCourse(course) {
         'use strict';
         var refString = refCourses + '/' + course.key;
-        var ref = db.ref(refString);
+        var ref = database.ref(refString);
         return ref.update({ "name": course.name, "description": course.description });
     }
 
@@ -73,7 +74,7 @@ var FirebaseCoursesModule = (function () {
             if (coursesList[k].name === name) {
 
                 var refDeleteString = refCourses + '/' + coursesList[k].key;
-                db.ref(refDeleteString).remove(function (error) {
+                database.ref(refDeleteString).remove(function (error) {
                     console.log(error ? "Deletion failed !!!" : "Success!");
                 });
                 break;

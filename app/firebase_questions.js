@@ -1,6 +1,6 @@
 var FirebaseQuestionsModule = (function () {
 
-    var db;
+    var database;
     var questionsList;
 
     // ============================================================================================
@@ -8,7 +8,7 @@ var FirebaseQuestionsModule = (function () {
 
     function init() {
 
-        db = firebase.database();  // get a reference to the database service
+        database = firebase.database();  // get a reference to the database service
     };
 
     // ============================================================================================
@@ -22,7 +22,7 @@ var FirebaseQuestionsModule = (function () {
         questionsList = [];
         var refString = '/questions';
         var counter = 1;
-        db.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
+        database.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
             snapshot.forEach((childSnapshot) => {
 
                 console.log("===========> X1");
@@ -46,7 +46,7 @@ var FirebaseQuestionsModule = (function () {
         questionsList = [];
         var refString = '/questions';
         var counter = 1;
-        db.ref(refString).once('value').then(function (snapshot) {
+        database.ref(refString).once('value').then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 var snap = childSnapshot.val();
                 var question = readQuestion(snap);
@@ -83,7 +83,7 @@ var FirebaseQuestionsModule = (function () {
         question['/num-correct-answers'] = numCorrectAnswers;
 
         // write data into firebase
-        var ref = db.ref('questions').push();
+        var ref = database.ref('questions').push();
         return ref.update(question);
     }
 

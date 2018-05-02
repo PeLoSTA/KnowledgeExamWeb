@@ -8,7 +8,7 @@ var HtmlTabStudentsModule = (function () {
     var btnModifyStudent = document.getElementById('btnModifyStudent');
     var btnDeleteStudent = document.getElementById('btnDeleteStudent');
     var btnRefreshStudents = document.getElementById('btnRefreshStudents');
-    var selectStudentsSubjects = document.getElementById('selectStudentsSubjects');
+    var selectStudentsCourses = document.getElementById('selectStudentsCourses');
 
     // miscellaneous data
     var isActive;
@@ -29,7 +29,7 @@ var HtmlTabStudentsModule = (function () {
         btnDeleteStudent.addEventListener('click', onClickEvent);
         btnRefreshStudents.addEventListener('click', onClickEvent);
 
-        selectStudentsSubjects.addEventListener('change', onChangeEvent);
+        selectStudentsCourses.addEventListener('change', onChangeEvent);
 
         tabStudents.addEventListener('click', () => {
             'use strict';

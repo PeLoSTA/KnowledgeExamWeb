@@ -120,7 +120,7 @@ var HtmlTabCoursesModule = (function () {
 
     function onRefreshEvent() {
         'use strict';
-        updateTableOfCourses();
+        updateTableOfCoursesPr();
     };
 
     function updateTableOfCoursesCb() {
@@ -206,7 +206,7 @@ var HtmlTabCoursesModule = (function () {
         }
         else {
             FirebaseCoursesModule.addCourse(name, description);
-            updateTableOfCourses();
+            updateTableOfCoursesPr();
         }
 
         txtCourse.value = '';
@@ -253,7 +253,7 @@ var HtmlTabCoursesModule = (function () {
             course.name = name;
             course.description = description;
             FirebaseCoursesModule.updateCourse(course);
-            updateTableOfCourses();
+            updateTableOfCoursesPr();
         }
 
         txtCourseModified.value = '';
@@ -395,7 +395,7 @@ var HtmlTabCoursesModule = (function () {
 
     return {
         init: init,
-        updateTableOfCoursesCb: updateTableOfCoursesCb,
+        // updateTableOfCoursesCb: updateTableOfCoursesCb,
         updateTableOfCoursesPr: updateTableOfCoursesPr
     };
 })();
