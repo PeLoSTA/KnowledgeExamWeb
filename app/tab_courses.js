@@ -1,3 +1,7 @@
+/*global FirebaseCoursesModule */
+/*global dialogPolyfill */
+/*global componentHandler */
+
 var HtmlTabCoursesModule = (function () {
 
     // retrieve HTML elements according to 'Courses' tab
@@ -31,7 +35,7 @@ var HtmlTabCoursesModule = (function () {
 
         // connect ui elements with event handlers
         bindUIActions();
-    };
+    }
 
     function bindUIActions() {
         'use strict';
@@ -88,7 +92,7 @@ var HtmlTabCoursesModule = (function () {
 
         //     console.log('Yeahhhhhhhh: ' + index);
         // }
-    };
+    }
 
     // ============================================================================================
     // click event dispatching routine
@@ -111,7 +115,7 @@ var HtmlTabCoursesModule = (function () {
                 onRefreshEvent();
                 break;
         }
-    };
+    }
 
     // ============================================================================================
     // courses
@@ -123,13 +127,13 @@ var HtmlTabCoursesModule = (function () {
     function onRefreshEvent() {
         'use strict';
         updateTableOfCoursesPr();
-    };
+    }
 
     function updateTableOfCoursesCb() {
         'use strict';
         updateTableOfCoursesBegin();
         FirebaseCoursesModule.readListOfCoursesCb(updateTableOfCoursesNext, updateTableOfCoursesDone);
-    };
+    }
 
     function updateTableOfCoursesBegin() {
         'use strict';
@@ -144,12 +148,12 @@ var HtmlTabCoursesModule = (function () {
         lastCheckedCourse = -1;
         tableCoursesBody.innerHTML = '';
         componentHandler.upgradeDom();
-    };
+    }
 
     function updateTableOfCoursesNext(course) {
         'use strict';
         addEntryToCourseTable(course);
-    };
+    }
 
     function updateTableOfCoursesDone() {
         'use strict';
@@ -187,7 +191,7 @@ var HtmlTabCoursesModule = (function () {
         });
 
         isActive = false;
-    };
+    }
 
     // ============================================================================================
     // create new course
@@ -357,7 +361,7 @@ var HtmlTabCoursesModule = (function () {
         tableCoursesBody.appendChild(node);        // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
-    };
+    }
 
     function checkboxHandler() {
         'use strict';
@@ -388,7 +392,7 @@ var HtmlTabCoursesModule = (function () {
                 lastCheckedCourse = -1;
             }
         }
-    };
+    }
 
     // ============================================================================================
     // public interface

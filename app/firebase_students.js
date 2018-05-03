@@ -1,3 +1,5 @@
+/*global firebase */
+
 var FirebaseStudentsModule = (function () {
 
     const refStudents = '/students';

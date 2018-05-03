@@ -1,3 +1,6 @@
+/*global dialogPolyfill */
+/*global FirebaseClassesModule */
+
 var HtmlTabClassesModule = (function () {
 
     // retrieve HTML elements according to 'Classes' tab
@@ -29,7 +32,7 @@ var HtmlTabClassesModule = (function () {
 
         // connect ui elements with event handlers
         bindUIActions();
-    };
+    }
 
     function bindUIActions() {
         'use strict';
@@ -80,7 +83,7 @@ var HtmlTabClassesModule = (function () {
                 onUpdateClass();
                 break;
         }
-    };
+    }
 
     // ============================================================================================
     // create new class

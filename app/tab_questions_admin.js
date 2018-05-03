@@ -1,3 +1,10 @@
+/*global FirebaseCoursesModule */
+/*global FirebaseQuestionsModule */
+/*global FirebaseSubjectsModule */
+
+/*global dialogPolyfill */
+/*global componentHandler */
+
 var HtmlTabQuestionsAdminModule = (function () {
 
     // retrieve HTML elements according to 'questions administrations' tab
@@ -34,7 +41,7 @@ var HtmlTabQuestionsAdminModule = (function () {
 
         // connect ui elements with event handlers
         bindUIActions();
-    };
+    }
     
     function bindUIActions() {
         'use strict';
@@ -73,7 +80,7 @@ var HtmlTabQuestionsAdminModule = (function () {
             'use strict';
             onLoadListOfSubjectsAdmin();
         });
-    };
+    }
 
     function helperDialogDisplay(number) {
         'use strict';
@@ -204,7 +211,7 @@ var HtmlTabQuestionsAdminModule = (function () {
         var correctAnswers = [];
         var numCorrectAnswers = 0;
         var childrenCorrectAnswers = divAnchorCorrectAnswers.getElementsByClassName('mdl-checkbox');
-        for (var i = 0; i < childrenCorrectAnswers.length; i++) {
+        for (i = 0; i < childrenCorrectAnswers.length; i++) {
 
             var label = childrenCorrectAnswers[i];
             var classAttributes = label.getAttribute("class");

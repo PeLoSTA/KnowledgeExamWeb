@@ -1,3 +1,5 @@
+/*global firebase */
+
 var FirebaseCoursesModule = (function () {
 
     // firebase
@@ -14,7 +16,7 @@ var FirebaseCoursesModule = (function () {
 
         database = firebase.database();  // get a reference to the database service
         coursesList = [];               // empty list of courses
-    };
+    }
 
     function readListOfCoursesCb(callback, done) {
         'use strict';

@@ -1,3 +1,5 @@
+/*global firebase */
+
 var FirebaseQuestionsModule = (function () {
 
     var database;
@@ -9,7 +11,7 @@ var FirebaseQuestionsModule = (function () {
     function init() {
 
         database = firebase.database();  // get a reference to the database service
-    };
+    }
 
     // ============================================================================================
     // public interface
@@ -71,7 +73,7 @@ var FirebaseQuestionsModule = (function () {
         }
 
         var numCorrectAnswers = 0;
-        for (var i = 0; i < correctAnswers.length; i++) {
+        for (i = 0; i < correctAnswers.length; i++) {
             if (correctAnswers[i] === true) {
                 numCorrectAnswers++;
                 question['/correct-answers/answer' + (i + 1)] = true;
@@ -107,7 +109,7 @@ var FirebaseQuestionsModule = (function () {
 
         var correctAnswers = snapshot['correct-answers'];
         question['correct-answers'] = [];
-        for (var k = 0; k < numAnswers; k++) {
+        for (k = 0; k < numAnswers; k++) {
             question['correct-answers'].push(correctAnswers['answer' + (k + 1)]);
         }
 
