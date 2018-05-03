@@ -89,7 +89,6 @@ var HtmlTabClassesModule = (function () {
         dialogCreateClass.showModal();
     }
 
-    // ARGH : DAS SOLLTE JETZT MIT PROMISES GEHEN !!!!!!!!!!!!!!!!!!!!!
     function doCreateClass() {
         'use strict';
         var name = txtClassName.value;
