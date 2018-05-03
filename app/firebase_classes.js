@@ -21,7 +21,7 @@ var FirebaseClassesModule = (function () {
     // ============================================================================================
     // public interface
 
-    function readListOfClassesPr() {
+    function getClassesPr() {
         'use strict';
         return database.ref(refClasses).once('value')
             .then((snapshot) => {
@@ -69,6 +69,7 @@ var FirebaseClassesModule = (function () {
 
     return {
         init: init,
-        addClass: addClass
+        addClass: addClass,
+        getClassesPr: getClassesPr
     }
 })();

@@ -358,7 +358,7 @@ var HtmlTabCoursesModule = (function () {
         node.appendChild(td1);                      // append <td> to <tr>
         node.appendChild(td2);                      // append <td> to <tr>
         node.appendChild(td3);                      // append <td> to <tr>
-        tableCoursesBody.appendChild(node);        // append <tr> to <tbody>
+        tableCoursesBody.appendChild(node);         // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
     }
