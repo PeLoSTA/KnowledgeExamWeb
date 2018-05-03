@@ -38,6 +38,9 @@ var HtmlTabCoursesModule = (function () {
         if (!dialogCreateCourse.showModal) {
             dialogPolyfill.registerDialog(dialogCreateCourse);
         }
+        if (!dialogModifyCourse.showModal) {
+            dialogPolyfill.registerDialog(dialogModifyCourse);
+        }
         if (!dialogDeleteCourse.showModal) {
             dialogPolyfill.registerDialog(dialogDeleteCourse);
         }
@@ -109,7 +112,6 @@ var HtmlTabCoursesModule = (function () {
                 break;
         }
     };
-
 
     // ============================================================================================
     // courses
@@ -187,9 +189,8 @@ var HtmlTabCoursesModule = (function () {
         isActive = false;
     };
 
-    /*
-     *  create new course
-     */
+    // ============================================================================================
+    // create new course
 
     function onCreateEvent() {
         dialogCreateCourse.showModal();
@@ -202,7 +203,6 @@ var HtmlTabCoursesModule = (function () {
 
         if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
-
         }
         else {
             FirebaseCoursesModule.addCourse(name, description);
@@ -391,7 +391,7 @@ var HtmlTabCoursesModule = (function () {
     };
 
     // ============================================================================================
-    // public functions
+    // public interface
 
     return {
         init: init,

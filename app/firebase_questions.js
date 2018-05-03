@@ -119,7 +119,7 @@ var FirebaseQuestionsModule = (function () {
     }
 
     // ============================================================================================
-    // public functions
+    // public interface
 
     return {
         init: init,

@@ -300,7 +300,7 @@ var HtmlTabQuestionsViewerModule = (function () {
     }
 
     // ============================================================================================
-    // public functions
+    // public interface
 
     return {
         init: init

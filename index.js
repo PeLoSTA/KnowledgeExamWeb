@@ -1,7 +1,9 @@
+FirebaseClassesModule.init();
 FirebaseCoursesModule.init();
 FirebaseQuestionsModule.init();
 FirebaseStudentsModule.init();
 
+HtmlTabClassesModule.init();
 HtmlTabCoursesModule.init();
 HtmlTabQuestionsAdminModule.init();
 HtmlTabQuestionsViewerModule.init();

@@ -270,7 +270,7 @@ var HtmlTabQuestionsAdminModule = (function () {
     }
 
     // ============================================================================================
-    // public functions
+    // public interface
 
     return {
         init: init
