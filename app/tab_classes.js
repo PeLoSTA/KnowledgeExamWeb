@@ -1,5 +1,6 @@
 /*global dialogPolyfill */
 /*global FirebaseClassesModule */
+/*global FirebaseHelpers */
 /*global componentHandler */
 
 var HtmlTabClassesModule = (function () {
@@ -102,26 +103,33 @@ var HtmlTabClassesModule = (function () {
 
         if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
+            return;
         }
-        else {
-            FirebaseClassesModule.addClass(name, description)
-                .then((key) => {
-                    console.log('aaa');
-                    // add key to status line
-                    txtStatusBar.value = "Added Class '" + name + "' to repository [Key = " + key + "]!";
-                    return key;
-                }).then((key) => {
-                    console.log('bbb [' + key + ']');
-                    updateTableOfClassesPr();
-                }).catch((msg) => {
-                    console.log('ccc');
-                    txtStatusBar.value = msg;
-                }).finally(() => {
-                    txtClassName.value = '';
-                    txtClassDescription.value = '';
-                    dialogCreateClass.close();
-                });
+
+        if (isActive === true) {
+            FirebaseHelpers.htmllog("Another asynchronous invocation still pending ... ignoring click event!");
+            return;
         }
+
+        isActive = true;
+        FirebaseHelpers.htmllog("> doCreateClass");
+
+        FirebaseClassesModule.addClass(name, description)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Added Class '" + name + "' to repository [Key = " + key + "]!";
+                return key;
+            }).catch((msg) => {
+                // log error message to status line
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                txtClassName.value = '';
+                txtClassDescription.value = '';
+                dialogCreateClass.close();
+
+                isActive = false;
+                FirebaseHelpers.htmllog("< doCreateClass");
+            });
     }
 
     function cancelCreateClass() {
@@ -156,25 +164,25 @@ var HtmlTabClassesModule = (function () {
     function updateTableOfClassesPr() {
         'use strict';
         if (isActive === true) {
-            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
+            FirebaseHelpers.htmllog("Another asynchronous invocation still pending ... ignoring click event!");
             return;
         }
 
         isActive = true;
-        console.log("updateTableOfClassesPr");
+        FirebaseHelpers.htmllog("> updateTableOfClassesPr");
 
         tableClassesBody.innerHTML = '';
         FirebaseClassesModule.getClassesPr().then((listOfClasses) => {
             for (var i = 0; i < listOfClasses.length; i++) {
                 var course = listOfClasses[i]
-                console.log("    ===> " + course.name);
                 addEntryToClassTable(tableClassesBody, i, course);
             }
-        }).catch((err) => {
-            console.log('Reading list of courses failed !!!!!!!!!!!!!');
-            console.log('    ' + err);
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
         }).finally(() => {
             isActive = false;
+            FirebaseHelpers.htmllog("< updateTableOfClassesPr");
         });
     }
 
@@ -229,7 +237,7 @@ var HtmlTabClassesModule = (function () {
 
     function checkboxHandler() {
         'use strict';
-        console.log('clicked at checkbox: ' + this.id + '[checkbox is checked: ' + this.checked + ' ]');
+        FirebaseHelpers.htmllog('clicked at checkbox: ' + this.id + '[checkbox is checked: ' + this.checked + ' ]');
 
         // calculate index of row
         var row = parseInt(this.id.substring(4));  // omitting 'row_'

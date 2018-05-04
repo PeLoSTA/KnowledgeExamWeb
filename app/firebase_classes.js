@@ -1,3 +1,4 @@
+/*global FirebaseHelpers */
 /*global firebase */
 
 var FirebaseClassesModule = (function () {
@@ -29,16 +30,16 @@ var FirebaseClassesModule = (function () {
                 let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
-                    console.log("Got class " + snap.name + ", Description = " + snap.description);
                     let classs = { name: snap.name, description: snap.description, key: childSnapshot.key };
+                    FirebaseHelpers.firelog("-> Class " + snap.name + ", Description = " + snap.description + ", Key = " + childSnapshot.key);
                     classesList.push(classs);
                     localList.push(classs);
                 });
                 return localList;
             }).catch((err) => {
                 let msg = "FirebaseClassesModule: ERROR " + err.code + ", Message: " + err.message;
-                console.log('Reading list of classes failed! [' + msg + ']');
-                throw err;
+                FirebaseHelpers.firelog('getClasses failed! ' + msg);
+                throw msg;
             });
     }
 
@@ -48,21 +49,15 @@ var FirebaseClassesModule = (function () {
 
         return database.ref(refClasses).push()
             .then((newRef) => {
-                console.log('111');
                 key = newRef.key;
                 return newRef.set({ name: name, description: description });
             })
             .then(() => {
-                console.log('222');
                 return key;
             })
-            .catch(function (err) {
-                console.log('333');
-
-                var msg = "Error: " + err.code + ", Message: " + err.message;
-
-                console.log('err', msg);
-                key = 'weiß nicht ....';
+            .catch((err) => {
+                let msg = "FirebaseClassesModule: ERROR " + err.code + ", Message: " + err.message;
+                FirebaseHelpers.firelog('addClass failed! ' + msg);
                 throw msg;
             });
     }
