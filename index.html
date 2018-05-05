@@ -18,7 +18,7 @@
 
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 
-    <!-- classes dialog (creation) ===================================================================== -->
+    <!-- class dialog (creation) ===================================================================== -->
 
     <dialog id="dialogCreateClass" class="mdl-dialog" style="width: 500px">
         <div>
@@ -54,7 +54,24 @@
         </div>
     </dialog>
 
-    <!-- courses dialog (creation) ===================================================================== -->
+    <!-- class dialog (deletion) ===================================================================== -->
+
+    <dialog id="dialogDeleteClass" class="mdl-dialog" style="width: 400px">
+        <div>
+            <h6 class="mdl-dialog__title">Delete a Class</h6>
+            <br/>
+            <p>Are you sure you want to delete this class?</p>
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="txtClassToDelete" readonly>
+            </div>
+            <div class="mdl-dialog__actions">
+                <button type="button" class="mdl-button delete_class">Delete</button>
+                <button type="button" class="mdl-button cancel_delete_class">Cancel</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- course dialog (creation) ===================================================================== -->
 
     <dialog id="dialogCreateCourse" class="mdl-dialog" style="width: 500px">
         <div>
@@ -264,7 +281,7 @@
                         </button>
                     </div>
                     <br/>
-                    <table id="tableCourses" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+                    <table class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
                         <thead>
                             <tr>
                                 <th/>
@@ -406,7 +423,6 @@
         firebase.initializeApp(config);
     </script>
 
-    <script type="text/javascript" src="app/firebase_misc.js"></script>
     <script type="text/javascript" src="app/firebase_classes.js"></script>
     <script type="text/javascript" src="app/firebase_courses.js"></script>
     <script type="text/javascript" src="app/firebase_questions.js"></script>

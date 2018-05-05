@@ -1,4 +1,3 @@
-/*global FirebaseHelpers */
 /*global firebase */
 
 var FirebaseClassesModule = (function () {
@@ -31,14 +30,14 @@ var FirebaseClassesModule = (function () {
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
                     let classs = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                    FirebaseHelpers.firelog("-> Class " + snap.name + ", Description = " + snap.description + ", Key = " + childSnapshot.key);
+                    console.log("[Firebase] -> Class " + snap.name + ", Description = " + snap.description + ", Key = " + childSnapshot.key);
                     classesList.push(classs);
                     localList.push(classs);
                 });
                 return localList;
             }).catch((err) => {
                 let msg = "FirebaseClassesModule: ERROR " + err.code + ", Message: " + err.message;
-                FirebaseHelpers.firelog('getClasses failed! ' + msg);
+                console.log('[Firebase] getClasses failed! ' + msg);
                 throw msg;
             });
     }
@@ -57,14 +56,56 @@ var FirebaseClassesModule = (function () {
             })
             .catch((err) => {
                 let msg = "FirebaseClassesModule: ERROR " + err.code + ", Message: " + err.message;
-                FirebaseHelpers.firelog('addClass failed! ' + msg);
+                console.log('[Firebase] addClass failed! ' + msg);
                 throw msg;
             });
+    }
+
+    function deleteClass(name) {
+        'use strict';
+
+        // search class to delete
+        var refDeleteString = '';
+        var keyOfClass = '';
+        for (var k = 0; k < classesList.length; k++) {
+
+            if (classesList[k].name === name) {
+
+                keyOfClass = classesList[k].key;
+                refDeleteString = refClasses + '/' + keyOfClass;
+                break;
+            }
+        }
+        if (refDeleteString === '') {
+            let msg = "FirebaseClassesModule: INTERNAL ERROR: class " + name + " not found!";
+            console.log('[Firebase] deleteClass failed! ' + msg);
+            return Promise.reject(msg);
+        }
+
+        return database.ref(refDeleteString).remove().then(() => {
+            return keyOfClass;
+        }).catch((err) => {
+            let msg = "FirebaseClassesModule: ERROR " + err.code + ", Message: " + err.message;
+            console.log('[Firebase] deleteClass failed! ' + msg);
+            throw msg;
+        });
+    }
+
+    function getClass(index) {
+        'use strict';
+        if (index < 0 || index >= classesList.length) {
+            return null;
+        }
+
+        return classesList[index];
     }
 
     return {
         init: init,
         addClass: addClass,
-        getClassesPr: getClassesPr
+        deleteClass: deleteClass,
+
+        getClassesPr: getClassesPr,
+        getClass: getClass
     }
 })();

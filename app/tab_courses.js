@@ -9,7 +9,7 @@ var HtmlTabCoursesModule = (function () {
     var btnModifyCourse = document.getElementById('btnModifyCourse');
     var btnDeleteCourse = document.getElementById('btnDeleteCourse');
     var btnRefreshCourses = document.getElementById('btnRefreshCourses');
-    var tableCoursesBody = document.getElementById('tableCoursesBody');
+
     var dialogCreateCourse = document.getElementById('dialogCreateCourse');
     var dialogModifyCourse = document.getElementById('dialogModifyCourse');
     var dialogDeleteCourse = document.getElementById('dialogDeleteCourse');
@@ -20,8 +20,11 @@ var HtmlTabCoursesModule = (function () {
     var txtDescriptionModified = document.getElementById('txtDescriptionModified');
     var txtCourseToDelete = document.getElementById('txtCourseToDelete');
 
+    var tableCoursesBody = document.getElementById('tableCoursesBody');
+
+    var txtStatusBar = document.getElementById('status_bar');
+
     // miscellaneous data
-    var rowCounterCourses;
     var lastCheckedCourse;
     var isActive;
 
@@ -144,7 +147,6 @@ var HtmlTabCoursesModule = (function () {
 
         isActive = true;
         console.log("updateTableOfCoursesBegin");
-        rowCounterCourses = 1;
         lastCheckedCourse = -1;
         tableCoursesBody.innerHTML = '';
         componentHandler.upgradeDom();
@@ -172,25 +174,21 @@ var HtmlTabCoursesModule = (function () {
         }
 
         isActive = true;
+        console.log("[Html] > updateTableOfCoursesPr");
 
-        console.log("updateTableOfCoursesBegin");
-        rowCounterCourses = 1;
-        lastCheckedCourse = -1;
         tableCoursesBody.innerHTML = '';
-
         FirebaseCoursesModule.readListOfCoursesPr().then((listOfCourses) => {
             for (var i = 0; i < listOfCourses.length; i++) {
                 var course = listOfCourses[i]
-                console.log("    ===> " + course.name);
-                addEntryToCourseTable(course);
+                addEntryToCourseTable(tableCoursesBody, i, course);
             }
-
-        }).catch((err) => {
-            console.log('Reading list of courses failed !!!!!!!!!!!!!');
-            console.log('    ' + err);
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] < updateTableOfCoursesPr");
         });
-
-        isActive = false;
     }
 
     // ============================================================================================
@@ -316,17 +314,17 @@ var HtmlTabCoursesModule = (function () {
     // ============================================================================================
     // private helper functions
 
-    function addEntryToCourseTable(entry) {
+    function addEntryToCourseTable(tablebody, index, entry) {
         'use strict';
 
         // adding dynamically a 'material design lite' node to a table, for example
         //
         //  <tr>
-        //  <td>
+        //    <td>
         //      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
         //          <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
         //      </label>
-        //  </td>
+        //    </td>
         //      <td class="mdl-data-table__cell--non-numeric">C++</td>
         //      <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
         //  </tr>
@@ -336,14 +334,13 @@ var HtmlTabCoursesModule = (function () {
         var label = document.createElement('label');     // create <label> node
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        label.setAttribute('for', 'row_' + rowCounterCourses);  // set attribute
-        label.setAttribute('id', 'label_' + rowCounterCourses);  // set attribute
+        label.setAttribute('for', 'row_' + index);  // set attribute
+        label.setAttribute('id', 'label_' + index);  // set attribute
         var input = document.createElement('input');     // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
         input.setAttribute('type', 'checkbox');  // set attributes
-        input.setAttribute('id', 'row_' + rowCounterCourses);  // set attribute
+        input.setAttribute('id', 'row_' + index);  // set attribute
         input.addEventListener('click', checkboxHandler);
-        rowCounterCourses++;
         label.appendChild(input);
         td1.appendChild(label);
 
@@ -353,19 +350,19 @@ var HtmlTabCoursesModule = (function () {
         td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         var textnode1 = document.createTextNode(entry.name);             // create second text node
         var textnode2 = document.createTextNode(entry.description);      // create third text node
-        td2.appendChild(textnode1);                 // append text to <td>
-        td3.appendChild(textnode2);                 // append text to <td>
-        node.appendChild(td1);                      // append <td> to <tr>
-        node.appendChild(td2);                      // append <td> to <tr>
-        node.appendChild(td3);                      // append <td> to <tr>
-        tableCoursesBody.appendChild(node);         // append <tr> to <tbody>
+        td2.appendChild(textnode1);     // append text to <td>
+        td3.appendChild(textnode2);     // append text to <td>
+        node.appendChild(td1);          // append <td> to <tr>
+        node.appendChild(td2);          // append <td> to <tr>
+        node.appendChild(td3);          // append <td> to <tr>
+        tablebody.appendChild(node);    // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
     }
 
     function checkboxHandler() {
         'use strict';
-        console.log('clicked at checkbox: ' + this.id + '[checkbox is checked: ' + this.checked + ' ]');
+        console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
 
         // calculate index of row
         var row = parseInt(this.id.substring(4));  // omitting 'row_'
@@ -374,11 +371,10 @@ var HtmlTabCoursesModule = (function () {
 
             lastCheckedCourse = row;
 
-            // TODO: Da fehlt die Hierarchie: Alle unterhalb von genau dieser Tabelle ...
-            var boxes = document.getElementsByClassName('checkbox_select_course');
+            var boxes = tableCoursesBody.getElementsByClassName('checkbox_select_course');
             for (var k = 0; k < boxes.length; k++) {
 
-                if (k != lastCheckedCourse - 1) {
+                if (k != lastCheckedCourse) {
                     var label = boxes[k];
                     label.parentElement.MaterialCheckbox.uncheck();
                 }

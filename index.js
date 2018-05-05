@@ -1,4 +1,3 @@
-/*global FirebaseHelpers */
 /*global FirebaseClassesModule */
 /*global FirebaseCoursesModule */
 /*global FirebaseQuestionsModule */
@@ -10,7 +9,6 @@
 /*global HtmlTabQuestionsViewerModule */
 /*global HtmlTabStudentsModule */
 
-FirebaseHelpers.init();
 FirebaseClassesModule.init();
 FirebaseCoursesModule.init();
 FirebaseQuestionsModule.init();

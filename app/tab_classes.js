@@ -1,6 +1,5 @@
 /*global dialogPolyfill */
 /*global FirebaseClassesModule */
-/*global FirebaseHelpers */
 /*global componentHandler */
 
 var HtmlTabClassesModule = (function () {
@@ -13,6 +12,7 @@ var HtmlTabClassesModule = (function () {
 
     var txtClassName = document.getElementById('txtClassName');
     var txtClassDescription = document.getElementById('txtClassDescription');
+    var txtClassToDelete = document.getElementById('txtClassToDelete');
 
     var dialogCreateClass = document.getElementById('dialogCreateClass');
     var dialogModifyClass = document.getElementById('dialogModifyClass');
@@ -46,9 +46,9 @@ var HtmlTabClassesModule = (function () {
         // if (!dialogModifyClass.showModal) {
         //     dialogPolyfill.registerDialog(dialogModifyClass);
         // }
-        // if (!dialogDeleteClass.showModal) {
-        //     dialogPolyfill.registerDialog(dialogDeleteClass);
-        // }
+        if (!dialogDeleteClass.showModal) {
+            dialogPolyfill.registerDialog(dialogDeleteClass);
+        }
 
         btnCreateClass.addEventListener('click', onClickEvent);
         btnModifyClass.addEventListener('click', onClickEvent);
@@ -63,6 +63,16 @@ var HtmlTabClassesModule = (function () {
         dialogCreateClass.querySelector('.cancel_create_class').addEventListener('click', () => {
             'use strict';
             cancelCreateClass();
+        });
+
+        dialogDeleteClass.querySelector('.delete_class').addEventListener('click', () => {
+            'use strict';
+            doDeleteClass();
+        });
+
+        dialogDeleteClass.querySelector('.cancel_delete_class').addEventListener('click', () => {
+            'use strict';
+            cancelDeleteClass();
         });
     }
 
@@ -103,22 +113,24 @@ var HtmlTabClassesModule = (function () {
 
         if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
-            return;
+            return null;
         }
 
         if (isActive === true) {
-            FirebaseHelpers.htmllog("Another asynchronous invocation still pending ... ignoring click event!");
-            return;
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
         }
 
         isActive = true;
-        FirebaseHelpers.htmllog("> doCreateClass");
+        console.log("[Html] > doCreateClass");
 
         FirebaseClassesModule.addClass(name, description)
             .then((key) => {
                 // log key to status bar
                 txtStatusBar.value = "Added Class '" + name + "' to repository [Key = " + key + "]!";
                 return key;
+            }).then((key) => {
+                return updateTableOfClassesPr(false, false);
             }).catch((msg) => {
                 // log error message to status line
                 txtStatusBar.value = msg;
@@ -128,7 +140,7 @@ var HtmlTabClassesModule = (function () {
                 dialogCreateClass.close();
 
                 isActive = false;
-                FirebaseHelpers.htmllog("< doCreateClass");
+                console.log("[Html] < doCreateClass");
             });
     }
 
@@ -150,39 +162,88 @@ var HtmlTabClassesModule = (function () {
     // ============================================================================================
     // delete existing class
 
+    // Note: 'double click' on delete button must not be prevented - second click runs on not existing firebase path
+
     function onDeleteClass() {
-        console.log('ToDo');
-    }
-
-    // ============================================================================================
-    // update existing class
-
-    function onUpdateClass() {
-        updateTableOfClassesPr();
-    }
-
-    function updateTableOfClassesPr() {
         'use strict';
-        if (isActive === true) {
-            FirebaseHelpers.htmllog("Another asynchronous invocation still pending ... ignoring click event!");
+        if (lastCheckedClass === -1) {
+            window.alert("Warning: No class selected !");
             return;
         }
 
+        var classs = FirebaseClassesModule.getClass(lastCheckedClass);
+        txtClassToDelete.value = classs.name;
+        dialogDeleteClass.showModal();
+    }
+
+    function doDeleteClass() {
+        'use strict';
+
+        var name = txtClassToDelete.value;
+        console.log("[Html] > doDeleteClass: " + name);
+
+        FirebaseClassesModule.deleteClass(name)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Deleted Class '" + name + "' from repository [Key = " + key + "]!";
+                return key;
+            }).then((key) => {
+                return updateTableOfClassesPr(true, false);
+            }).catch((msg) => {
+                console.log("Error in doDeleteClass");
+                // log error to status bar
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                txtClassToDelete.value = '';
+                dialogDeleteClass.close();
+                console.log("[Html] < doDeleteClass");
+            });
+    }
+
+    function cancelDeleteClass() {
+        'use strict';
+        // clear checkbox
+        var checkboxLabel = document.getElementById('label_' + lastCheckedClass);
+        checkboxLabel.MaterialCheckbox.uncheck();
+        lastCheckedClass = -1;
+        dialogDeleteClass.close();
+    }
+
+    // ============================================================================================
+    // refresh registered classes
+
+    function onUpdateClass() {
+        updateTableOfClassesPr(true, true);
+    }
+
+    function updateTableOfClassesPr(checkGuard, verbose) {
+        'use strict';
+        if (checkGuard && isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
+        }
+
         isActive = true;
-        FirebaseHelpers.htmllog("> updateTableOfClassesPr");
+        console.log("[Html] > updateTableOfClassesPr");
 
         tableClassesBody.innerHTML = '';
-        FirebaseClassesModule.getClassesPr().then((listOfClasses) => {
+        return FirebaseClassesModule.getClassesPr().then((listOfClasses) => {
             for (var i = 0; i < listOfClasses.length; i++) {
                 var course = listOfClasses[i]
                 addEntryToClassTable(tableClassesBody, i, course);
+            }
+            return listOfClasses.length;
+        }).then((number) => {
+            if (verbose) {
+                // refresh status line
+                txtStatusBar.value = number + ' classes';
             }
         }).catch((msg) => {
             // log error message to status line
             txtStatusBar.value = msg;
         }).finally(() => {
             isActive = false;
-            FirebaseHelpers.htmllog("< updateTableOfClassesPr");
+            console.log("[Html] < updateTableOfClassesPr");
         });
     }
 
@@ -237,7 +298,7 @@ var HtmlTabClassesModule = (function () {
 
     function checkboxHandler() {
         'use strict';
-        FirebaseHelpers.htmllog('clicked at checkbox: ' + this.id + '[checkbox is checked: ' + this.checked + ' ]');
+        console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
 
         // calculate index of row
         var row = parseInt(this.id.substring(4));  // omitting 'row_'

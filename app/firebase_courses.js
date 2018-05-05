@@ -41,8 +41,8 @@ var FirebaseCoursesModule = (function () {
                 let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
-                    console.log("Got course " + snap.name + ", Description = " + snap.description);
                     let course = { name: snap.name, description: snap.description, key: childSnapshot.key };
+                    console.log("[Firebase] -> Course " + course.name + ", Description = " + course.description + ", Key = " + course.key);
                     coursesList.push(course);
                     localList.push(course);
                 });
@@ -54,13 +54,33 @@ var FirebaseCoursesModule = (function () {
             });
     }
 
-    // NOCH NICHT UMGESTELLT :::::::::::::::::.
+    // function addCourse(name, description) {
+    //     'use strict';
+    //     var ref = database.ref(refCourses).push();
+    //     return ref.set({ "name": name, "description": description });
+    // }
 
     function addCourse(name, description) {
         'use strict';
-        var ref = database.ref(refCourses).push();
-        return ref.set({ "name": name, "description": description });
+        var key = '';
+
+        return database.ref(refCourses).push()
+            .then((newRef) => {
+                key = newRef.key;
+                return newRef.set({ name: name, description: description });
+            })
+            .then(() => {
+                return key;
+            })
+            .catch((err) => {
+                let msg = "FirebaseCoursesModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('[Firebase] addCourse failed! ' + msg);
+                throw msg;
+            });
     }
+
+    // NOCH NICHT UMGESTELLT :::::::::::::::::.
+
 
     function updateCourse(course) {
         'use strict';
