@@ -12,6 +12,8 @@ var HtmlTabClassesModule = (function () {
 
     var txtClassName = document.getElementById('txtClassName');
     var txtClassDescription = document.getElementById('txtClassDescription');
+    var txtClassNameModified = document.getElementById('txtClassNameModified');
+    var txtClassDescriptionModified = document.getElementById('txtClassDescriptionModified');
     var txtClassToDelete = document.getElementById('txtClassToDelete');
 
     var dialogCreateClass = document.getElementById('dialogCreateClass');
@@ -43,9 +45,9 @@ var HtmlTabClassesModule = (function () {
         if (!dialogCreateClass.showModal) {
             dialogPolyfill.registerDialog(dialogCreateClass);
         }
-        // if (!dialogModifyClass.showModal) {
-        //     dialogPolyfill.registerDialog(dialogModifyClass);
-        // }
+        if (!dialogModifyClass.showModal) {
+            dialogPolyfill.registerDialog(dialogModifyClass);
+        }
         if (!dialogDeleteClass.showModal) {
             dialogPolyfill.registerDialog(dialogDeleteClass);
         }
@@ -63,6 +65,16 @@ var HtmlTabClassesModule = (function () {
         dialogCreateClass.querySelector('.cancel_create_class').addEventListener('click', () => {
             'use strict';
             cancelCreateClass();
+        });
+
+        dialogModifyClass.querySelector('.modify_class').addEventListener('click', () => {
+            'use strict';
+            doModifyClass();
+        });
+
+        dialogModifyClass.querySelector('.cancel_modify_class').addEventListener('click', () => {
+            'use strict';
+            cancelModifyClass();
         });
 
         dialogDeleteClass.querySelector('.delete_class').addEventListener('click', () => {
@@ -156,13 +168,81 @@ var HtmlTabClassesModule = (function () {
     // modify existing class
 
     function onModifyClass() {
-        console.log('ToDo');
+        'use strict';
+        if (lastCheckedClass === -1) {
+            window.alert("Warning: No class selected !");
+            return;
+        }
+
+        var classs = FirebaseClassesModule.getClass(lastCheckedClass);
+        txtClassNameModified.value = classs.name;
+        txtClassDescriptionModified.value = classs.description;
+        dialogModifyClass.showModal();
+    }
+
+    function doModifyClass() {
+        'use strict';
+        var name = txtClassNameModified.value;
+        var description = txtClassDescriptionModified.value;
+
+        if (name === '' || description === '') {
+            window.alert("Name or Description field emtpy !");
+            return null;
+        }
+
+        if (isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
+        }
+
+        isActive = true;
+        console.log("[Html] > doModifyClass");
+
+        var classs = FirebaseClassesModule.getClass(lastCheckedClass);
+        classs.name = name;
+        classs.description = description;
+
+        FirebaseClassesModule.updateClass(classs)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Updated Class '" + name;
+                return key;
+            }).then((key) => {
+                return updateTableOfClassesPr(false, false);
+            }).catch((msg) => {
+                // log error message to status line
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                // clear checkbox
+                var checkboxLabel = document.getElementById('label_' + lastCheckedClass);
+                checkboxLabel.MaterialCheckbox.uncheck();
+                txtClassNameModified.value = '';
+                txtClassDescriptionModified.value = '';
+                lastCheckedClass = -1;
+                dialogModifyClass.close();
+
+                isActive = false;
+                console.log("[Html] < doModifyClass");
+            });
+    }
+
+    function cancelModifyClass() {
+        'use strict';
+        // clear checkbox
+        var checkboxLabel = document.getElementById('label_' + lastCheckedClass);
+        checkboxLabel.MaterialCheckbox.uncheck();
+        txtClassNameModified.value = '';
+        txtClassDescriptionModified.value = '';
+        lastCheckedClass = -1;
+        dialogModifyClass.close();
     }
 
     // ============================================================================================
     // delete existing class
 
-    // Note: 'double click' on delete button must not be prevented - second click runs on not existing firebase path
+    // Note: 'double click' on delete button needn't to be handled 
+    //   - second click runs on a not existing firebase path
+    //   - Firebase doesn't complain about this ...
 
     function onDeleteClass() {
         'use strict';
@@ -229,8 +309,8 @@ var HtmlTabClassesModule = (function () {
         tableClassesBody.innerHTML = '';
         return FirebaseClassesModule.getClassesPr().then((listOfClasses) => {
             for (var i = 0; i < listOfClasses.length; i++) {
-                var course = listOfClasses[i]
-                addEntryToClassTable(tableClassesBody, i, course);
+                var classs = listOfClasses[i]
+                addEntryToClassTable(tableClassesBody, i, classs);
             }
             return listOfClasses.length;
         }).then((number) => {

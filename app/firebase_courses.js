@@ -42,7 +42,7 @@ var FirebaseCoursesModule = (function () {
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
                     let course = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                    console.log("[Firebase] -> Course " + course.name + ", Description = " + course.description + ", Key = " + course.key);
+                    console.log("[Fire] -> Course " + course.name + ", Description = " + course.description + ", Key = " + course.key);
                     coursesList.push(course);
                     localList.push(course);
                 });
@@ -74,7 +74,7 @@ var FirebaseCoursesModule = (function () {
             })
             .catch((err) => {
                 let msg = "FirebaseCoursesModule: ERROR " + err.code + ", Message: " + err.message;
-                console.log('[Firebase] addCourse failed! ' + msg);
+                console.log('[Fire] addCourse failed! ' + msg);
                 throw msg;
             });
     }

@@ -86,15 +86,6 @@ var HtmlTabCoursesModule = (function () {
             'use strict';
             cancelDeleteEvent();
         });
-
-        // Funktioniert -- aber ich will das lieber mit checkboxes lösen
-        // tableSubjectsBody.onclick = function (ev) {
-        //     // ev.target <== td element
-        //     // ev.target.parentElement <== tr
-        //     var index = ev.target.parentElement.rowIndex;
-
-        //     console.log('Yeahhhhhhhh: ' + index);
-        // }
     }
 
     // ============================================================================================
@@ -224,9 +215,8 @@ var HtmlTabCoursesModule = (function () {
         dialogCreateCourse.close();
     }
 
-    /*
-     *  modify existing course
-     */
+    // ============================================================================================
+    // modify existing course
 
     function onModifyEvent() {
         'use strict';
