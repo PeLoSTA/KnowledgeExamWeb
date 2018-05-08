@@ -14,10 +14,10 @@ var HtmlTabCoursesModule = (function () {
     var dialogModifyCourse = document.getElementById('dialogModifyCourse');
     var dialogDeleteCourse = document.getElementById('dialogDeleteCourse');
 
-    var txtCourse = document.getElementById('txtCourse');
-    var txtDescription = document.getElementById('txtDescription');
-    var txtCourseModified = document.getElementById('txtCourseModified');
-    var txtDescriptionModified = document.getElementById('txtDescriptionModified');
+    var txtCourseName = document.getElementById('txtCourseName');
+    var txtCourseDescription = document.getElementById('txtCourseDescription');
+    var txtCourseNameModified = document.getElementById('txtCourseNameModified');
+    var txtCourseDescriptionModified = document.getElementById('txtCourseDescriptionModified');
     var txtCourseToDelete = document.getElementById('txtCourseToDelete');
 
     var tableCoursesBody = document.getElementById('tableCoursesBody');
@@ -57,34 +57,34 @@ var HtmlTabCoursesModule = (function () {
         btnDeleteCourse.addEventListener('click', onClickEvent);
         btnRefreshCourses.addEventListener('click', onClickEvent);
 
-        dialogCreateCourse.querySelector('.create').addEventListener('click', () => {
+        dialogCreateCourse.querySelector('.create_course').addEventListener('click', () => {
             'use strict';
-            doCreateEvent();
+            doCreateCourse();
         });
 
-        dialogCreateCourse.querySelector('.cancel_create').addEventListener('click', () => {
+        dialogCreateCourse.querySelector('.cancel_create_course').addEventListener('click', () => {
             'use strict';
-            cancelCreateEvent();
+            cancelCreateCourse();
         });
 
-        dialogModifyCourse.querySelector('.modify').addEventListener('click', () => {
+        dialogModifyCourse.querySelector('.modify_course').addEventListener('click', () => {
             'use strict';
-            doModifyEvent();
+            doModifyCourse();
         });
 
-        dialogModifyCourse.querySelector('.cancel_modify').addEventListener('click', () => {
+        dialogModifyCourse.querySelector('.cancel_modify_course').addEventListener('click', () => {
             'use strict';
-            cancelModifyEvent();
+            cancelModifyCourse();
         });
 
-        dialogDeleteCourse.querySelector('.delete').addEventListener('click', () => {
+        dialogDeleteCourse.querySelector('.delete_course').addEventListener('click', () => {
             'use strict';
-            doDeleteEvent();
+            doDeleteCourse();
         });
 
-        dialogDeleteCourse.querySelector('.cancel_delete').addEventListener('click', () => {
+        dialogDeleteCourse.querySelector('.cancel_delete_course').addEventListener('click', () => {
             'use strict';
-            cancelDeleteEvent();
+            cancelDeleteCourse();
         });
     }
 
@@ -97,120 +97,69 @@ var HtmlTabCoursesModule = (function () {
 
         switch (sender) {
             case "btnCreateCourse":
-                onCreateEvent();
+                onCreateCourse();
                 break;
             case "btnModifyCourse":
-                onModifyEvent();
+                onModifyCourse();
                 break;
             case "btnDeleteCourse":
-                onDeleteEvent();
+                onDeleteCourse();
                 break;
             case "btnRefreshCourses":
-                onRefreshEvent();
+                onRefreshCourse();
                 break;
         }
-    }
-
-    // ============================================================================================
-    // courses
-
-    /*
-     *  reading list of courses (asynchronously) - using callbacks
-     */
-
-    function onRefreshEvent() {
-        'use strict';
-        updateTableOfCoursesPr();
-    }
-
-    function updateTableOfCoursesCb() {
-        'use strict';
-        updateTableOfCoursesBegin();
-        FirebaseCoursesModule.readListOfCoursesCb(updateTableOfCoursesNext, updateTableOfCoursesDone);
-    }
-
-    function updateTableOfCoursesBegin() {
-        'use strict';
-        if (isActive === true) {
-            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
-            return;
-        }
-
-        isActive = true;
-        console.log("updateTableOfCoursesBegin");
-        lastCheckedCourse = -1;
-        tableCoursesBody.innerHTML = '';
-        componentHandler.upgradeDom();
-    }
-
-    function updateTableOfCoursesNext(course) {
-        'use strict';
-        addEntryToCourseTable(course);
-    }
-
-    function updateTableOfCoursesDone() {
-        'use strict';
-        isActive = false;
-    }
-
-    /*
-     *  reading list of Courses (synchronously)- using promises
-     */
-
-    function updateTableOfCoursesPr() {
-        'use strict';
-        if (isActive === true) {
-            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
-            return;
-        }
-
-        isActive = true;
-        console.log("[Html] > updateTableOfCoursesPr");
-
-        tableCoursesBody.innerHTML = '';
-        FirebaseCoursesModule.readListOfCoursesPr().then((listOfCourses) => {
-            for (var i = 0; i < listOfCourses.length; i++) {
-                var course = listOfCourses[i]
-                addEntryToCourseTable(tableCoursesBody, i, course);
-            }
-        }).catch((msg) => {
-            // log error message to status line
-            txtStatusBar.value = msg;
-        }).finally(() => {
-            isActive = false;
-            console.log("[Html] < updateTableOfCoursesPr");
-        });
     }
 
     // ============================================================================================
     // create new course
 
-    function onCreateEvent() {
+    function onCreateCourse() {
         dialogCreateCourse.showModal();
     }
 
-    function doCreateEvent() {
+    function doCreateCourse() {
         'use strict';
-        var name = txtCourse.value;
-        var description = txtDescription.value;
+        var name = txtCourseName.value;
+        var description = txtCourseDescription.value;
 
         if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
-        }
-        else {
-            FirebaseCoursesModule.addCourse(name, description);
-            updateTableOfCoursesPr();
+            return null;
         }
 
-        txtCourse.value = '';
-        txtDescription.value = '';
-        dialogCreateCourse.close();
+        if (isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
+        }
+
+        isActive = true;
+        console.log("[Html] > doCreateCourse");
+
+        FirebaseCoursesModule.addCourse(name, description)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Added Course '" + name + "' to Repository [Key = " + key + "]!";
+                return key;
+            }).then((key) => {
+                return updateTableOfCourses(false, false);
+            }).catch((msg) => {
+                // log error message to status line
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                txtCourseName.value = '';
+                txtCourseDescription.value = '';
+                dialogCreateCourse.close();
+
+                isActive = false;
+                console.log("[Html] < doCreateClass");
+            });
     }
 
-    function cancelCreateEvent() {
+    function cancelCreateCourse() {
         'use strict';
-        txtCourse.value = '';
-        txtDescription.value = '';
+        txtCourseName.value = '';
+        txtCourseDescription.value = '';
         lastCheckedCourse = -1;
         dialogCreateCourse.close();
     }
@@ -218,87 +167,167 @@ var HtmlTabCoursesModule = (function () {
     // ============================================================================================
     // modify existing course
 
-    function onModifyEvent() {
+    function onModifyCourse() {
         'use strict';
         if (lastCheckedCourse === -1) {
 
-            console.log("Warning: No course selected !");
+            window.alert("Warning: No course selected !");
             return;
         }
 
-        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse - 1);
-        txtCourseModified.value = course.name;
-        txtDescriptionModified.value = course.description;
+        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse);
+        txtCourseNameModified.value = course.name;
+        txtCourseDescriptionModified.value = course.description;
         dialogModifyCourse.showModal();
     }
 
-    function doModifyEvent() {
+    function doModifyCourse() {
         'use strict';
-        var name = txtCourseModified.value;
-        var description = txtDescriptionModified.value;
+        var name = txtCourseNameModified.value;
+        var description = txtCourseDescriptionModified.value;
 
         if (name === '' || description === '') {
             window.alert("Name or Description field emtpy !");
-        }
-        else {
-            var course = FirebaseCoursesModule.getCourse(lastCheckedCourse - 1);
-            course.name = name;
-            course.description = description;
-            FirebaseCoursesModule.updateCourse(course);
-            updateTableOfCoursesPr();
+            return null;
         }
 
-        txtCourseModified.value = '';
-        txtDescriptionModified.value = '';
-        dialogModifyCourse.close();
+        if (isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
+        }
+
+        isActive = true;
+        console.log("[Html] > doModifyCourse");
+
+        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse);
+        course.name = name;
+        course.description = description;
+
+        FirebaseCoursesModule.updateCourse(course)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Updated Course '" + name;
+                return key;
+            }).then((key) => {
+                return updateTableOfCourses(false, false);
+            }).catch((msg) => {
+                // log error message to status line
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                // clear checkbox
+                var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
+                checkboxLabel.MaterialCheckbox.uncheck();
+                txtCourseNameModified.value = '';
+                txtCourseDescriptionModified.value = '';
+                lastCheckedCourse = -1;
+                dialogModifyCourse.close();
+
+                isActive = false;
+                console.log("[Html] < doModifyCourse");
+            });
     }
 
-    function cancelModifyEvent() {
+    function cancelModifyCourse() {
         'use strict';
         // clear checkbox
         var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
         checkboxLabel.MaterialCheckbox.uncheck();
-        txtCourseModified.value = '';
-        txtDescriptionModified.value = '';
+        txtCourseNameModified.value = '';
+        txtCourseDescriptionModified.value = '';
         lastCheckedCourse = -1;
         dialogModifyCourse.close();
     }
 
-    /*
-     *  delete existing course
-     */
+    // ============================================================================================
+    // delete existing course
 
-    function onDeleteEvent() {
+    // Note: 'double click' on delete button needn't to be handled 
+    //   - second click runs on a not existing firebase path
+    //   - Firebase doesn't complain about this ...
+
+    function onDeleteCourse() {
         'use strict';
         if (lastCheckedCourse === -1) {
 
-            console.log("Warning: No course selected !");
+            window.alert("Warning: No course selected !");
             return;
         }
 
-        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse - 1);
+        var course = FirebaseCoursesModule.getCourse(lastCheckedCourse);
         txtCourseToDelete.value = course.name;
         dialogDeleteCourse.showModal();
     }
 
-    function doDeleteEvent() {
+    function doDeleteCourse() {
         'use strict';
-        console.log("Course to delete: " + txtCourseToDelete.value);
-        FirebaseCoursesModule.deleteCourse(txtCourseToDelete.value);
-        txtCourseToDelete.value = '';
-        dialogDeleteCourse.close();
 
-        updateTableOfCoursesBegin();
-        FirebaseCoursesModule.readListOfCoursesCb(updateTableOfCoursesNext, updateTableOfCoursesDone);
+        var name = txtCourseToDelete.value;
+        console.log("[Html] > doDeleteCourse: " + name);
+
+        FirebaseCoursesModule.deleteCourse(name)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Deleted Course '" + name + "' from Repository [Key = " + key + "]!";
+                return key;
+            }).then((key) => {
+                return updateTableOfCourses(true, false);
+            }).catch((msg) => {
+                console.log("Error in doDeleteCourse");
+                // log error to status bar
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                txtCourseToDelete.value = '';
+                lastCheckedCourse = -1;
+                dialogDeleteCourse.close();
+                console.log("[Html] < doDeleteCourse");
+            });
     }
 
-    function cancelDeleteEvent() {
+    function cancelDeleteCourse() {
         'use strict';
         // clear checkbox
         var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
         checkboxLabel.MaterialCheckbox.uncheck();
         lastCheckedCourse = -1;
         dialogDeleteCourse.close();
+    }
+
+    // ============================================================================================
+    // create list of courses (synchronously)- using promises
+
+    function onRefreshCourse() {
+        updateTableOfCourses(true, true);
+    }
+
+    function updateTableOfCourses(checkGuard, verbose) {
+        'use strict';
+        if (checkGuard && isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... just ignoring click event!");
+            return;
+        }
+
+        isActive = true;
+        console.log("[Html] > updateTableOfCourses");
+
+        tableCoursesBody.innerHTML = '';
+        return FirebaseCoursesModule.getCourses().then((listOfCourses) => {
+            for (var i = 0; i < listOfCourses.length; i++) {
+                var course = listOfCourses[i]
+                addEntryToCourseTable(tableCoursesBody, i, course);
+            }
+            return listOfCourses.length;
+        }).then((number) => {
+            if (verbose) {
+                // refresh status line
+                txtStatusBar.value = number + ' courses';
+            }
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] < updateTableOfCourses");
+        });
     }
 
     // ============================================================================================
@@ -385,7 +414,6 @@ var HtmlTabCoursesModule = (function () {
 
     return {
         init: init,
-        // updateTableOfCoursesCb: updateTableOfCoursesCb,
-        updateTableOfCoursesPr: updateTableOfCoursesPr
+        updateTableOfCourses: updateTableOfCourses
     };
 })();

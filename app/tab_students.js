@@ -1,3 +1,6 @@
+/*global FirebaseSubjectsModule */
+/*global FirebaseStudentsModule */
+
 var HtmlTabStudentsModule = (function () {
 
     // retrieve HTML elements according to 'questions viewer' tab

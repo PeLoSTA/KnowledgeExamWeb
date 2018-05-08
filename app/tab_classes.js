@@ -139,10 +139,10 @@ var HtmlTabClassesModule = (function () {
         FirebaseClassesModule.addClass(name, description)
             .then((key) => {
                 // log key to status bar
-                txtStatusBar.value = "Added Class '" + name + "' to repository [Key = " + key + "]!";
+                txtStatusBar.value = "Added Class '" + name + "' to Repository [Key = " + key + "]!";
                 return key;
             }).then((key) => {
-                return updateTableOfClassesPr(false, false);
+                return updateTableOfClasses(false, false);
             }).catch((msg) => {
                 // log error message to status line
                 txtStatusBar.value = msg;
@@ -208,7 +208,7 @@ var HtmlTabClassesModule = (function () {
                 txtStatusBar.value = "Updated Class '" + name;
                 return key;
             }).then((key) => {
-                return updateTableOfClassesPr(false, false);
+                return updateTableOfClasses(false, false);
             }).catch((msg) => {
                 // log error message to status line
                 txtStatusBar.value = msg;
@@ -265,10 +265,10 @@ var HtmlTabClassesModule = (function () {
         FirebaseClassesModule.deleteClass(name)
             .then((key) => {
                 // log key to status bar
-                txtStatusBar.value = "Deleted Class '" + name + "' from repository [Key = " + key + "]!";
+                txtStatusBar.value = "Deleted Class '" + name + "' from Repository [Key = " + key + "]!";
                 return key;
             }).then((key) => {
-                return updateTableOfClassesPr(true, false);
+                return updateTableOfClasses(true, false);
             }).catch((msg) => {
                 console.log("Error in doDeleteClass");
                 // log error to status bar
@@ -293,10 +293,10 @@ var HtmlTabClassesModule = (function () {
     // refresh registered classes
 
     function onUpdateClass() {
-        updateTableOfClassesPr(true, true);
+        updateTableOfClasses(true, true);
     }
 
-    function updateTableOfClassesPr(checkGuard, verbose) {
+    function updateTableOfClasses(checkGuard, verbose) {
         'use strict';
         if (checkGuard && isActive === true) {
             console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
@@ -304,10 +304,10 @@ var HtmlTabClassesModule = (function () {
         }
 
         isActive = true;
-        console.log("[Html] > updateTableOfClassesPr");
+        console.log("[Html] > updateTableOfClasses");
 
         tableClassesBody.innerHTML = '';
-        return FirebaseClassesModule.getClassesPr().then((listOfClasses) => {
+        return FirebaseClassesModule.getClasses().then((listOfClasses) => {
             for (var i = 0; i < listOfClasses.length; i++) {
                 var classs = listOfClasses[i]
                 addEntryToClassTable(tableClassesBody, i, classs);
@@ -323,7 +323,7 @@ var HtmlTabClassesModule = (function () {
             txtStatusBar.value = msg;
         }).finally(() => {
             isActive = false;
-            console.log("[Html] < updateTableOfClassesPr");
+            console.log("[Html] < updateTableOfClasses");
         });
     }
 

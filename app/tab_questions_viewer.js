@@ -1,3 +1,13 @@
+/*global FirebaseCoursesModule */
+/*global FirebaseQuestionsModule */
+/*global FirebaseSubjectsModule */
+
+/*global MaterialRadio */
+/*global MaterialCheckbox */
+
+/*global dialogPolyfill */
+/*global componentHandler */
+
 var HtmlTabQuestionsViewerModule = (function () {
 
     // retrieve HTML elements according to 'questions viewer' tab
@@ -20,7 +30,7 @@ var HtmlTabQuestionsViewerModule = (function () {
 
         // connect ui elements with event handlers
         bindUIActions();
-    };
+    }
 
     function bindUIActions() {
         'use strict';
@@ -29,7 +39,7 @@ var HtmlTabQuestionsViewerModule = (function () {
             onLoadListOfSubjectsSurvey();
             onLoadQuestionsSurvey();
         });
-    };
+    }
 
     // ============================================================================================
     // questions
@@ -48,7 +58,7 @@ var HtmlTabQuestionsViewerModule = (function () {
         'use strict';
         updateTableOfQuestionsBegin();
         FirebaseQuestionsModule.readListOfQuestions(updateTableOfQuestionsNext, updateTableOfQuestionsDone);
-    };
+    }
 
     function updateTableOfQuestionsBegin() {
         'use strict';
@@ -62,20 +72,18 @@ var HtmlTabQuestionsViewerModule = (function () {
         rowCounter = 1;
         tableQuestionsBody.innerHTML = '';
         componentHandler.upgradeDom();
-    };
+    }
 
     function updateTableOfQuestionsNext(counter, question) {
         'use strict';
         addEntryToQuestionsTable(counter, question);
-    };
+    }
 
     function updateTableOfQuestionsDone() {
         'use strict';
         isActive = false;
         console.log('done................................');
     }
-
-
 
     // ============================================================================================
     // private helper functions (viewer)
@@ -130,7 +138,7 @@ var HtmlTabQuestionsViewerModule = (function () {
             tableQuestionsBody.appendChild(nodeAnswer);
         }
         componentHandler.upgradeDom();
-    };
+    }
 
     // ============================================================================================
     // private helper functions (ui - questions table - viewer)

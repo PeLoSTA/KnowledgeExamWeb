@@ -18,22 +18,7 @@ var FirebaseCoursesModule = (function () {
         coursesList = [];               // empty list of courses
     }
 
-    function readListOfCoursesCb(callback, done) {
-        'use strict';
-        coursesList = [];
-        database.ref(refCourses).once('value').then(function (snapshot) {
-            snapshot.forEach(function (childSnapshot) {
-                var snap = childSnapshot.val();
-                console.log("Got course " + snap.name + ", Description = " + snap.description);
-                var course = { name: snap.name, description: snap.description, key: childSnapshot.key };
-                coursesList.push(course);
-                callback(course);
-            });
-            done();
-        });
-    }
-
-    function readListOfCoursesPr() {
+    function getCourses() {
         'use strict';
         return database.ref(refCourses).once('value')
             .then((snapshot) => {
@@ -54,12 +39,6 @@ var FirebaseCoursesModule = (function () {
             });
     }
 
-    // function addCourse(name, description) {
-    //     'use strict';
-    //     var ref = database.ref(refCourses).push();
-    //     return ref.set({ "name": name, "description": description });
-    // }
-
     function addCourse(name, description) {
         'use strict';
         var key = '';
@@ -79,29 +58,49 @@ var FirebaseCoursesModule = (function () {
             });
     }
 
-    // NOCH NICHT UMGESTELLT :::::::::::::::::.
-
-
     function updateCourse(course) {
         'use strict';
         var refString = refCourses + '/' + course.key;
-        var ref = database.ref(refString);
-        return ref.update({ "name": course.name, "description": course.description });
+
+        return database.ref(refString).update({ name: course.name, description: course.description })
+            .then(() => {
+                console.log('[Fire] updateCourse done !!! ');
+            })
+            .catch((err) => {
+                let msg = "FirebaseCoursesModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('[Fire] updateCourse failed! ' + msg);
+                throw msg;
+            });
     }
 
     function deleteCourse(name) {
         'use strict';
+
+        // search course to delete
+        var refDeleteString = '';
+        var keyOfCourse = '';
         for (var k = 0; k < coursesList.length; k++) {
 
             if (coursesList[k].name === name) {
 
-                var refDeleteString = refCourses + '/' + coursesList[k].key;
-                database.ref(refDeleteString).remove(function (error) {
-                    console.log(error ? "Deletion failed !!!" : "Success!");
-                });
+                keyOfCourse = coursesList[k].key;
+                refDeleteString = refCourses + '/' + keyOfCourse;
                 break;
             }
         }
+        if (refDeleteString === '') {
+            let msg = "FirebaseCoursesModule: INTERNAL ERROR: course " + name + " not found!";
+            console.log('[Fire] deleteCourse failed! ' + msg);
+            return Promise.reject(msg);
+        }
+
+        return database.ref(refDeleteString).remove().then(() => {
+            return keyOfCourse;
+        }).catch((err) => {
+            let msg = "FirebaseCoursesModule: ERROR " + err.code + ", Message: " + err.message;
+            console.log('[Fire] deleteCourse failed! ' + msg);
+            throw msg;
+        });
     }
 
     function getCourse(index) {
@@ -124,7 +123,7 @@ var FirebaseCoursesModule = (function () {
 
         return "";
     }
-
+3
     // ============================================================================================
     // public interface
 
@@ -133,10 +132,9 @@ var FirebaseCoursesModule = (function () {
         addCourse: addCourse,
         updateCourse: updateCourse,
         deleteCourse: deleteCourse,
-        getNameOfCourse: getNameOfCourse,
-        getCourse: getCourse,
 
-        readListOfCoursesCb: readListOfCoursesCb,
-        readListOfCoursesPr: readListOfCoursesPr
+        getCourses: getCourses,
+        getNameOfCourse: getNameOfCourse,
+        getCourse: getCourse
     };
 })();

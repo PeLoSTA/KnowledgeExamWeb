@@ -21,7 +21,7 @@ var FirebaseClassesModule = (function () {
     // ============================================================================================
     // public interface
 
-    function getClassesPr() {
+    function getClasses() {
         'use strict';
         return database.ref(refClasses).once('value')
             .then((snapshot) => {
@@ -96,7 +96,7 @@ var FirebaseClassesModule = (function () {
             console.log('[Fire] deleteClass failed! ' + msg);
             return Promise.reject(msg);
         }
-
+3
         return database.ref(refDeleteString).remove().then(() => {
             return keyOfClass;
         }).catch((err) => {
@@ -121,7 +121,7 @@ var FirebaseClassesModule = (function () {
         updateClass: updateClass,
         deleteClass: deleteClass,
 
-        getClassesPr: getClassesPr,
+        getClasses: getClasses,
         getClass: getClass
     }
 })();

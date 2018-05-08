@@ -54,39 +54,39 @@
         </div>
     </dialog>
 
-        <!-- class dialog (modification) ===================================================================== -->
+    <!-- class dialog (modification) ===================================================================== -->
 
-        <dialog id="dialogModifyClass" class="mdl-dialog" style="width: 500px">
+    <dialog id="dialogModifyClass" class="mdl-dialog" style="width: 500px">
+        <div>
+            <h6 class="mdl-dialog__title">Modify an existing Class</h6>
+            <br/>
             <div>
-                <h6 class="mdl-dialog__title">Modify an existing Class</h6>
-                <br/>
-                <div>
-                    <table class="mdl-data-table mdl-js-data-table">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="mdl-textfield mdl-js-textfield">
-                                        <input class="mdl-textfield__input" type="text" id="txtClassNameModified">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="mdl-textfield mdl-js-textfield">
-                                        <input class="mdl-textfield__input" type="text" id="txtClassDescriptionModified">
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br/>
-                <div class="mdl-dialog__actions" style="width: 350px">
-                    <button id="btnDlgCreate" type="button" class="mdl-button modify_class">Modify</button>
-                    <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_modify_class">Cancel</button>
-                </div>
+                <table class="mdl-data-table mdl-js-data-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtClassNameModified">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtClassDescriptionModified">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </dialog>
+            <br/>
+            <div class="mdl-dialog__actions" style="width: 350px">
+                <button id="btnDlgCreate" type="button" class="mdl-button modify_class">Modify</button>
+                <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_modify_class">Cancel</button>
+            </div>
+        </div>
+    </dialog>
 
     <!-- class dialog (deletion) ===================================================================== -->
 
@@ -117,16 +117,16 @@
                         <tr>
                             <td>
                                 <div class="mdl-textfield mdl-js-textfield">
-                                    <input class="mdl-textfield__input" type="text" id="txtCourse">
-                                    <label class="mdl-textfield__label" for="txtCourse">Course ...</label>
+                                    <input class="mdl-textfield__input" type="text" id="txtCourseName">
+                                    <label class="mdl-textfield__label" for="txtCourseName">Course ...</label>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="mdl-textfield mdl-js-textfield">
-                                    <input class="mdl-textfield__input" type="text" id="txtDescription">
-                                    <label class="mdl-textfield__label" for="txtDescription">Description ...</label>
+                                    <input class="mdl-textfield__input" type="text" id="txtCourseDescription">
+                                    <label class="mdl-textfield__label" for="txtCourseDescription">Description ...</label>
                                 </div>
                             </td>
                         </tr>
@@ -135,8 +135,8 @@
             </div>
             <br/>
             <div class="mdl-dialog__actions" style="width: 350px">
-                <button id="btnDlgCreate" type="button" class="mdl-button create">Add</button>
-                <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_create">Cancel</button>
+                <button id="btnDlgCreate" type="button" class="mdl-button create_course">Add</button>
+                <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_create_course">Cancel</button>
             </div>
         </div>
     </dialog>
@@ -153,14 +153,14 @@
                         <tr>
                             <td>
                                 <div class="mdl-textfield mdl-js-textfield">
-                                    <input class="mdl-textfield__input" type="text" id="txtCourseModified">
+                                    <input class="mdl-textfield__input" type="text" id="txtCourseNameModified">
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="mdl-textfield mdl-js-textfield">
-                                    <input class="mdl-textfield__input" type="text" id="txtDescriptionModified">
+                                    <input class="mdl-textfield__input" type="text" id="txtCourseDescriptionModified">
                                 </div>
                             </td>
                         </tr>
@@ -169,8 +169,8 @@
             </div>
             <br/>
             <div class="mdl-dialog__actions" style="width: 350px">
-                <button id="btnDlgCreate" type="button" class="mdl-button modify">Modify</button>
-                <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_modify">Cancel</button>
+                <button id="btnDlgCreate" type="button" class="mdl-button modify_course">Modify</button>
+                <button id="btnDlgCancelCreate" type="button" class="mdl-button cancel_modify_course">Cancel</button>
             </div>
         </div>
     </dialog>
@@ -186,8 +186,8 @@
                 <input class="mdl-textfield__input" type="text" id="txtCourseToDelete" readonly>
             </div>
             <div class="mdl-dialog__actions">
-                <button type="button" class="mdl-button delete">Delete</button>
-                <button type="button" class="mdl-button cancel_delete">Cancel</button>
+                <button type="button" class="mdl-button delete_course">Delete</button>
+                <button type="button" class="mdl-button cancel_delete_course">Cancel</button>
             </div>
         </div>
     </dialog>
