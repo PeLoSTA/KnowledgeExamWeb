@@ -24,6 +24,8 @@ var HtmlTabClassesModule = (function () {
 
     var txtStatusBar = document.getElementById('status_bar');
 
+    var tabClassesPanel = document.getElementById('#classes-panel');
+
     // miscellaneous data
     var lastCheckedClass;
     var isActive;
@@ -85,6 +87,11 @@ var HtmlTabClassesModule = (function () {
         dialogDeleteClass.querySelector('.cancel_delete_class').addEventListener('click', () => {
             'use strict';
             cancelDeleteClass();
+        });
+
+        tabClassesPanel.addEventListener('click', () => {
+            'use strict';
+            onUpdateClass();
         });
     }
 
@@ -410,7 +417,8 @@ var HtmlTabClassesModule = (function () {
     // public interface
 
     return {
-        init: init
+        init: init,
+        updateTableOfClasses: updateTableOfClasses
     }
 
 })();

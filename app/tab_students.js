@@ -1,10 +1,8 @@
 /*global FirebaseSubjectsModule */
+/*global FirebaseCoursesModule */
 /*global FirebaseStudentsModule */
 
 var HtmlTabStudentsModule = (function () {
-
-    // retrieve HTML elements according to 'questions viewer' tab
-    var tabStudents = document.getElementById('#results-of-exams-panel');
 
     // retrieve HTML elements according to 'students' tab
     var btnCreateStudent = document.getElementById('btnCreateStudent');
@@ -12,6 +10,10 @@ var HtmlTabStudentsModule = (function () {
     var btnDeleteStudent = document.getElementById('btnDeleteStudent');
     var btnRefreshStudents = document.getElementById('btnRefreshStudents');
     var selectStudentsCourses = document.getElementById('selectStudentsCourses');
+
+    var txtStatusBar = document.getElementById('status_bar');
+
+    var tabStudents = document.getElementById('#students-panel');
 
     // miscellaneous data
     var isActive;
@@ -36,7 +38,7 @@ var HtmlTabStudentsModule = (function () {
 
         tabStudents.addEventListener('click', () => {
             'use strict';
-            onUpdateDropDownListOfSubjectsPr();
+            onUpdateDropDownListOfCourses();
         });
     }
 
@@ -49,7 +51,7 @@ var HtmlTabStudentsModule = (function () {
 
         console.log("select ...  value == " + this.value);
 
-        let options = selectStudentsSubjects.querySelectorAll('option');
+        let options = selectStudentsCourses.querySelectorAll('option');
         let count = options.length;
         if (typeof count == 'undefined') {
             console.log("arghhhhhhhhh ....");
@@ -77,35 +79,28 @@ var HtmlTabStudentsModule = (function () {
     }
 
     // ============================================================================================
-    // reading list of subjects (synchronously)- using promises
+    // reading list of subjects (synchronously)
 
-    function onUpdateDropDownListOfSubjectsPr() {
+    function onUpdateDropDownListOfCourses() {
         'use strict';
-        if (isActive === true) {
-            console.log("Another asynchronous invocation still pending ... just ignoring update event!");
-            return;
-        }
 
-        isActive = true;
+        console.log("[Html] > onUpdateDropDownListOfCourses");
+        FirebaseCoursesModule.getCourses().then((coursesList) => {
+            addEntriesToSubjectsDropDownList(selectStudentsCourses, coursesList);
 
-        console.log("updateDropDownListOfSubjectsPr");
-
-        FirebaseSubjectsModule.readListOfSubjectsPr().then((listOfSubjects) => {
-            // for (var i = 0; i < listOfSubjects.length; i++) {
-            //     var subject = listOfSubjects[i]
-            //     console.log("    ===> " + subject.name);
-            //     addEntryToSubjectTable(subject);
-            // }
-
-            addEntriesToSubjectsDropDownList(selectStudentsSubjects, listOfSubjects);
-
+            if (coursesList.length === 0) {
+                txtStatusBar.value = 'No Courses found!';
+            } else {
+                txtStatusBar.value = coursesList.length + ' Courses found!';
+            }
         }).catch((err) => {
-            console.log('Reading list of subjects failed !!!!!!!!!!!!!');
+            console.log('[Html] Reading list of courses failed !');
             console.log('    ' + err);
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] > onUpdateDropDownListOfCourses");
         });
-
-        isActive = false;
-    };
+    }
 
     // ============================================================================================
     // helper functions
@@ -141,28 +136,27 @@ var HtmlTabStudentsModule = (function () {
         // </select>
 
         // clear contents of list
-        selectStudentsSubjects.innerHTML = '';
+        selectElem.innerHTML = '';
 
         // add empty node
-        addEntryToSubjectsDropDownList(selectStudentsSubjects, 0, null);
+        addEntryToCoursesDropDownList(selectElem, 0, null);
 
         // add each subject of the list
         for (let i = 0; i < entries.length; i++) {
-            addEntryToSubjectsDropDownList(selectStudentsSubjects, i + 1, entries[i]);
+            addEntryToCoursesDropDownList(selectElem, i + 1, entries[i]);
         }
     }
 
-    function addEntryToSubjectsDropDownList(selectElem, index, entry) {
+    function addEntryToCoursesDropDownList(selectElem, index, entry) {
         'use strict';
         let optionNode = document.createElement('option');    // create <option> node
         optionNode.setAttribute('value', 'option_' + index);  // set attribute
 
-        let text = (entry === null) ? '' : entry.name;
+        let text = (entry === null) ? 'Choose Course ...' : entry.name;
         let textNode = document.createTextNode(text);         // create text node
 
         optionNode.appendChild(textNode);                     // append text to <option> node
         selectElem.appendChild(optionNode);                   // append <option> node to <select> element
-
     }
 
     // ============================================================================================

@@ -24,6 +24,8 @@ var HtmlTabCoursesModule = (function () {
 
     var txtStatusBar = document.getElementById('status_bar');
 
+    var tabCoursesPanel = document.getElementById('#courses-panel');
+
     // miscellaneous data
     var lastCheckedCourse;
     var isActive;
@@ -85,6 +87,11 @@ var HtmlTabCoursesModule = (function () {
         dialogDeleteCourse.querySelector('.cancel_delete_course').addEventListener('click', () => {
             'use strict';
             cancelDeleteCourse();
+        });
+ 
+        tabCoursesPanel.addEventListener('click', () => {
+            'use strict';
+            onRefreshCourse();
         });
     }
 
