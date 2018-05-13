@@ -192,6 +192,50 @@
         </div>
     </dialog>
 
+    <!-- class student (creation) ===================================================================== -->
+
+    <dialog id="dialogCreateStudent" class="mdl-dialog" style="width: 500px">
+        <div>
+            <h6 class="mdl-dialog__title">Add new Student</h6>
+            <br/>
+            <div>
+                <table class="mdl-data-table mdl-js-data-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtStudentFirstName">
+                                    <label class="mdl-textfield__label" for="txtClassName">First Name ...</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtStudentLastName">
+                                    <label class="mdl-textfield__label" for="txtClassName">Last Name ...</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="mdl-textfield mdl-js-textfield">
+                                    <input class="mdl-textfield__input" type="text" id="txtStudentEMail">
+                                    <label class="mdl-textfield__label" for="txtClassName">EMail ...</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <div class="mdl-dialog__actions" style="width: 350px">
+                <button id="btnDlgCreateClass" type="button" class="mdl-button create_student">Add</button>
+                <button id="btnDlgCancelCreateClass" type="button" class="mdl-button cancel_create_student">Cancel</button>
+            </div>
+        </div>
+    </dialog>
+
     <!-- questions dialog (creation) ===================================================================== -->
 
     <dialog id="dialogCreateQuestion" class="mdl-dialog" style="width: 800px">
@@ -351,16 +395,18 @@
                         </div>
 
                         <div class="mdl-cell mdl-cell--4-col">
-                            <h5>Choose Course</h5>
+                            <h5>Choose Class</h5>
                             <div class="mdl-selectfield mdl-js-selectfield">
-                                <select class="mdl-selectfield__select" id="selectStudentsCourses">
-                                    <!-- <option value="option1">option 1</option>
+                                <select class="mdl-selectfield__select" id="selectStudentsClasses">
+                                    <!-- 
+                                    <option value="option1">option 1</option>
                                     <option value="option2">option 2</option>
                                     <option value="option3">option 3</option>
                                     <option value="option4">option 4</option>
-                                    <option value="option5">option 5</option> -->
+                                    <option value="option5">option 5</option>
+                                 -->
                                 </select>
-                                <label class="mdl-selectfield__label" for="selectStudentsCourses">Choose Course ...</label>
+                                <label class="mdl-selectfield__label" for="selectStudentsCourses">Choose Class ...</label>
                             </div>
                         </div>
 

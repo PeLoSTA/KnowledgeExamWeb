@@ -20,5 +20,5 @@ HtmlTabQuestionsAdminModule.init();
 HtmlTabQuestionsViewerModule.init();
 HtmlTabStudentsModule.init();
 
-// HtmlTabClassesModule.updateTableOfClasses(true, true);
-// HtmlTabCoursesModule.updateTableOfCourses(true, true);
+HtmlTabClassesModule.updateTableOfClasses(true, true);
+HtmlTabCoursesModule.updateTableOfCourses(true, true);

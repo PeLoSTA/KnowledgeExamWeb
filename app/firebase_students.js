@@ -18,7 +18,7 @@ var FirebaseStudentsModule = (function () {
     // ============================================================================================
     // public functions
 
-    function addStudent(firstname, lastname, subject) {
+    function addStudent1(firstname, lastname, subject) {
         'use strict';
 
         return new Promise(function (resolve, reject) {
@@ -96,13 +96,34 @@ var FirebaseStudentsModule = (function () {
         });
     }
 
+
+
+
+    function addStudent(firstname, lastname, email, classs) {
+        'use strict';
+        var key = '';
+
+        return database.ref(refStudents).push()
+            .then((newRef) => {
+                key = newRef.key;
+                return newRef.set({ firstname: firstname, lastname: lastname, email: email, 'class': classs });
+            })
+            .then(() => {
+                return key;
+            })
+            .catch((err) => {
+                let msg = "FirebaseStudentsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('[Fire] addStudent failed! ' + msg);
+                throw msg;
+            });
+    }
+
+
     // ============================================================================================
     // public interface
 
     return {
         init: init,
-        addStudent: addStudent,
-        addStudent2: addStudent2,
-        addStudent3: addStudent3
+        addStudent: addStudent
     }
 })();
