@@ -15,7 +15,7 @@ var FirebaseCoursesModule = (function () {
     function init() {
 
         database = firebase.database();  // get a reference to the database service
-        coursesList = [];               // empty list of courses
+        coursesList = [];                // empty list of courses
     }
 
     function getCourses() {

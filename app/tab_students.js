@@ -1,6 +1,7 @@
-/*global dialogPolyfill */
 /*global FirebaseClassesModule */
 /*global FirebaseStudentsModule */
+/*global dialogPolyfill */
+/*global componentHandler */
 
 var HtmlTabStudentsModule = (function () {
 
@@ -16,6 +17,8 @@ var HtmlTabStudentsModule = (function () {
     var txtStudentLastName = document.getElementById('txtStudentLastName');
     var txtStudentEMail = document.getElementById('txtStudentEMail');
 
+    var tableStudentsBody = document.getElementById('tableStudentsBody');
+
     var dialogCreateStudent = document.getElementById('dialogCreateStudent');
     var dialogModifyStudent = document.getElementById('dialogModifyStudent');
     var dialogDeleteStudent = document.getElementById('dialogDeleteStudent');
@@ -28,6 +31,7 @@ var HtmlTabStudentsModule = (function () {
     var isActive;
     var classes;
     var classesSelectedIndex;
+    var lastCheckedStudent;
 
     // ============================================================================================
     // initialization
@@ -39,6 +43,8 @@ var HtmlTabStudentsModule = (function () {
         // no classes loaded or selected
         classes = null;
         classesSelectedIndex = -1;
+
+        lastCheckedStudent = -1;
 
         bindUIActions();
     }
@@ -115,9 +121,9 @@ var HtmlTabStudentsModule = (function () {
             // case "btnDeleteStudent":
             //     onDeleteStudent();
             //     break;
-            // case "btnRefreshStudents":
-            //     onUpdateStudent();
-            //     break;
+            case "btnRefreshStudents":
+                onUpdateStudent();
+                break;
         }
     }
 
@@ -248,7 +254,28 @@ var HtmlTabStudentsModule = (function () {
             return null;
         }
 
-        return null;  // empty promise 
+        isActive = true;
+        console.log("[Html] > updateTableOfStudents");
+
+        tableStudentsBody.innerHTML = '';
+        return FirebaseStudentsModule.getStudents().then((listOfStudents) => {
+            for (var i = 0; i < listOfStudents.length; i++) {
+                var student = listOfStudents[i]
+                addEntryToStudentTable(tableStudentsBody, i, student);
+            }
+            return listOfStudents.length;
+        }).then((number) => {
+            if (verbose) {
+                // refresh status line
+                txtStatusBar.value = number + ' students';
+            }
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] < updateTableOfStudents");
+        });
     }
 
     // ============================================================================================
@@ -315,15 +342,15 @@ var HtmlTabStudentsModule = (function () {
         selectElem.innerHTML = '';
 
         // add empty node
-        addEntry(selectElem, 0, null);
+        addEntryToSelectList(selectElem, 0, null);
 
         // add each subject of the list
         for (let i = 0; i < entries.length; i++) {
-            addEntry(selectElem, i + 1, entries[i]);
+            addEntryToSelectList(selectElem, i + 1, entries[i]);
         }
     }
 
-    function addEntry(selectElem, index, entry) {
+    function addEntryToSelectList(selectElem, index, entry) {
         'use strict';
         let optionNode = document.createElement('option');    // create <option> node
         optionNode.setAttribute('value', 'option_' + index);  // set attribute
@@ -333,6 +360,99 @@ var HtmlTabStudentsModule = (function () {
 
         optionNode.appendChild(textNode);                     // append text to <option> node
         selectElem.appendChild(optionNode);                   // append <option> node to <select> element
+    }
+
+    function addEntryToStudentTable(tablebody, index, entry) {
+        'use strict';
+
+        // adding dynamically a 'material design lite' node to a table, for example
+        //
+        //  <tr>
+        //    <td>
+        //      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+        //          <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+        //      </label>
+        //    </td>
+        //      <td class="mdl-data-table__cell--non-numeric">C++</td>
+        //      <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
+        //  </tr>
+
+        var node = document.createElement('tr');    // create <tr> node
+        var td1 = document.createElement('td');     // create first <td> node
+        var label = document.createElement('label');     // create <label> node
+
+        label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
+        label.setAttribute('for', 'row_' + index);  // set attribute
+        label.setAttribute('id', 'label_' + index);  // set attribute
+        var input = document.createElement('input');     // create <input> node
+        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_student');  // set attribute
+        input.setAttribute('type', 'checkbox');  // set attributes
+        input.setAttribute('id', 'row_' + index);  // set attribute
+        input.addEventListener('click', checkboxHandler);
+        label.appendChild(input);
+        td1.appendChild(label);
+
+        var td2 = document.createElement('td');     // create second <td> node
+        var td3 = document.createElement('td');     // create third <td> node
+        td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        var textnode1 = document.createTextNode(entry.firstname);        // create second text node
+        var textnode2 = document.createTextNode(entry.lastname);         // create third text node
+
+        // HIER GEHTS WEITER ............
+
+        td2.appendChild(textnode1);     // append text to <td>
+        td3.appendChild(textnode2);     // append text to <td>
+        node.appendChild(td1);          // append <td> to <tr>
+        node.appendChild(td2);          // append <td> to <tr>
+        node.appendChild(td3);          // append <td> to <tr>
+        tablebody.appendChild(node);    // append <tr> to <tbody>
+
+        componentHandler.upgradeDom();
+    }
+
+    function checkboxHandler() {
+        'use strict';
+        console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
+
+        // calculate index of row
+        var row = parseInt(this.id.substring(4));  // omitting 'row_'
+
+        if (this.checked) {
+
+            lastCheckedStudent = row;
+
+            var boxes = tableStudentsBody.getElementsByClassName('checkbox_select_student');
+            // for (var k = 0; k < boxes.length; k++) {
+
+            //     if (k != lastCheckedStudent) {
+            //         var label = boxes[k];
+            //         label.parentElement.MaterialCheckbox.uncheck();
+            //     }
+            // }
+
+            for (var k = 0; k < boxes.length; k++) {
+
+                if (k != lastCheckedStudent) {
+                    var label = boxes[k];
+                    label.parentElement.MaterialCheckbox.uncheck();
+
+                    console.log('[TEST] UNCHECK AT ' + k);
+                }
+                else {
+                    console.log('[TEST] DO NOTHING');
+                }
+            }
+
+        }
+        else {
+
+            if (row === lastCheckedStudent) {
+
+                // clear last selection
+                lastCheckedStudent = -1;
+            }
+        }
     }
 
     // ============================================================================================

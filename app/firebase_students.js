@@ -7,97 +7,48 @@ var FirebaseStudentsModule = (function () {
     // firebase database reference
     var database;
 
+    // (last read) list of students
+    var studentsList;
+
     // ============================================================================================
     // initialization
 
     function init() {
 
         database = firebase.database();  // get a reference to the database service
+        studentsList = [];               // empty list of students
     }
 
     // ============================================================================================
     // public functions
 
-    function addStudent1(firstname, lastname, subject) {
+    function getStudents() {
         'use strict';
+        return database.ref(refStudents).once('value')
+            .then((snapshot) => {
+                studentsList = [];
+                let localList = [];
+                snapshot.forEach(function (childSnapshot) {
+                    var snap = childSnapshot.val();
 
-        return new Promise(function (resolve, reject) {
+                    let student = {
+                        firstname: snap.firstname,
+                        lastname: snap.lastname,
+                        email: snap.email,
+                        key: childSnapshot.key
+                    };
 
-            console.log('aaa');
-
-            let newRef = database.ref(refStudents).push();
-
-            console.log('bbb');
-
-            if (newRef) {
-                console.log('ccc');
-                newRef.set({ name: "Ooopsi" });  // ??? uncaught !?!?!?!?
-                resolve(newRef.key);
-            }
-            else {
-                console.log('eee');
-                reject("addStudent ==> firebase push operation failed!");
-            }
-        });
-    }
-
-    function addStudent2(firstname, lastname, subject) {
-        'use strict';
-
-        let student = { firstname: firstname, lastname: lastname, subject: subject };
-        let key = '';
-
-        return database.ref(refStudents).push()
-            .then((newRef) => {
-                console.log('111');
-                key = newRef.key;
-                return newRef.set(student);
-            })
-            .then(() => {
-                console.log('222');
-                console.log("success");
-                return key;
-            })
-            .catch(function (err) {
-                console.log('333');
-
-                let msg = "Error " + err.code + ", Message: " + err.message;
-
-                console.log('err', msg);
-                key = 'weiß nicht ....';
+                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", Key = " + student.key);
+                    studentsList.push(student);
+                    localList.push(student);
+                });
+                return localList;
+            }).catch((err) => {
+                let msg = "FirebaseStudentsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('Reading list of students failed! [' + msg + ']');
                 throw err;
             });
     }
-
-    function addStudent3(firstname, lastname, subject) {
-        'use strict';
-
-        return new Promise(function (resolve, reject) {
-
-            console.log('xxx');
-
-            let student = { firstname: firstname, lastname: lastname, subject: subject };
-            let key = '';
-
-            return database.ref(refStudents).push()
-                .then((newRef) => {
-                    console.log('yyy');
-                    key = newRef.key;
-                    return newRef.set(student);
-                })
-                .then(() => {
-                    console.log('uuu');
-                    resolve(key);
-                })
-                .catch(function (err) {
-                    console.log('vvv');
-                    reject(err);
-                });
-        });
-    }
-
-
-
 
     function addStudent(firstname, lastname, email, classs) {
         'use strict';
@@ -118,12 +69,13 @@ var FirebaseStudentsModule = (function () {
             });
     }
 
-
     // ============================================================================================
     // public interface
 
     return {
         init: init,
-        addStudent: addStudent
+        addStudent: addStudent,
+
+        getStudents: getStudents
     }
 })();

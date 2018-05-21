@@ -366,7 +366,7 @@ var HtmlTabCoursesModule = (function () {
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
         input.setAttribute('type', 'checkbox');  // set attributes
         input.setAttribute('id', 'row_' + index);  // set attribute
-        input.addEventListener('click', checkboxHandler);
+        // input.addEventListener('click', checkboxHandler);
         label.appendChild(input);
         td1.appendChild(label);
 
@@ -386,35 +386,35 @@ var HtmlTabCoursesModule = (function () {
         componentHandler.upgradeDom();
     }
 
-    function checkboxHandler() {
-        'use strict';
-        console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
+    // function checkboxHandler() {
+    //     'use strict';
+    //     console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
 
-        // calculate index of row
-        var row = parseInt(this.id.substring(4));  // omitting 'row_'
+    //     // calculate index of row
+    //     var row = parseInt(this.id.substring(4));  // omitting 'row_'
 
-        if (this.checked) {
+    //     if (this.checked) {
 
-            lastCheckedCourse = row;
+    //         lastCheckedCourse = row;
 
-            var boxes = tableCoursesBody.getElementsByClassName('checkbox_select_course');
-            for (var k = 0; k < boxes.length; k++) {
+    //         var boxes = tableCoursesBody.getElementsByClassName('checkbox_select_course');
+    //         for (var k = 0; k < boxes.length; k++) {
 
-                if (k != lastCheckedCourse) {
-                    var label = boxes[k];
-                    label.parentElement.MaterialCheckbox.uncheck();
-                }
-            }
-        }
-        else {
+    //             if (k != lastCheckedCourse) {
+    //                 var label = boxes[k];
+    //                 label.parentElement.MaterialCheckbox.uncheck();
+    //             }
+    //         }
+    //     }
+    //     else {
 
-            if (row === lastCheckedCourse) {
+    //         if (row === lastCheckedCourse) {
 
-                // clear last selection
-                lastCheckedCourse = -1;
-            }
-        }
-    }
+    //             // clear last selection
+    //             lastCheckedCourse = -1;
+    //         }
+    //     }
+    // }
 
     // ============================================================================================
     // public interface
