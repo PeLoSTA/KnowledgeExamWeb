@@ -30,6 +30,8 @@ var HtmlTabClassesModule = (function () {
     var lastCheckedClass;
     var isActive;
 
+    const prefix_checkboxes = 'row_class_';
+
     // ============================================================================================
     // initialization
 
@@ -330,6 +332,9 @@ var HtmlTabClassesModule = (function () {
             txtStatusBar.value = msg;
         }).finally(() => {
             isActive = false;
+
+            componentHandler.upgradeDom();
+            
             console.log("[Html] < updateTableOfClasses");
         });
     }
@@ -349,20 +354,23 @@ var HtmlTabClassesModule = (function () {
         //      </label>
         //    </td>
         //      <td class="mdl-data-table__cell--non-numeric">C++</td>
-        //      <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
+        //      <td class="mdl-data-table__cell--non-numeric">...</td>
+        //      <td class="mdl-data-table__cell--non-numeric">...</td>
         //  </tr>
 
         var node = document.createElement('tr');      // create <tr> node
         var td1 = document.createElement('td');       // create first <td> node
         var label = document.createElement('label');  // create <label> node
 
+        var uniqueId = prefix_checkboxes + index;     // need unique checkbox id for entire document
+
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        label.setAttribute('for', 'row_' + index);    // set attribute
+        label.setAttribute('for', uniqueId);          // set attribute
         label.setAttribute('id', 'label_' + index);   // set attribute
         var input = document.createElement('input');  // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_class');  // set attribute
         input.setAttribute('type', 'checkbox');       // set attributes
-        input.setAttribute('id', 'row_' + index);     // set attribute
+        input.setAttribute('id', uniqueId);           // set attribute
         input.addEventListener('click', checkboxHandler);
         label.appendChild(input);
         td1.appendChild(label);
@@ -388,7 +396,8 @@ var HtmlTabClassesModule = (function () {
         console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
 
         // calculate index of row
-        var row = parseInt(this.id.substring(4));  // omitting 'row_'
+        var ofs = prefix_checkboxes.length;
+        var row = parseInt(this.id.substring(ofs));  // omitting prefix 'row_class_'
 
         if (this.checked) {
 

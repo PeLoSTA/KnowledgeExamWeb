@@ -33,6 +33,8 @@ var HtmlTabStudentsModule = (function () {
     var classesSelectedIndex;
     var lastCheckedStudent;
 
+    const prefix_checkboxes = 'row_student_';
+
     // ============================================================================================
     // initialization
 
@@ -374,38 +376,49 @@ var HtmlTabStudentsModule = (function () {
         //      </label>
         //    </td>
         //      <td class="mdl-data-table__cell--non-numeric">C++</td>
-        //      <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
+        //      <td class="mdl-data-table__cell--non-numeric">...</td>
+        //      <td class="mdl-data-table__cell--non-numeric">...</td>
         //  </tr>
 
-        var node = document.createElement('tr');    // create <tr> node
-        var td1 = document.createElement('td');     // create first <td> node
-        var label = document.createElement('label');     // create <label> node
+        var node = document.createElement('tr');      // create <tr> node
+        var td1 = document.createElement('td');       // create first <td> node
+        var label = document.createElement('label');  // create <label> node
+
+        var uniqueId = prefix_checkboxes + index;     // need unique checkbox id for entire document
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        label.setAttribute('for', 'row_' + index);  // set attribute
-        label.setAttribute('id', 'label_' + index);  // set attribute
-        var input = document.createElement('input');     // create <input> node
+        label.setAttribute('for', uniqueId);          // set attribute
+        label.setAttribute('id', 'label_' + index);   // set attribute
+        var input = document.createElement('input');  // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_student');  // set attribute
-        input.setAttribute('type', 'checkbox');  // set attributes
-        input.setAttribute('id', 'row_' + index);  // set attribute
+        input.setAttribute('type', 'checkbox');       // set attributes
+        input.setAttribute('id', uniqueId);           // set attribute
         input.addEventListener('click', checkboxHandler);
         label.appendChild(input);
         td1.appendChild(label);
 
-        var td2 = document.createElement('td');     // create second <td> node
-        var td3 = document.createElement('td');     // create third <td> node
+        var td2 = document.createElement('td');       // create 2nd <td> node
+        var td3 = document.createElement('td');       // create 3rd <td> node
+        var td4 = document.createElement('td');       // create 4th <td> node
+        var td5 = document.createElement('td');       // create 5th <td> node
         td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-        var textnode1 = document.createTextNode(entry.firstname);        // create second text node
-        var textnode2 = document.createTextNode(entry.lastname);         // create third text node
-
-        // HIER GEHTS WEITER ............
+        td4.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        td5.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+        var textnode1 = document.createTextNode(entry.firstname);  // create 2nd text node
+        var textnode2 = document.createTextNode(entry.lastname);   // create 3rd text node
+        var textnode3 = document.createTextNode(entry.email);      // create 4th text node
+        var textnode4 = document.createTextNode(entry.key);        // create 5th text node
 
         td2.appendChild(textnode1);     // append text to <td>
         td3.appendChild(textnode2);     // append text to <td>
+        td4.appendChild(textnode3);     // append text to <td>
+        td5.appendChild(textnode4);     // append text to <td>
         node.appendChild(td1);          // append <td> to <tr>
         node.appendChild(td2);          // append <td> to <tr>
         node.appendChild(td3);          // append <td> to <tr>
+        node.appendChild(td4);          // append <td> to <tr>
+        node.appendChild(td5);          // append <td> to <tr>
         tablebody.appendChild(node);    // append <tr> to <tbody>
 
         componentHandler.upgradeDom();
@@ -416,34 +429,21 @@ var HtmlTabStudentsModule = (function () {
         console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
 
         // calculate index of row
-        var row = parseInt(this.id.substring(4));  // omitting 'row_'
+        var ofs = prefix_checkboxes.length;
+        var row = parseInt(this.id.substring(ofs));  // omitting prefix 'row_student_'
 
         if (this.checked) {
 
             lastCheckedStudent = row;
 
             var boxes = tableStudentsBody.getElementsByClassName('checkbox_select_student');
-            // for (var k = 0; k < boxes.length; k++) {
-
-            //     if (k != lastCheckedStudent) {
-            //         var label = boxes[k];
-            //         label.parentElement.MaterialCheckbox.uncheck();
-            //     }
-            // }
-
             for (var k = 0; k < boxes.length; k++) {
 
                 if (k != lastCheckedStudent) {
                     var label = boxes[k];
                     label.parentElement.MaterialCheckbox.uncheck();
-
-                    console.log('[TEST] UNCHECK AT ' + k);
-                }
-                else {
-                    console.log('[TEST] DO NOTHING');
                 }
             }
-
         }
         else {
 

@@ -30,6 +30,8 @@ var HtmlTabCoursesModule = (function () {
     var lastCheckedCourse;
     var isActive;
 
+    const prefix_checkboxes = 'row_course_';
+
     // ============================================================================================
     // initialization
 
@@ -88,7 +90,7 @@ var HtmlTabCoursesModule = (function () {
             'use strict';
             cancelDeleteCourse();
         });
- 
+
         tabCoursesPanel.addEventListener('click', () => {
             'use strict';
             onRefreshCourse();
@@ -352,21 +354,24 @@ var HtmlTabCoursesModule = (function () {
         //      </label>
         //    </td>
         //      <td class="mdl-data-table__cell--non-numeric">C++</td>
-        //      <td class="mdl-data-table__cell--non-numeric">Beyond C</td>
+        //      <td class="mdl-data-table__cell--non-numeric">...</td>
+        //      <td class="mdl-data-table__cell--non-numeric">...</td>
         //  </tr>
 
-        var node = document.createElement('tr');    // create <tr> node
-        var td1 = document.createElement('td');     // create first <td> node
-        var label = document.createElement('label');     // create <label> node
+        var node = document.createElement('tr');       // create <tr> node
+        var td1 = document.createElement('td');        // create first <td> node
+        var label = document.createElement('label');   // create <label> node
+
+        var uniqueId = prefix_checkboxes + index;      // need unique checkbox id for entire document
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        label.setAttribute('for', 'row_' + index);  // set attribute
-        label.setAttribute('id', 'label_' + index);  // set attribute
-        var input = document.createElement('input');     // create <input> node
+        label.setAttribute('for', uniqueId);           // set attribute
+        label.setAttribute('id', 'label_' + index);    // set attribute
+        var input = document.createElement('input');   // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
-        input.setAttribute('type', 'checkbox');  // set attributes
-        input.setAttribute('id', 'row_' + index);  // set attribute
-        // input.addEventListener('click', checkboxHandler);
+        input.setAttribute('type', 'checkbox');        // set attributes
+        input.setAttribute('id', uniqueId);            // set attribute
+        input.addEventListener('click', checkboxHandler);
         label.appendChild(input);
         td1.appendChild(label);
 
@@ -386,35 +391,36 @@ var HtmlTabCoursesModule = (function () {
         componentHandler.upgradeDom();
     }
 
-    // function checkboxHandler() {
-    //     'use strict';
-    //     console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
+    function checkboxHandler() {
+        'use strict';
+        console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
 
-    //     // calculate index of row
-    //     var row = parseInt(this.id.substring(4));  // omitting 'row_'
+        // calculate index of row
+        var ofs = prefix_checkboxes.length;
+        var row = parseInt(this.id.substring(ofs));  // omitting prefix 'row_course_'
 
-    //     if (this.checked) {
+        if (this.checked) {
 
-    //         lastCheckedCourse = row;
+            lastCheckedCourse = row;
 
-    //         var boxes = tableCoursesBody.getElementsByClassName('checkbox_select_course');
-    //         for (var k = 0; k < boxes.length; k++) {
+            var boxes = tableCoursesBody.getElementsByClassName('checkbox_select_course');
+            for (var k = 0; k < boxes.length; k++) {
 
-    //             if (k != lastCheckedCourse) {
-    //                 var label = boxes[k];
-    //                 label.parentElement.MaterialCheckbox.uncheck();
-    //             }
-    //         }
-    //     }
-    //     else {
+                if (k != lastCheckedCourse) {
+                    var label = boxes[k];
+                    label.parentElement.MaterialCheckbox.uncheck();
+                }
+            }
+        }
+        else {
 
-    //         if (row === lastCheckedCourse) {
+            if (row === lastCheckedCourse) {
 
-    //             // clear last selection
-    //             lastCheckedCourse = -1;
-    //         }
-    //     }
-    // }
+                // clear last selection
+                lastCheckedCourse = -1;
+            }
+        }
+    }
 
     // ============================================================================================
     // public interface

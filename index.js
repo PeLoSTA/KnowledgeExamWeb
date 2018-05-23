@@ -16,9 +16,9 @@ FirebaseStudentsModule.init();
 
 HtmlTabClassesModule.init();
 HtmlTabCoursesModule.init();
+HtmlTabStudentsModule.init();
 HtmlTabQuestionsAdminModule.init();
 HtmlTabQuestionsViewerModule.init();
-HtmlTabStudentsModule.init();
 
 HtmlTabClassesModule.updateTableOfClasses(true, true);
 HtmlTabCoursesModule.updateTableOfCourses(true, true);
