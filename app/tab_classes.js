@@ -333,8 +333,6 @@ var HtmlTabClassesModule = (function () {
         }).finally(() => {
             isActive = false;
 
-            componentHandler.upgradeDom();
-            
             console.log("[Html] < updateTableOfClasses");
         });
     }

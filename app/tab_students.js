@@ -107,7 +107,7 @@ var HtmlTabStudentsModule = (function () {
     }
 
     // ============================================================================================
-    // click event dispatching routine
+    // click event dispatching routine: buttons
 
     function onClickEvent() {
         'use strict';
@@ -130,13 +130,10 @@ var HtmlTabStudentsModule = (function () {
     }
 
     // ============================================================================================
-    // click event dispatching routine
+    // click event dispatching routine: select box
 
     function onChangeEvent() {
         'use strict';
-        var sender = this.id
-
-        console.log("select ...  value == " + this.value);
 
         // retrieve index of selected item
         var start = 'option_'.length;
@@ -144,37 +141,8 @@ var HtmlTabStudentsModule = (function () {
 
         // store currently selected class (index of this class) in closure
         classesSelectedIndex = parseInt(reminder);
-
-
-
-        console.log("Index == " + classesSelectedIndex);
-
-        // let options = selectStudentsClasses.querySelectorAll('option');
-        // let count = options.length;
-        // if (typeof count == 'undefined') {
-        //     console.log("arghhhhhhhhh ....");
-        // }
+        console.log("Index (Classes) = " + classesSelectedIndex);
     }
-
-    // function onClickEvent() {
-    //     'use strict';
-    //     var sender = this.id;
-
-    //     switch (sender) {
-    //         case "btnCreateStudent":
-    //             onCreateEvent();
-    //             break;
-    //         // case "btnModifySubject":
-    //         //     onModifyEvent();
-    //         //     break;
-    //         // case "btnDeleteSubject":
-    //         //     onDeleteEvent();
-    //         //     break;
-    //         // case "btnRefreshSubjects":
-    //         //     onRefreshEvent();
-    //         //     break;
-    //     }
-    // }
 
     // ============================================================================================
     // create new student
@@ -281,7 +249,7 @@ var HtmlTabStudentsModule = (function () {
     }
 
     // ============================================================================================
-    // reading list of subjects (synchronously)
+    // reading list of classes
 
     function onUpdateDropDownListOfClasses() {
         'use strict';
@@ -405,10 +373,12 @@ var HtmlTabStudentsModule = (function () {
         td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td4.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td5.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-        var textnode1 = document.createTextNode(entry.firstname);  // create 2nd text node
-        var textnode2 = document.createTextNode(entry.lastname);   // create 3rd text node
-        var textnode3 = document.createTextNode(entry.email);      // create 4th text node
-        var textnode4 = document.createTextNode(entry.key);        // create 5th text node
+
+        var className = FirebaseClassesModule.getNameOfClass(entry.key);
+        var textnode1 = document.createTextNode(className);        // create 2nd text node (class)
+        var textnode2 = document.createTextNode(entry.firstname);  // create 3rd text node (firstname)
+        var textnode3 = document.createTextNode(entry.lastname);   // create 4th text node (lastname)
+        var textnode4 = document.createTextNode(entry.email);      // create 5th text node (email)
 
         td2.appendChild(textnode1);     // append text to <td>
         td3.appendChild(textnode2);     // append text to <td>

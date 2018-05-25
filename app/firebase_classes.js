@@ -96,7 +96,7 @@ var FirebaseClassesModule = (function () {
             console.log('[Fire] deleteClass failed! ' + msg);
             return Promise.reject(msg);
         }
-3
+
         return database.ref(refDeleteString).remove().then(() => {
             return keyOfClass;
         }).catch((err) => {
@@ -115,6 +115,17 @@ var FirebaseClassesModule = (function () {
         return classesList[index];
     }
 
+    function getNameOfClass(key) {
+        'use strict';
+        for (var k = 0; k < classesList.length; k++) {
+
+            if (classesList[k].key === key) {
+                return classesList[k].name;
+            }
+            return '';
+        }
+    }
+
     return {
         init: init,
         addClass: addClass,
@@ -122,6 +133,7 @@ var FirebaseClassesModule = (function () {
         deleteClass: deleteClass,
 
         getClasses: getClasses,
-        getClass: getClass
+        getClass: getClass,
+        getNameOfClass: getNameOfClass
     }
 })();
