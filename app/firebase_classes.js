@@ -118,12 +118,11 @@ var FirebaseClassesModule = (function () {
     function getNameOfClass(key) {
         'use strict';
         for (var k = 0; k < classesList.length; k++) {
-
             if (classesList[k].key === key) {
                 return classesList[k].name;
             }
-            return '';
         }
+        return '';
     }
 
     return {
