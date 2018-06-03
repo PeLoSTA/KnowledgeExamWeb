@@ -185,7 +185,7 @@ var HtmlTabStudentsModule = (function () {
                 txtStatusBar.value = "Added Student '" + firstname + ' ' + lastname + "' to Repository !";
                 return key;
             }).then((key) => {
-                return updateTableOfStudents(false, false);
+                return updateTableOfAllStudents(false, false);   // TODO: Das sollte nur die Tabelle der aktuellen Klasse sein !!!
             }).catch((msg) => {
                 // log error message to status line
                 txtStatusBar.value = msg;
@@ -214,10 +214,18 @@ var HtmlTabStudentsModule = (function () {
     // refresh registered classes
 
     function onUpdateStudent() {
-        updateTableOfStudents(true, true);
+
+        if (classesSelectedIndex == -1 || classesSelectedIndex == 0) {
+            updateTableOfAllStudents(true, true);
+        } else {
+
+            // retrieve key of currently selected class
+            var key = classes[classesSelectedIndex-1].key;
+            updateTableOfStudents(key, true, true);
+        }
     }
 
-    function updateTableOfStudents(checkGuard, verbose) {
+    function updateTableOfAllStudents(checkGuard, verbose) {
         'use strict';
         if (checkGuard && isActive === true) {
             console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
@@ -225,10 +233,10 @@ var HtmlTabStudentsModule = (function () {
         }
 
         isActive = true;
-        console.log("[Html] > updateTableOfStudents");
+        console.log("[Html] > updateTableOfAllStudents");
 
         tableStudentsBody.innerHTML = '';
-        return FirebaseStudentsModule.getStudents().then((listOfStudents) => {
+        return FirebaseStudentsModule.getAllStudents().then((listOfStudents) => {
             for (var i = 0; i < listOfStudents.length; i++) {
                 var student = listOfStudents[i]
                 addEntryToStudentTable(tableStudentsBody, i, student);
@@ -244,7 +252,38 @@ var HtmlTabStudentsModule = (function () {
             txtStatusBar.value = msg;
         }).finally(() => {
             isActive = false;
-            console.log("[Html] < updateTableOfStudents");
+            console.log("[Html] < updateTableOfAllStudents");
+        });
+    }
+
+    function updateTableOfStudents(classs, checkGuard, verbose) {
+        'use strict';
+        if (checkGuard && isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
+        }
+
+        isActive = true;
+        console.log("[Html] > updateTableOfAllStudents");
+
+        tableStudentsBody.innerHTML = '';
+        return FirebaseStudentsModule.getStudents(classs).then((listOfStudents) => {
+            for (var i = 0; i < listOfStudents.length; i++) {
+                var student = listOfStudents[i]
+                addEntryToStudentTable(tableStudentsBody, i, student);
+            }
+            return listOfStudents.length;
+        }).then((number) => {
+            if (verbose) {
+                // refresh status line
+                txtStatusBar.value = number + ' students';
+            }
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] < updateTableOfAllStudents");
         });
     }
 
@@ -257,7 +296,7 @@ var HtmlTabStudentsModule = (function () {
         console.log("[Html] > onUpdateDropDownListOfClasses");
         FirebaseClassesModule.getClasses().then((classesList) => {
 
-            classes = classesList;  // store read classes in closure
+            classes = classesList;  // store list of classes in closure
 
             fillClassesDropDownList(selectStudentsClasses, classesList);
 

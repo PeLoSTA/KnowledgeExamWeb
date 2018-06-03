@@ -22,34 +22,6 @@ var FirebaseStudentsModule = (function () {
     // ============================================================================================
     // public functions
 
-    function getStudents() {
-        'use strict';
-        return database.ref(refStudents).once('value')
-            .then((snapshot) => {
-                studentsList = [];
-                let localList = [];
-                snapshot.forEach(function (childSnapshot) {
-                    var snap = childSnapshot.val();
-
-                    let student = {
-                        firstname: snap.firstname,
-                        lastname: snap.lastname,
-                        email: snap.email,
-                        key: childSnapshot.key
-                    };
-
-                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", Key = " + student.key);
-                    studentsList.push(student);
-                    localList.push(student);
-                });
-                return localList;
-            }).catch((err) => {
-                let msg = "FirebaseStudentsModule: ERROR " + err.code + ", Message: " + err.message;
-                console.log('Reading list of students failed! [' + msg + ']');
-                throw err;
-            });
-    }
-
     function addStudent(firstname, lastname, email, classs) {
         'use strict';
         var key = '';
@@ -69,6 +41,62 @@ var FirebaseStudentsModule = (function () {
             });
     }
 
+    function getAllStudents() {
+        'use strict';
+        return database.ref(refStudents).once('value')
+            .then((snapshot) => {
+                studentsList = [];
+                let localList = [];
+                snapshot.forEach(function (childSnapshot) {
+                    var snap = childSnapshot.val();
+
+                    let student = {
+                        firstname: snap.firstname,
+                        lastname: snap.lastname,
+                        email: snap.email,
+                        key: snap.class
+                    };
+
+                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", Key = " + student.key);
+                    studentsList.push(student);
+                    localList.push(student);
+                });
+                return localList;
+            }).catch((err) => {
+                let msg = "FirebaseStudentsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('Reading list of students failed! [' + msg + ']');
+                throw err;
+            });
+    }
+
+    function getStudents(classs) {
+        'use strict';
+        return database.ref(refStudents).orderByChild('class').equalTo(classs).once('value')
+            .then((snapshot) => {
+                studentsList = [];
+                let localList = [];
+                snapshot.forEach(function (childSnapshot) {
+                    var snap = childSnapshot.val();
+
+                    let student = {
+                        firstname: snap.firstname,
+                        lastname: snap.lastname,
+                        email: snap.email,
+                        key: snap.class
+                    };
+
+                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", Key = " + student.key);
+                    studentsList.push(student);
+                    localList.push(student);
+                });
+                return localList;
+            }).catch((err) => {
+                let msg = "FirebaseStudentsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('Reading list of students failed! [' + msg + ']');
+                throw err;
+            });
+    }
+
     // ============================================================================================
     // public interface
 
@@ -76,6 +104,7 @@ var FirebaseStudentsModule = (function () {
         init: init,
         addStudent: addStudent,
 
-        getStudents: getStudents
+        getStudents: getStudents,
+        getAllStudents: getAllStudents
     }
 })();
