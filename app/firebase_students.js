@@ -22,14 +22,14 @@ var FirebaseStudentsModule = (function () {
     // ============================================================================================
     // public functions
 
-    function addStudent(firstname, lastname, email, classs) {
+    function addStudent(firstname, lastname, email, keyClass) {
         'use strict';
         var key = '';
 
         return database.ref(refStudents).push()
             .then((newRef) => {
                 key = newRef.key;
-                return newRef.set({ firstname: firstname, lastname: lastname, email: email, 'class': classs });
+                return newRef.set({ firstname: firstname, lastname: lastname, email: email, 'class': keyClass });
             })
             .then(() => {
                 return key;
@@ -39,6 +39,15 @@ var FirebaseStudentsModule = (function () {
                 console.log('[Fire] addStudent failed! ' + msg);
                 throw msg;
             });
+    }
+
+    function getStudents(keyClass) {
+        if (keyClass === undefined) {
+            return getAllStudents();
+        }
+        else {
+            return getStudentsOfClass(keyClass);
+        }
     }
 
     function getAllStudents() {
@@ -69,9 +78,9 @@ var FirebaseStudentsModule = (function () {
             });
     }
 
-    function getStudents(classs) {
+    function getStudentsOfClass(keyClass) {
         'use strict';
-        return database.ref(refStudents).orderByChild('class').equalTo(classs).once('value')
+        return database.ref(refStudents).orderByChild('class').equalTo(keyClass).once('value')
             .then((snapshot) => {
                 studentsList = [];
                 let localList = [];
@@ -103,8 +112,6 @@ var FirebaseStudentsModule = (function () {
     return {
         init: init,
         addStudent: addStudent,
-
-        getStudents: getStudents,
-        getAllStudents: getAllStudents
+        getStudents: getStudents
     }
 })();

@@ -141,7 +141,6 @@ var HtmlTabStudentsModule = (function () {
 
         // store currently selected class (index of this class) in closure
         classesSelectedIndex = parseInt(reminder);
-        console.log("Index (Classes) = " + classesSelectedIndex);
     }
 
     // ============================================================================================
@@ -177,15 +176,15 @@ var HtmlTabStudentsModule = (function () {
         console.log("[Html] > doCreateStudent");
 
         // retrieve key of currently selected class (index starts at 1, array at 0)
-        var key = classes[classesSelectedIndex - 1].key;
+        var keyClass = classes[classesSelectedIndex - 1].key;
 
-        FirebaseStudentsModule.addStudent(firstname, lastname, email, key)
+        FirebaseStudentsModule.addStudent(firstname, lastname, email, keyClass)
             .then((key) => {
                 // log key to status bar
                 txtStatusBar.value = "Added Student '" + firstname + ' ' + lastname + "' to Repository !";
                 return key;
             }).then((key) => {
-                return updateTableOfAllStudents(false, false);   // TODO: Das sollte nur die Tabelle der aktuellen Klasse sein !!!
+                return updateTableOfStudents(false, false, keyClass);
             }).catch((msg) => {
                 // log error message to status line
                 txtStatusBar.value = msg;
@@ -216,16 +215,15 @@ var HtmlTabStudentsModule = (function () {
     function onUpdateStudent() {
 
         if (classesSelectedIndex == -1 || classesSelectedIndex == 0) {
-            updateTableOfAllStudents(true, true);
+            updateTableOfStudents(true, true);
         } else {
-
             // retrieve key of currently selected class
-            var key = classes[classesSelectedIndex-1].key;
-            updateTableOfStudents(key, true, true);
+            var keyClass = classes[classesSelectedIndex-1].key;
+            updateTableOfStudents(true, true, keyClass);
         }
     }
 
-    function updateTableOfAllStudents(checkGuard, verbose) {
+    function updateTableOfStudents(checkGuard, verbose, keyClass) {
         'use strict';
         if (checkGuard && isActive === true) {
             console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
@@ -236,38 +234,7 @@ var HtmlTabStudentsModule = (function () {
         console.log("[Html] > updateTableOfAllStudents");
 
         tableStudentsBody.innerHTML = '';
-        return FirebaseStudentsModule.getAllStudents().then((listOfStudents) => {
-            for (var i = 0; i < listOfStudents.length; i++) {
-                var student = listOfStudents[i]
-                addEntryToStudentTable(tableStudentsBody, i, student);
-            }
-            return listOfStudents.length;
-        }).then((number) => {
-            if (verbose) {
-                // refresh status line
-                txtStatusBar.value = number + ' students';
-            }
-        }).catch((msg) => {
-            // log error message to status line
-            txtStatusBar.value = msg;
-        }).finally(() => {
-            isActive = false;
-            console.log("[Html] < updateTableOfAllStudents");
-        });
-    }
-
-    function updateTableOfStudents(classs, checkGuard, verbose) {
-        'use strict';
-        if (checkGuard && isActive === true) {
-            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
-            return null;
-        }
-
-        isActive = true;
-        console.log("[Html] > updateTableOfAllStudents");
-
-        tableStudentsBody.innerHTML = '';
-        return FirebaseStudentsModule.getStudents(classs).then((listOfStudents) => {
+        return FirebaseStudentsModule.getStudents(keyClass).then((listOfStudents) => {
             for (var i = 0; i < listOfStudents.length; i++) {
                 var student = listOfStudents[i]
                 addEntryToStudentTable(tableStudentsBody, i, student);
