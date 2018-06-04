@@ -17,6 +17,10 @@ var HtmlTabStudentsModule = (function () {
     var txtStudentLastName = document.getElementById('txtStudentLastName');
     var txtStudentEMail = document.getElementById('txtStudentEMail');
 
+    var txtStudentFirstNameModified = document.getElementById('txtStudentFirstNameModified');
+    var txtStudentLastNameModified = document.getElementById('txtStudentLastNameModified');
+    var txtStudentEMailModified = document.getElementById('txtStudentEMailModified');
+
     var tableStudentsBody = document.getElementById('tableStudentsBody');
 
     var dialogCreateStudent = document.getElementById('dialogCreateStudent');
@@ -56,9 +60,9 @@ var HtmlTabStudentsModule = (function () {
         if (!dialogCreateStudent.showModal) {
             dialogPolyfill.registerDialog(dialogCreateStudent);
         }
-        // if (!dialogModifyStudent.showModal) {
-        //     dialogPolyfill.registerDialog(dialogModifyStudent);
-        // }
+        if (!dialogModifyStudent.showModal) {
+            dialogPolyfill.registerDialog(dialogModifyStudent);
+        }
         // if (!dialogDeleteStudent.showModal) {
         //     dialogPolyfill.registerDialog(dialogDeleteStudent);
         // }
@@ -80,15 +84,15 @@ var HtmlTabStudentsModule = (function () {
             cancelCreateStudent();
         });
 
-        // dialogModifyStudent.querySelector('.modify_class').addEventListener('click', () => {
-        //     'use strict';
-        //     // doModifyClass();
-        // });
+        dialogModifyStudent.querySelector('.modify_student').addEventListener('click', () => {
+            'use strict';
+            doModifyStudent();
+        });
 
-        // dialogModifyStudent.querySelector('.cancel_modify_class').addEventListener('click', () => {
-        //     'use strict';
-        //     // cancelModifyClass();
-        // });
+        dialogModifyStudent.querySelector('.cancel_modify_student').addEventListener('click', () => {
+            'use strict';
+            cancelModifyStudent();
+        });
 
         // dialogDeleteStudent.querySelector('.delete_class').addEventListener('click', () => {
         //     'use strict';
@@ -117,9 +121,9 @@ var HtmlTabStudentsModule = (function () {
             case "btnCreateStudent":
                 onCreateStudent();
                 break;
-            // case "btnModifyStudent":
-            //     onModifyStudent();
-            //     break;
+            case "btnModifyStudent":
+                onModifyStudent();
+                break;
             // case "btnDeleteStudent":
             //     onDeleteStudent();
             //     break;
@@ -210,7 +214,36 @@ var HtmlTabStudentsModule = (function () {
     }
 
     // ============================================================================================
-    // refresh registered classes
+    // modify existing student
+
+    function onModifyStudent() {
+        'use strict';
+        if (lastCheckedStudent === -1) {
+            window.alert("Warning: No student selected !");
+            return;
+        }
+
+        var student = FirebaseStudentsModule.getStudent(lastCheckedStudent);
+        txtStudentFirstNameModified.value = student.firstname;
+        txtStudentLastNameModified.value = student.lastname;
+        txtStudentEMailModified.value = student.email;
+        dialogModifyStudent.showModal();
+    }
+
+    function doModifyStudent() {
+    }
+
+    function cancelModifyStudent() {
+        'use strict';
+        txtStudentFirstNameModified.value = '';
+        txtStudentLastNameModified.value = '';
+        txtStudentEMailModified.value = '';
+
+        dialogModifyStudent.close();
+    }
+
+    // ============================================================================================
+    // refresh registered students
 
     function onUpdateStudent() {
 
@@ -218,7 +251,7 @@ var HtmlTabStudentsModule = (function () {
             updateTableOfStudents(true, true);
         } else {
             // retrieve key of currently selected class
-            var keyClass = classes[classesSelectedIndex-1].key;
+            var keyClass = classes[classesSelectedIndex - 1].key;
             updateTableOfStudents(true, true, keyClass);
         }
     }

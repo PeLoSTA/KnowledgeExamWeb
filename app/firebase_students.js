@@ -106,12 +106,22 @@ var FirebaseStudentsModule = (function () {
             });
     }
 
+    function getStudent(index) {
+        'use strict';
+        if (index < 0 || index >= studentsList.length) {
+            return null;
+        }
+
+        return studentsList[index];
+    }
+
     // ============================================================================================
     // public interface
 
     return {
         init: init,
         addStudent: addStudent,
+        getStudent: getStudent,
         getStudents: getStudents
     }
 })();

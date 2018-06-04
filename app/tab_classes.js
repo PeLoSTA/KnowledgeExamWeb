@@ -12,8 +12,10 @@ var HtmlTabClassesModule = (function () {
 
     var txtClassName = document.getElementById('txtClassName');
     var txtClassDescription = document.getElementById('txtClassDescription');
+
     var txtClassNameModified = document.getElementById('txtClassNameModified');
     var txtClassDescriptionModified = document.getElementById('txtClassDescriptionModified');
+    
     var txtClassToDelete = document.getElementById('txtClassToDelete');
 
     var dialogCreateClass = document.getElementById('dialogCreateClass');

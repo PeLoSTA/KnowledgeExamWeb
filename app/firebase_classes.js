@@ -131,8 +131,8 @@ var FirebaseClassesModule = (function () {
         updateClass: updateClass,
         deleteClass: deleteClass,
 
-        getClasses: getClasses,
         getClass: getClass,
+        getClasses: getClasses,
         getNameOfClass: getNameOfClass
     }
 })();
