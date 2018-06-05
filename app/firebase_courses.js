@@ -26,7 +26,13 @@ var FirebaseCoursesModule = (function () {
                 let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
-                    let course = { name: snap.name, description: snap.description, key: childSnapshot.key };
+
+                    let course = {
+                        name: snap.name,
+                        description: snap.description,
+                        key: childSnapshot.key
+                    };
+
                     console.log("[Fire] -> Course " + course.name + ", Description = " + course.description + ", Key = " + course.key);
                     coursesList.push(course);
                     localList.push(course);
@@ -123,7 +129,7 @@ var FirebaseCoursesModule = (function () {
 
         return "";
     }
-3
+    3
     // ============================================================================================
     // public interface
 

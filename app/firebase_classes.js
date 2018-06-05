@@ -29,7 +29,13 @@ var FirebaseClassesModule = (function () {
                 let localList = [];
                 snapshot.forEach(function (childSnapshot) {
                     var snap = childSnapshot.val();
-                    let classs = { name: snap.name, description: snap.description, key: childSnapshot.key };
+
+                    let classs = {
+                        name: snap.name,
+                        description: snap.description,
+                        key: childSnapshot.key
+                    };
+
                     console.log("[Fire] -> Class " + snap.name + ", Description = " + snap.description + ", Key = " + childSnapshot.key);
                     classesList.push(classs);
                     localList.push(classs);

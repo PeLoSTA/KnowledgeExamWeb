@@ -231,14 +231,67 @@ var HtmlTabStudentsModule = (function () {
     }
 
     function doModifyStudent() {
+        'use strict';
+        var firstname = txtStudentFirstNameModified.value;
+        var lastname = txtStudentLastNameModified.value;
+        var email = txtStudentEMailModified.value;
+
+        if (firstname === '' || lastname === '' || email === '') {
+            window.alert("One or more fields emtpy !");
+            return null;
+        }
+
+        if (isActive === true) {
+            console.log("[Html] Another asynchronous invocation still pending ... ignoring click event!");
+            return null;
+        }
+
+        isActive = true;
+        console.log("[Html] > doModifyStudent");
+
+        var student = FirebaseStudentsModule.getStudent(lastCheckedStudent);
+        student.firstname = firstname;
+        student.lastname = lastname;
+        student.email = email;
+
+        FirebaseStudentsModule.updateStudent(student)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Updated Student '" + firstname + ' ' + lastname;
+                return key;
+            }).then((key) => {
+                return updateTableOfStudents(false, false);  // TODO: Hmm, da fehlt der Key der klasse als 3. parameter
+            }).catch((msg) => {
+                // log error message to status line
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                // clear checkbox
+                var checkboxLabel = document.getElementById('label__' + lastCheckedStudent);
+                checkboxLabel.MaterialCheckbox.uncheck();
+
+                txtStudentFirstNameModified.value = '';
+                txtStudentLastNameModified.value = '';
+                txtStudentEMailModified.value = '';
+
+                lastCheckedStudent = -1;
+                dialogModifyStudent.close();
+
+                isActive = false;
+                console.log("[Html] < doModifyStudent");
+            });
     }
 
     function cancelModifyStudent() {
         'use strict';
+        // clear checkbox
+        var checkboxLabel = document.getElementById('label__' + lastCheckedStudent);
+        checkboxLabel.MaterialCheckbox.uncheck();
+
         txtStudentFirstNameModified.value = '';
         txtStudentLastNameModified.value = '';
         txtStudentEMailModified.value = '';
 
+        lastCheckedStudent = -1;
         dialogModifyStudent.close();
     }
 
@@ -395,7 +448,7 @@ var HtmlTabStudentsModule = (function () {
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
         label.setAttribute('for', uniqueId);          // set attribute
-        label.setAttribute('id', 'label_' + index);   // set attribute
+        label.setAttribute('id', 'label__' + index);   // set attribute
         var input = document.createElement('input');  // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_student');  // set attribute
         input.setAttribute('type', 'checkbox');       // set attributes
