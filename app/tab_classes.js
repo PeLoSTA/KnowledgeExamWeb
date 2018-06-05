@@ -32,7 +32,8 @@ var HtmlTabClassesModule = (function () {
     var lastCheckedClass;
     var isActive;
 
-    const prefix_checkboxes = 'row_class_';
+    const prefix_checkboxes = 'row_class_';     // need unique id's for automatically generated checkboxes
+    const prefix_label = 'label_class_';        // need unique id's for automatically generated labels
 
     // ============================================================================================
     // initialization
@@ -225,7 +226,7 @@ var HtmlTabClassesModule = (function () {
                 txtStatusBar.value = msg;
             }).finally(() => {
                 // clear checkbox
-                var checkboxLabel = document.getElementById('label_' + lastCheckedClass);
+                var checkboxLabel = document.getElementById(prefix_label + lastCheckedClass);
                 checkboxLabel.MaterialCheckbox.uncheck();
                 txtClassNameModified.value = '';
                 txtClassDescriptionModified.value = '';
@@ -240,7 +241,7 @@ var HtmlTabClassesModule = (function () {
     function cancelModifyClass() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label_' + lastCheckedClass);
+        var checkboxLabel = document.getElementById(prefix_label + lastCheckedClass);
         checkboxLabel.MaterialCheckbox.uncheck();
         txtClassNameModified.value = '';
         txtClassDescriptionModified.value = '';
@@ -294,7 +295,7 @@ var HtmlTabClassesModule = (function () {
     function cancelDeleteClass() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label_' + lastCheckedClass);
+        var checkboxLabel = document.getElementById(prefix_label + lastCheckedClass);
         checkboxLabel.MaterialCheckbox.uncheck();
         lastCheckedClass = -1;
         dialogDeleteClass.close();
@@ -366,7 +367,7 @@ var HtmlTabClassesModule = (function () {
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
         label.setAttribute('for', uniqueId);          // set attribute
-        label.setAttribute('id', 'label_' + index);   // set attribute
+        label.setAttribute('id', prefix_label + index);   // set attribute
         var input = document.createElement('input');  // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_class');  // set attribute
         input.setAttribute('type', 'checkbox');       // set attributes

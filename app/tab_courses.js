@@ -30,7 +30,8 @@ var HtmlTabCoursesModule = (function () {
     var lastCheckedCourse;
     var isActive;
 
-    const prefix_checkboxes = 'row_course_';
+    const prefix_checkboxes = 'row_course_';     // need unique id's for automatically generated checkboxes
+    const prefix_label = 'label_course_';        // need unique id's for automatically generated labels
 
     // ============================================================================================
     // initialization
@@ -224,7 +225,7 @@ var HtmlTabCoursesModule = (function () {
                 txtStatusBar.value = msg;
             }).finally(() => {
                 // clear checkbox
-                var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
+                var checkboxLabel = document.getElementById(prefix_label + lastCheckedCourse);
                 checkboxLabel.MaterialCheckbox.uncheck();
                 txtCourseNameModified.value = '';
                 txtCourseDescriptionModified.value = '';
@@ -239,7 +240,7 @@ var HtmlTabCoursesModule = (function () {
     function cancelModifyCourse() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
+        var checkboxLabel = document.getElementById(prefix_label + lastCheckedCourse);
         checkboxLabel.MaterialCheckbox.uncheck();
         txtCourseNameModified.value = '';
         txtCourseDescriptionModified.value = '';
@@ -295,7 +296,7 @@ var HtmlTabCoursesModule = (function () {
     function cancelDeleteCourse() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label_' + lastCheckedCourse);
+        var checkboxLabel = document.getElementById(prefix_label + lastCheckedCourse);
         checkboxLabel.MaterialCheckbox.uncheck();
         lastCheckedCourse = -1;
         dialogDeleteCourse.close();
@@ -366,7 +367,7 @@ var HtmlTabCoursesModule = (function () {
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
         label.setAttribute('for', uniqueId);           // set attribute
-        label.setAttribute('id', 'label_' + index);    // set attribute
+        label.setAttribute('id', prefix_label + index);    // set attribute
         var input = document.createElement('input');   // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
         input.setAttribute('type', 'checkbox');        // set attributes

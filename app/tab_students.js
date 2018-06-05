@@ -37,7 +37,8 @@ var HtmlTabStudentsModule = (function () {
     var classesSelectedIndex;
     var lastCheckedStudent;
 
-    const prefix_checkboxes = 'row_student_';
+    const prefix_checkboxes = 'row_student_';     // need unique id's for automatically generated checkboxes
+    const prefix_label = 'label_student_';        // need unique id's for automatically generated labels
 
     // ============================================================================================
     // initialization
@@ -266,7 +267,7 @@ var HtmlTabStudentsModule = (function () {
                 txtStatusBar.value = msg;
             }).finally(() => {
                 // clear checkbox
-                var checkboxLabel = document.getElementById('label__' + lastCheckedStudent);
+                var checkboxLabel = document.getElementById(prefix_label + lastCheckedStudent);
                 checkboxLabel.MaterialCheckbox.uncheck();
 
                 txtStudentFirstNameModified.value = '';
@@ -284,7 +285,7 @@ var HtmlTabStudentsModule = (function () {
     function cancelModifyStudent() {
         'use strict';
         // clear checkbox
-        var checkboxLabel = document.getElementById('label__' + lastCheckedStudent);
+        var checkboxLabel = document.getElementById(prefix_label + lastCheckedStudent);
         checkboxLabel.MaterialCheckbox.uncheck();
 
         txtStudentFirstNameModified.value = '';
@@ -448,7 +449,7 @@ var HtmlTabStudentsModule = (function () {
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
         label.setAttribute('for', uniqueId);          // set attribute
-        label.setAttribute('id', 'label__' + index);   // set attribute
+        label.setAttribute('id', prefix_label + index);   // set attribute
         var input = document.createElement('input');  // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_student');  // set attribute
         input.setAttribute('type', 'checkbox');       // set attributes
