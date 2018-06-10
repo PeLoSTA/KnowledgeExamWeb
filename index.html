@@ -192,7 +192,7 @@
         </div>
     </dialog>
 
-    <!-- class student (creation) ===================================================================== -->
+    <!-- student dialog (creation) ===================================================================== -->
 
     <dialog id="dialogCreateStudent" class="mdl-dialog" style="width: 500px">
         <div>
@@ -237,7 +237,7 @@
     </dialog>
 
 
-    <!-- class student (modification) ===================================================================== -->
+    <!-- student dialog (modification) ===================================================================== -->
 
     <dialog id="dialogModifyStudent" class="mdl-dialog" style="width: 500px">
         <div>
@@ -274,6 +274,23 @@
             <div class="mdl-dialog__actions" style="width: 350px">
                 <button type="button" class="mdl-button modify_student">Modify</button>
                 <button type="button" class="mdl-button cancel_modify_student">Cancel</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- student dialog (deletion) ===================================================================== -->
+
+    <dialog id="dialogDeleteStudent" class="mdl-dialog" style="width: 400px">
+        <div>
+            <h6 class="mdl-dialog__title">Delete a Student</h6>
+            <br/>
+            <p>Are you sure you want to delete this Student?</p>
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="txtStudentToDelete" readonly>
+            </div>
+            <div class="mdl-dialog__actions">
+                <button type="button" class="mdl-button delete_student">Delete</button>
+                <button type="button" class="mdl-button cancel_delete_student">Cancel</button>
             </div>
         </div>
     </dialog>

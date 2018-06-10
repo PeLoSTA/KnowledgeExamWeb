@@ -56,8 +56,37 @@ var FirebaseStudentsModule = (function () {
             });
     }
 
-    function deleteStudent() {
+    function deleteStudent(index) {
         'use strict';
+
+        // search class to delete
+        // var refDeleteString = '';
+        // var keyOfStudent = '';
+        // for (var k = 0; k < studentsList.length; k++) {
+
+        //     if (studentsList[k].name === name) {
+
+        //         keyOfClass = classesList[k].key;
+        //         refDeleteString = refClasses + '/' + keyOfClass;
+        //         break;
+        //     }
+        // }
+        // if (refDeleteString === '') {
+        //     let msg = "FirebaseClassesModule: INTERNAL ERROR: class " + name + " not found!";
+        //     console.log('[Fire] deleteClass failed! ' + msg);
+        //     return Promise.reject(msg);
+        // }
+
+        var key = studentsList[index].key;
+        var refDelete = refStudents + '/' + key;
+
+        return database.ref(refDelete).remove().then(() => {
+            return key;
+        }).catch((err) => {
+            let msg = "FirebaseStudentsModule: ERROR " + err.code + ", Message: " + err.message;
+            console.log('[Fire] deleteStudent failed! ' + msg);
+            throw msg;
+        });
     }
 
     function getStudents(keyClass) {

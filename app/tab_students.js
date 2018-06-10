@@ -21,6 +21,8 @@ var HtmlTabStudentsModule = (function () {
     var txtStudentLastNameModified = document.getElementById('txtStudentLastNameModified');
     var txtStudentEMailModified = document.getElementById('txtStudentEMailModified');
 
+    var txtStudentToDelete = document.getElementById('txtStudentToDelete');
+
     var tableStudentsBody = document.getElementById('tableStudentsBody');
 
     var dialogCreateStudent = document.getElementById('dialogCreateStudent');
@@ -64,9 +66,9 @@ var HtmlTabStudentsModule = (function () {
         if (!dialogModifyStudent.showModal) {
             dialogPolyfill.registerDialog(dialogModifyStudent);
         }
-        // if (!dialogDeleteStudent.showModal) {
-        //     dialogPolyfill.registerDialog(dialogDeleteStudent);
-        // }
+        if (!dialogDeleteStudent.showModal) {
+            dialogPolyfill.registerDialog(dialogDeleteStudent);
+        }
 
         btnCreateStudent.addEventListener('click', onClickEvent);
         btnModifyStudent.addEventListener('click', onClickEvent);
@@ -95,15 +97,15 @@ var HtmlTabStudentsModule = (function () {
             cancelModifyStudent();
         });
 
-        // dialogDeleteStudent.querySelector('.delete_class').addEventListener('click', () => {
-        //     'use strict';
-        //     // doDeleteClass();
-        // });
+        dialogDeleteStudent.querySelector('.delete_student').addEventListener('click', () => {
+            'use strict';
+            doDeleteStudent();
+        });
 
-        // dialogDeleteStudent.querySelector('.cancel_delete_class').addEventListener('click', () => {
-        //     'use strict';
-        //     // cancelDeleteClass();
-        // });
+        dialogDeleteStudent.querySelector('.cancel_delete_student').addEventListener('click', () => {
+            'use strict';
+            cancelDeleteStudent();
+        });
 
         tabStudents.addEventListener('click', () => {
             'use strict';
@@ -125,9 +127,9 @@ var HtmlTabStudentsModule = (function () {
             case "btnModifyStudent":
                 onModifyStudent();
                 break;
-            // case "btnDeleteStudent":
-            //     onDeleteStudent();
-            //     break;
+            case "btnDeleteStudent":
+                onDeleteStudent();
+                break;
             case "btnRefreshStudents":
                 onUpdateStudent();
                 break;
@@ -294,6 +296,56 @@ var HtmlTabStudentsModule = (function () {
 
         lastCheckedStudent = -1;
         dialogModifyStudent.close();
+    }
+
+    // ============================================================================================
+    // delete existing student
+
+    function onDeleteStudent() {
+        'use strict';
+        if (lastCheckedStudent === -1) {
+            window.alert("Warning: No student selected !");
+            return;
+        }
+
+        var student = FirebaseStudentsModule.getStudent(lastCheckedStudent);
+        txtStudentToDelete.value = student.firstname + ' ' + student.lastname;
+        dialogDeleteStudent.showModal();
+    }
+
+    function doDeleteStudent() {
+        'use strict';
+
+        console.log("[Html] > doDeleteStudent");
+
+        FirebaseStudentsModule.deleteStudent(lastCheckedStudent)
+            .then((key) => {
+                // log key to status bar
+                txtStatusBar.value = "Deleted student from Repository [Key = " + key + "]!";
+                return key;
+            }).then((key) => {
+                return updateTableOfStudents(true, false);
+            }).catch((msg) => {
+                console.log("Error in doDeleteClass");
+                // log error to status bar
+                txtStatusBar.value = msg;
+            }).finally(() => {
+                txtStudentToDelete.value = '';
+                lastCheckedStudent = -1;
+                dialogDeleteStudent.close();
+                console.log("[Html] < doDeleteStudent");
+            });
+    }
+
+    function cancelDeleteStudent() {
+        // clear checkbox
+        var checkboxLabel = document.getElementById(prefix_label + lastCheckedStudent);
+        checkboxLabel.MaterialCheckbox.uncheck();
+
+        txtStudentToDelete.value = '';
+
+        lastCheckedStudent = -1;
+        dialogDeleteStudent.close();
     }
 
     // ============================================================================================
