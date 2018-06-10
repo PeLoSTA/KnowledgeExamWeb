@@ -1,6 +1,5 @@
 /*global FirebaseCoursesModule */
 /*global FirebaseQuestionsModule */
-/*global FirebaseSubjectsModule */
 
 /*global dialogPolyfill */
 /*global componentHandler */
@@ -11,7 +10,7 @@ var HtmlTabQuestionsAdminModule = (function () {
     var tabQuestionsAdmin = document.getElementById('#questions-panel-admin');
     var dialogCreateQuestion = document.getElementById('dialogCreateQuestion');
     var btnEnterQuestion = document.getElementById('btnEnterQuestion');
-    var textareaQuestion = document.getElementById('textareaQuestion');
+    var txtQuestionAdmin = document.getElementById('txtQuestionAdmin');
     var divAnchorAnswers = document.getElementById('divAnchorAnswers');
     var divAnchorCorrectAnswers = document.getElementById('divAnchorCorrectAnswers');
     var labelNumAnswers = document.getElementById('labelNumAnswers');
@@ -23,12 +22,16 @@ var HtmlTabQuestionsAdminModule = (function () {
     var listItem7 = document.getElementById('list-num-answers-7');
     var listItem8 = document.getElementById('list-num-answers-8');
     var listItem9 = document.getElementById('list-num-answers-9');
-    var menuSubjects = document.getElementById('menuSubjects');
-    var textfieldCurrentSubject = document.getElementById('textfieldCurrentSubject');
+
+    var selectCourseQuestionsAdmin = document.getElementById('selectCourseQuestionsAdmin');
+
+    var txtStatusBar = document.getElementById('status_bar');
 
     // miscellaneous data
-    var numAnswers;      // needed for 'create question' dialog
-    var currentSubject;  // needed to assign question input to this subject (admin)
+    var isActive;               // guard for double click events
+    var numAnswers;             // needed for 'create question' dialog
+    var coursesSelectedIndex;   // needed to assign question input to this course (admin)
+    var courses;                // list of courses
 
     // ============================================================================================
     // initialization
@@ -37,12 +40,14 @@ var HtmlTabQuestionsAdminModule = (function () {
         // questions
         numAnswers = 2;
 
-        currentSubject = null;
+        // no courses loaded or selected
+        courses = null;
+        coursesSelectedIndex = -1;
 
         // connect ui elements with event handlers
         bindUIActions();
     }
-    
+
     function bindUIActions() {
         'use strict';
         if (!dialogCreateQuestion.showModal) {
@@ -53,6 +58,8 @@ var HtmlTabQuestionsAdminModule = (function () {
             'use strict';
             onCreateQuestion();
         });
+
+        selectCourseQuestionsAdmin.addEventListener('change', onChangeEvent);
 
         dialogCreateQuestion.querySelector('.create_question').addEventListener('click', () => {
             'use strict';
@@ -78,9 +85,25 @@ var HtmlTabQuestionsAdminModule = (function () {
 
         tabQuestionsAdmin.addEventListener('click', () => {
             'use strict';
-            onLoadListOfSubjectsAdmin();
+            onUpdateDropDownListOfCourses();
         });
     }
+
+    // ============================================================================================
+    // click event dispatching routine: select box
+
+    function onChangeEvent() {
+        'use strict';
+
+        // retrieve index of selected item
+        var start = 'option_'.length;
+        var reminder = this.value.substr(start);
+
+        // store currently selected class (index of this class) in closure
+        coursesSelectedIndex = parseInt(reminder);
+    }
+
+    // ============================================================================================
 
     function helperDialogDisplay(number) {
         'use strict';
@@ -99,8 +122,8 @@ var HtmlTabQuestionsAdminModule = (function () {
 
     function onCreateQuestion() {
         'use strict';
-        if (currentSubject === null) {
-            alert("Please choose subject !");
+        if (coursesSelectedIndex === -1) {
+            alert("Please choose Course !");
             return;
         }
 
@@ -117,6 +140,7 @@ var HtmlTabQuestionsAdminModule = (function () {
     function cancelCreateQuestion() {
         'use strict';
         dialogCreateQuestion.close();
+        clearDialog();
     }
 
     function createAnswersList(number, outerDiv) {
@@ -196,7 +220,7 @@ var HtmlTabQuestionsAdminModule = (function () {
 
     function addQuestion() {
         'use strict';
-        var question = textareaQuestion.value;
+        var question = txtQuestionAdmin.value;
         if (question === "") {
             window.alert("Empty Question !");
             return;
@@ -228,52 +252,94 @@ var HtmlTabQuestionsAdminModule = (function () {
         // assertion: lists must have same size
         if (answers.length != correctAnswers.length) {
             window.alert("Internal Error: Lists of answers and their solutions have different size !");
+            return;
         }
 
-        FirebaseQuestionsModule.addQuestion(question, currentSubject.key, answers, correctAnswers);
+        // retrieve key of selected course
+        var course = FirebaseCoursesModule.getCourse(coursesSelectedIndex - 1);
+        var key = course.key;
+
+        FirebaseQuestionsModule.addQuestion(question, key, answers, correctAnswers)
+            .then(() => {
+                txtStatusBar.value = 'Added question successfully!';
+            });
     }
 
     function clearDialog() {
         'use strict';
-        textareaQuestion.value = '';
+        txtQuestionAdmin.value = '';
         numAnswers = 2;
         updateDialogDisplay(numAnswers, labelNumAnswers, divAnchorAnswers, divAnchorCorrectAnswers);
     }
 
-        // ============================================================================================
-    // private helper functions (ui - subjects menu - admin tab)  
+    // ============================================================================================
+    // reading list of courses
 
-    function onLoadListOfSubjectsAdmin() {
-        'use strict';
-        FirebaseSubjectsModule.readListOfSubjects(addMenuEntry, doneMenu);
-    }
-
-    function addMenuEntry(subject) {
+    function onUpdateDropDownListOfCourses() {
         'use strict';
 
-        // <li>
-        //     <p class="mdl-menu__item">Subject</p>
-        // </li>
+        console.log("[Html] > onUpdateDropDownListOfCourses");
+        FirebaseCoursesModule.getCourses().then((coursesList) => {
 
-        var listitem = document.createElement('li');   // create <li> node
-        var para = document.createElement('p');        // create <p> node
-        para.setAttribute('class', 'mdl-menu__item');  // set attribute
-        var textnode = document.createTextNode(subject.name);  // create text node
-        para.appendChild(textnode);          // append text to <p>
-        listitem.appendChild(para);          // append <p> to <li>
-        menuSubjects.appendChild(listitem);  // append <li> to <ul>
+            courses = coursesList;  // store list of courses in closure
 
-        listitem.addEventListener('click', () => {
-            'use strict';
-            // retrieving selected subject from closure
-            currentSubject = subject;
-            textfieldCurrentSubject.value = currentSubject.name;
+            fillClassesDropDownList(selectCourseQuestionsAdmin, courses);
+
+            if (courses.length === 0) {
+                txtStatusBar.value = 'No Courses found!';
+            } else {
+                txtStatusBar.value = courses.length + ' Courses found!';
+            }
+        }).catch((err) => {
+            console.log('[Html] Reading list of courses failed !');
+            console.log('    ' + err);
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] > onUpdateDropDownListOfCourses");
         });
     }
 
-    function doneMenu() {
+    // ============================================================================================
+    // private helper functions (ui - courses drop down menu - admin tab)  
+
+    function fillClassesDropDownList(selectElem, entries) {
         'use strict';
-        componentHandler.upgradeDom();
+
+        /*
+         *   strucure of HTML drop-down list
+         */
+
+        // <select class="mdl-selectfield__select" id="selectStudentsSubjects">
+        //     <option value="option0"></option>
+        //     <option value="option1">option 1</option>
+        //     <option value="option2">option 2</option>
+        //     <option value="option3">option 3</option>
+        //     <option value="option4">option 4</option>
+        //     <option value="option5">option 5</option>
+        // </select>
+
+        // clear contents of list
+        selectElem.innerHTML = '';
+
+        // add empty node
+        addEntryToSelectList(selectElem, 0, null);
+
+        // add each subject of the list
+        for (let i = 0; i < entries.length; i++) {
+            addEntryToSelectList(selectElem, i + 1, entries[i]);
+        }
+    }
+
+    function addEntryToSelectList(selectElem, index, entry) {
+        'use strict';
+        let optionNode = document.createElement('option');    // create <option> node
+        optionNode.setAttribute('value', 'option_' + index);  // set attribute
+
+        let text = (entry === null) ? '' : entry.name;
+        let textNode = document.createTextNode(text);         // create text node
+
+        optionNode.appendChild(textNode);                     // append text to <option> node
+        selectElem.appendChild(optionNode);                   // append <option> node to <select> element
     }
 
     // ============================================================================================
@@ -282,5 +348,4 @@ var HtmlTabQuestionsAdminModule = (function () {
     return {
         init: init
     };
-
 })();

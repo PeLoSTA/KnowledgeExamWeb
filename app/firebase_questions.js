@@ -2,6 +2,7 @@
 
 var FirebaseQuestionsModule = (function () {
 
+    const refQuestions = '/questions';
     var database;
     var questionsList;
 
@@ -16,56 +17,56 @@ var FirebaseQuestionsModule = (function () {
     // ============================================================================================
     // public interface
 
-    function readListOfQuestionsFromSubject(subjectKey, callback, done) {
-        'use strict';
+    // function readListOfQuestionsFromSubject(subjectKey, callback, done) {
+    //     'use strict';
 
-        console.log("===========> readListOfQuestionsFromSubject");
+    //     console.log("===========> readListOfQuestionsFromSubject");
 
-        questionsList = [];
-        var refString = '/questions';
-        var counter = 1;
-        database.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
-            snapshot.forEach((childSnapshot) => {
+    //     questionsList = [];
+    //     var refString = '/questions';
+    //     var counter = 1;
+    //     database.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
+    //         snapshot.forEach((childSnapshot) => {
 
-                console.log("===========> X1");
-                var snap = childSnapshot.val();
+    //             console.log("===========> X1");
+    //             var snap = childSnapshot.val();
 
-                console.log("===========> X2");
-                var question = readQuestion(snap);
+    //             console.log("===========> X2");
+    //             var question = readQuestion(snap);
 
-                console.log("===========> X3");
-                callback(counter, question);
+    //             console.log("===========> X3");
+    //             callback(counter, question);
 
-                console.log("===========> X4");
-                counter++;
-            });
-            done();
-        });
-    }
+    //             console.log("===========> X4");
+    //             counter++;
+    //         });
+    //         done();
+    //     });
+    // }
 
-    function readListOfQuestions(callback, done) {
-        'use strict';
-        questionsList = [];
-        var refString = '/questions';
-        var counter = 1;
-        database.ref(refString).once('value').then(function (snapshot) {
-            snapshot.forEach(function (childSnapshot) {
-                var snap = childSnapshot.val();
-                var question = readQuestion(snap);
-                callback(counter, question);
-                counter++;
-            });
-            done();
-        });
-    }
+    // function readListOfQuestions(callback, done) {
+    //     'use strict';
+    //     questionsList = [];
+    //     var refString = '/questions';
+    //     var counter = 1;
+    //     database.ref(refString).once('value').then(function (snapshot) {
+    //         snapshot.forEach(function (childSnapshot) {
+    //             var snap = childSnapshot.val();
+    //             var question = readQuestion(snap);
+    //             callback(counter, question);
+    //             counter++;
+    //         });
+    //         done();
+    //     });
+    // }
 
-    function addQuestion(text, subjectKey, answers, correctAnswers) {
+    function addQuestion(text, courseKey, answers, correctAnswers) {
         'use strict';
 
         // build JSON object
         var question = {};
         question['/question'] = text;
-        question['/subject'] = subjectKey;
+        question['/course'] = courseKey;
         question['/num-answers'] = answers.length;
 
         for (var i = 0; i < answers.length; i++) {
@@ -85,7 +86,7 @@ var FirebaseQuestionsModule = (function () {
         question['/num-correct-answers'] = numCorrectAnswers;
 
         // write data into firebase
-        var ref = database.ref('questions').push();
+        var ref = database.ref(refQuestions).push();
         return ref.update(question);
     }
 
@@ -125,8 +126,8 @@ var FirebaseQuestionsModule = (function () {
 
     return {
         init: init,
-        readListOfQuestions: readListOfQuestions,
-        readListOfQuestionsFromSubject: readListOfQuestionsFromSubject,
+        // readListOfQuestions: readListOfQuestions,
+        // readListOfQuestionsFromSubject: readListOfQuestionsFromSubject,
         addQuestion: addQuestion
     };
 })();

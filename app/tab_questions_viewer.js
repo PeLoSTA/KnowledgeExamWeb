@@ -1,6 +1,5 @@
 /*global FirebaseCoursesModule */
 /*global FirebaseQuestionsModule */
-/*global FirebaseSubjectsModule */
 
 /*global MaterialRadio */
 /*global MaterialCheckbox */
@@ -313,5 +312,4 @@ var HtmlTabQuestionsViewerModule = (function () {
     return {
         init: init
     };
-
 })();

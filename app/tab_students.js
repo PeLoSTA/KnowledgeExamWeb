@@ -404,12 +404,12 @@ var HtmlTabStudentsModule = (function () {
 
             classes = classesList;  // store list of classes in closure
 
-            fillClassesDropDownList(selectStudentsClasses, classesList);
+            fillClassesDropDownList(selectStudentsClasses, classes);
 
-            if (classesList.length === 0) {
+            if (classes.length === 0) {
                 txtStatusBar.value = 'No Classes found!';
             } else {
-                txtStatusBar.value = classesList.length + ' Classes found!';
+                txtStatusBar.value = classes.length + ' Classes found!';
             }
         }).catch((err) => {
             console.log('[Html] Reading list of classes failed !');
