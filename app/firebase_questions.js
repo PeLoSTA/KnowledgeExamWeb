@@ -17,48 +17,50 @@ var FirebaseQuestionsModule = (function () {
     // ============================================================================================
     // public interface
 
-    // function readListOfQuestionsFromSubject(subjectKey, callback, done) {
-    //     'use strict';
+    // DAS IST VERALTET _-- KEINE PROMISES
 
-    //     console.log("===========> readListOfQuestionsFromSubject");
+    function readListOfQuestionsFromSubject(subjectKey, callback, done) {
+        'use strict';
 
-    //     questionsList = [];
-    //     var refString = '/questions';
-    //     var counter = 1;
-    //     database.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
-    //         snapshot.forEach((childSnapshot) => {
+        console.log("===========> readListOfQuestionsFromSubject");
 
-    //             console.log("===========> X1");
-    //             var snap = childSnapshot.val();
+        questionsList = [];
+        var refString = '/questions';
+        var counter = 1;
+        database.ref(refString).orderByChild('subject').equalTo(subjectKey).once('value').then((snapshot) => {
+            snapshot.forEach((childSnapshot) => {
 
-    //             console.log("===========> X2");
-    //             var question = readQuestion(snap);
+                console.log("===========> X1");
+                var snap = childSnapshot.val();
 
-    //             console.log("===========> X3");
-    //             callback(counter, question);
+                console.log("===========> X2");
+                var question = readQuestion(snap);
 
-    //             console.log("===========> X4");
-    //             counter++;
-    //         });
-    //         done();
-    //     });
-    // }
+                console.log("===========> X3");
+                callback(counter, question);
 
-    // function readListOfQuestions(callback, done) {
-    //     'use strict';
-    //     questionsList = [];
-    //     var refString = '/questions';
-    //     var counter = 1;
-    //     database.ref(refString).once('value').then(function (snapshot) {
-    //         snapshot.forEach(function (childSnapshot) {
-    //             var snap = childSnapshot.val();
-    //             var question = readQuestion(snap);
-    //             callback(counter, question);
-    //             counter++;
-    //         });
-    //         done();
-    //     });
-    // }
+                console.log("===========> X4");
+                counter++;
+            });
+            done();
+        });
+    }
+
+    function readListOfQuestions(callback, done) {
+        'use strict';
+        questionsList = [];
+        var refString = '/questions';
+        var counter = 1;
+        database.ref(refString).once('value').then(function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                var snap = childSnapshot.val();
+                var question = readQuestion(snap);
+                callback(counter, question);
+                counter++;
+            });
+            done();
+        });
+    }
 
     function addQuestion(text, courseKey, answers, correctAnswers) {
         'use strict';
@@ -126,8 +128,8 @@ var FirebaseQuestionsModule = (function () {
 
     return {
         init: init,
-        // readListOfQuestions: readListOfQuestions,
-        // readListOfQuestionsFromSubject: readListOfQuestionsFromSubject,
+        readListOfQuestions: readListOfQuestions,
+        readListOfQuestionsFromSubject: readListOfQuestionsFromSubject,
         addQuestion: addQuestion
     };
 })();

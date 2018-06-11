@@ -15,10 +15,17 @@ var HtmlTabQuestionsViewerModule = (function () {
     var menuSubjectsSurvey = document.getElementById('menuSubjectsSurvey');
     var textfieldCurrentSubjectSurvey = document.getElementById('textfieldCurrentSubjectSurvey');
 
+    var selectCourseQuestionsAdmin = document.getElementById('selectCourseQuestionsViewer');
+
+    var txtStatusBar = document.getElementById('status_bar');
+
     // miscellaneous data
     var isActive;         // needed to prevent double clicks
-    var currentSubject;   // needed to assign question input to this subject (survey)
+    var currentSubject;   // needed to assign question input to this subject (survey)  // TODO : Wird das noch gebraucht ????
     var rowCounter;       // needed to create unique id for each table row
+
+    var coursesSelectedIndex;   // needed to assign question input to this course (admin)
+    var courses;                // list of courses
 
     // ============================================================================================
     // initialization
@@ -35,9 +42,25 @@ var HtmlTabQuestionsViewerModule = (function () {
         'use strict';
         tabQuestionsSurvey.addEventListener('click', () => {
             'use strict';
-            onLoadListOfSubjectsSurvey();
+            onUpdateDropDownListOfCourses();
             onLoadQuestionsSurvey();
         });
+
+        selectCourseQuestionsAdmin.addEventListener('change', onChangeEvent);
+    }
+
+    // ============================================================================================
+    // click event dispatching routine: select box
+
+    function onChangeEvent() {
+        'use strict';
+
+        // retrieve index of selected item
+        var start = 'option_'.length;
+        var reminder = this.value.substr(start);
+
+        // store currently selected class (index of this class) in closure
+        coursesSelectedIndex = parseInt(reminder);
     }
 
     // ============================================================================================
@@ -116,7 +139,7 @@ var HtmlTabQuestionsViewerModule = (function () {
         // add single row for question itself
 
         var keyOfSubject = entry['subject-key'];
-        var nameOfSubject = FirebaseSubjectsModule.getNameOfSubject(keyOfSubject);
+        var nameOfSubject = FirebaseCoursesModule.getNameOfCourse(keyOfSubject);
         var node = createQuestion(counter, entry.question, nameOfSubject);
         tableQuestionsBody.appendChild(node);
 
@@ -270,41 +293,111 @@ var HtmlTabQuestionsViewerModule = (function () {
 
     // TODO: RENAME Survey to Viewer !!!!
 
-    function onLoadListOfSubjectsSurvey() {
+    // function onLoadListOfSubjectsSurvey() {
+    //     'use strict';
+    //     addMenuEntrySurvey({ name: 'Alle', description: '', key: '' });
+    //     FirebaseSubjectsModule.readListOfSubjects(addMenuEntrySurvey, doneMenuSurvey);
+    // }
+
+    // function addMenuEntrySurvey(subject) {
+    //     'use strict';
+
+    //     // <li>
+    //     //     <p class="mdl-menu__item">Subject</p>
+    //     // </li>
+
+    //     var listitem = document.createElement('li');   // create <li> node
+    //     var para = document.createElement('p');        // create <p> node
+    //     para.setAttribute('class', 'mdl-menu__item');  // set attribute
+    //     var textnode = document.createTextNode(subject.name);  // create text node
+    //     para.appendChild(textnode);                    // append text to <p>
+    //     listitem.appendChild(para);                    // append <p> to <li>
+    //     menuSubjectsSurvey.appendChild(listitem);      // append <li> to <ul>
+
+    //     listitem.addEventListener('click', () => {
+    //         'use strict';
+    //         // retrieving selected subject from closure
+    //         currentSubject = subject;
+    //         textfieldCurrentSubjectSurvey.value = currentSubject.name;
+
+    //         FirebaseQuestionsModule.readListOfQuestionsFromSubject(currentSubject.key, addMenuEntrySurvey, doneMenuSurvey);
+    //     });
+    // }
+
+    // ============================================================================================
+    // reading list of courses
+
+    function onUpdateDropDownListOfCourses() {
         'use strict';
-        addMenuEntrySurvey({ name: 'Alle', description: '', key: '' });
-        FirebaseSubjectsModule.readListOfSubjects(addMenuEntrySurvey, doneMenuSurvey);
-    }
 
-    function addMenuEntrySurvey(subject) {
-        'use strict';
+        console.log("[Html] > onUpdateDropDownListOfCourses");
+        FirebaseCoursesModule.getCourses().then((coursesList) => {
 
-        // <li>
-        //     <p class="mdl-menu__item">Subject</p>
-        // </li>
+            courses = coursesList;  // store list of courses in closure
 
-        var listitem = document.createElement('li');   // create <li> node
-        var para = document.createElement('p');        // create <p> node
-        para.setAttribute('class', 'mdl-menu__item');  // set attribute
-        var textnode = document.createTextNode(subject.name);  // create text node
-        para.appendChild(textnode);                    // append text to <p>
-        listitem.appendChild(para);                    // append <p> to <li>
-        menuSubjectsSurvey.appendChild(listitem);      // append <li> to <ul>
+            fillClassesDropDownList(selectCourseQuestionsAdmin, courses);
 
-        listitem.addEventListener('click', () => {
-            'use strict';
-            // retrieving selected subject from closure
-            currentSubject = subject;
-            textfieldCurrentSubjectSurvey.value = currentSubject.name;
-
-            FirebaseQuestionsModule.readListOfQuestionsFromSubject(currentSubject.key, addMenuEntrySurvey, doneMenuSurvey);
+            if (courses.length === 0) {
+                txtStatusBar.value = 'No Courses found!';
+            } else {
+                txtStatusBar.value = courses.length + ' Courses found!';
+            }
+        }).catch((err) => {
+            console.log('[Html] Reading list of courses failed !');
+            console.log('    ' + err);
+        }).finally(() => {
+            isActive = false;
+            console.log("[Html] > onUpdateDropDownListOfCourses");
         });
     }
 
-    function doneMenuSurvey() {
+        // ============================================================================================
+    // private helper functions (ui - courses drop down menu - admin tab)  
+
+    function fillClassesDropDownList(selectElem, entries) {
         'use strict';
-        componentHandler.upgradeDom();
+
+        /*
+         *   strucure of HTML drop-down list
+         */
+
+        // <select class="mdl-selectfield__select" id="selectStudentsSubjects">
+        //     <option value="option0"></option>
+        //     <option value="option1">option 1</option>
+        //     <option value="option2">option 2</option>
+        //     <option value="option3">option 3</option>
+        //     <option value="option4">option 4</option>
+        //     <option value="option5">option 5</option>
+        // </select>
+
+        // clear contents of list
+        selectElem.innerHTML = '';
+
+        // add empty node
+        addEntryToSelectList(selectElem, 0, null);
+
+        // add each subject of the list
+        for (let i = 0; i < entries.length; i++) {
+            addEntryToSelectList(selectElem, i + 1, entries[i]);
+        }
     }
+
+    function addEntryToSelectList(selectElem, index, entry) {
+        'use strict';
+        let optionNode = document.createElement('option');    // create <option> node
+        optionNode.setAttribute('value', 'option_' + index);  // set attribute
+
+        let text = (entry === null) ? '' : entry.name;
+        let textNode = document.createTextNode(text);         // create text node
+
+        optionNode.appendChild(textNode);                     // append text to <option> node
+        selectElem.appendChild(optionNode);                   // append <option> node to <select> element
+    }
+
+    // function doneMenuSurvey() {
+    //     'use strict';
+    //     componentHandler.upgradeDom();
+    // }
 
     // ============================================================================================
     // public interface
