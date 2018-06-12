@@ -26,10 +26,16 @@ var FirebaseStudentsModule = (function () {
         'use strict';
         var key = '';
 
-        return database.ref(refStudents).push()
+        return database.ref(refStudents)
+            .push()
             .then((newRef) => {
                 key = newRef.key;
-                return newRef.set({ firstname: firstname, lastname: lastname, email: email, keyClass: keyClass });
+                return newRef.set({
+                    firstname: firstname,
+                    lastname: lastname,
+                    email: email,
+                    'key-class': keyClass
+                });
             })
             .then(() => {
                 return key;
@@ -45,7 +51,13 @@ var FirebaseStudentsModule = (function () {
         'use strict';
         var refString = refStudents + '/' + student.key;
 
-        return database.ref(refString).update({ firstname: student.firstname, lastname: student.lastname, email: student.email, keyClass: student.keyClass })
+        return database.ref(refString)
+            .update({
+                firstname: student.firstname,
+                lastname: student.lastname,
+                email: student.email,
+                'key-class': student['key-class']
+            })
             .then(() => {
                 console.log('[Fire] updateStudent done !!! ');
             })
@@ -100,7 +112,8 @@ var FirebaseStudentsModule = (function () {
 
     function getAllStudents() {
         'use strict';
-        return database.ref(refStudents).once('value')
+        return database.ref(refStudents)
+            .once('value')
             .then((snapshot) => {
                 studentsList = [];
                 let localList = [];
@@ -111,11 +124,11 @@ var FirebaseStudentsModule = (function () {
                         firstname: snap.firstname,
                         lastname: snap.lastname,
                         email: snap.email,
-                        keyClass: snap.keyClass,
+                        'key-class': snap['key-class'],
                         key: childSnapshot.key
                     };
 
-                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", keyClass = " + student.keyClass);
+                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", key-class = " + student['key-class']);
                     studentsList.push(student);
                     localList.push(student);
                 });
@@ -129,7 +142,10 @@ var FirebaseStudentsModule = (function () {
 
     function getStudentsOfClass(keyClass) {
         'use strict';
-        return database.ref(refStudents).orderByChild('keyClass').equalTo(keyClass).once('value')
+        return database.ref(refStudents)
+            .orderByChild('key-class')
+            .equalTo(keyClass)
+            .once('value')
             .then((snapshot) => {
                 studentsList = [];
                 let localList = [];
@@ -140,11 +156,11 @@ var FirebaseStudentsModule = (function () {
                         firstname: snap.firstname,
                         lastname: snap.lastname,
                         email: snap.email,
-                        keyClass: snap.keyClass,
+                        'key-class': snap['key-class'],
                         key: childSnapshot.key
                     };
 
-                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", keyClass = " + student.keyClass);
+                    console.log("[Fire] -> Student " + student.firstname + ' ' + student.lastname + ", EMail = " + student.email + ", key-class = " + student['key-class']);
                     studentsList.push(student);
                     localList.push(student);
                 });
