@@ -21,16 +21,16 @@ var HtmlTabQuestionsViewerModule = (function () {
     // ============================================================================================
     // initialization
 
-    var courses;                // list of courses
-    var questions;              // list of questions
+    var courses;             // list of courses
+    var questions;           // list of questions
 
     // ============================================================================================
     // initialization
 
     function init() {
 
-        courses = null;                // list of courses
-        questions = null;              // list of questions
+        courses = null;      // list of courses
+        questions = null;    // list of questions
 
         // connect ui elements with event handlers
         bindUIActions();

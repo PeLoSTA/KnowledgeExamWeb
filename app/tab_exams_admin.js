@@ -5,6 +5,8 @@
 
 var HtmlTabExamsModule = (function () {
 
+    var tableQuestionsExamsAdminBody = document.getElementById('tableQuestionsExamsAdminBody');
+
     function init() {
         'use strict';
     }

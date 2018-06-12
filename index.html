@@ -568,28 +568,46 @@
                         <h6>Create a new Exam:</h6>
                     </div>
 
-                    <div class="section__text mdl-cell mdl-cell--12-col">
-                        <h7 style="display:inline-block; margin-right: 5mm">Short Description:</h7>
-                        <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input" type="text" id="sample1">
-                            <label class="mdl-textfield__label" for="sample1">Description</label>
+                    <div class="mdl-grid">
+                        <div class="section__text mdl-cell mdl-cell--4-col">
+                            <h7 style="display:inline-block; margin-right: 5mm">Short Description:</h7>
+                            <div class="mdl-textfield mdl-js-textfield">
+                                <input class="mdl-textfield__input" type="text" id="sample1">
+                                <label class="mdl-textfield__label" for="sample1">Description</label>
+                            </div>
+                        </div>
+                        <div class="section__text mdl-cell mdl-cell--4-col">
+                            <h7 style="display:inline-block; margin-right: 5mm">Enter unique PIN:</h7>
+                            <div class="mdl-textfield mdl-js-textfield">
+                                <input class="mdl-textfield__input" type="text" id="sample1">
+                                <label class="mdl-textfield__label" for="sample1">Pin</label>
+                            </div>
+                        </div>
+                        <div class="section__text mdl-cell mdl-cell--4-col">
+                            <h7 style="display:inline-block; margin-right: 5mm">Select Course:</h7>
                         </div>
                     </div>
 
-                    <div class="section__text mdl-cell mdl-cell--12-col">
-                        <h7 style="display:inline-block; margin-right: 5mm">Enter unique PIN:</h7>
-                        <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input" type="text" id="sample1">
-                            <label class="mdl-textfield__label" for="sample1">Pin</label>
+                    <div class="mdl-grid">
+                        <div class="section__text mdl-cell mdl-cell--12-col">
+                            <h7>Select Questions:</h7>
                         </div>
                     </div>
 
-                    <div class="section__text mdl-cell mdl-cell--12-col">
-                        <h7 style="display:inline-block; margin-right: 5mm">Select Course:</h7>
-                    </div>
-
-                    <div class="section__text mdl-cell mdl-cell--12-col">
-                        <h7 style="display:inline-block; margin-right: 5mm">Select Questions:</h7>
+                    <div class="mdl-grid">
+                        <div class="section__text mdl-cell mdl-cell--12-col">
+                            <table id="tableQuestionsExamsAdmin" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+                                <thead>
+                                    <tr>
+                                        <th class="mdl-data-table__cell--non-numeric"></th>
+                                        <th class="mdl-data-table__cell--non-numeric">Question</th>
+                                        <th class="mdl-data-table__cell--non-numeric">Course</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableQuestionsExamsAdminBody">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
