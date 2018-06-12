@@ -523,22 +523,10 @@
                         <label class="mdl-selectfield__label" for="selectCourseQuestionsViewer">Select Course ...</label>
                     </div>
 
-                    <!-- 
-                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn-courses_survey">
-                        <i class="material-icons">more_vert</i>
-                    </button>
-
-                    <div class="mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" type="text" id="textfieldCurrentCourseViewer" disabled>
-                    </div>
-
-                    <br/>
-                    <ul id="menuCoursesViewer" class="mdl-menu mdl-js-menu mdl-menu--bottom-left" for="btn-courses_survey" style="height:200px;overflow: scroll;">
-                    </ul>
-                    -->
-
                     <br/>
                     <!--   hier tut es ein style="overflow: auto; height: 500px"  um einen zweiten Schiebebalken hinzubekommen !!!   -->
+
+                    <!--
                     <div class="mdl-card__supporting-text" style="overflow: auto; height: 500px; width: 1000px;">
 
                         <table id="tableQuestionsSurvey" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
@@ -553,6 +541,43 @@
                             </tbody>
                         </table>
 
+                    </div>
+                     -->
+
+                    <br/>
+                    <div>
+                        <div class="mdl-grid">
+                            <div class="mdl-cell mdl-cell--6-col">
+                                <h6>Questions:</h6>
+                                <table id="tableQuestionsSurvey" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+                                    <thead>
+                                        <tr>
+                                            <th class="mdl-data-table__cell--non-numeric"></th>
+                                            <th class="mdl-data-table__cell--non-numeric">Question</th>
+                                            <th class="mdl-data-table__cell--non-numeric">Course</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableQuestionsBody">
+                                    </tbody>
+                                </table>
+
+                                <button type="button" class="mdl-button" id="XXXXXXXXXXXXXX">TEST !!!!</button>
+                            </div>
+                            <div class="mdl-cell mdl-cell--6-col">
+                                <h6>Answers:</h6>
+                                <table id="tableAnswersPerQuestions" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+                                    <thead>
+                                        <tr>
+                                            <th class="mdl-data-table__cell--non-numeric"></th>
+                                            <th class="mdl-data-table__cell--non-numeric">Text of Answer</th>
+                                            <th class="mdl-data-table__cell--non-numeric">True / False</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableAnswersBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

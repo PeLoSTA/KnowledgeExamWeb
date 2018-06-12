@@ -11,17 +11,77 @@ var HtmlTabQuestionsViewerModule = (function () {
 
     // retrieve HTML elements according to 'questions viewer' tab
     var tabQuestionsSurvey = document.getElementById('#questions-panel-survey');
+
     var tableQuestionsBody = document.getElementById('tableQuestionsBody');
-    var menuSubjectsSurvey = document.getElementById('menuSubjectsSurvey');
-    var textfieldCurrentSubjectSurvey = document.getElementById('textfieldCurrentSubjectSurvey');
+    var tableAnswersBody = document.getElementById('tableAnswersBody');
 
     var selectCourseQuestionsAdmin = document.getElementById('selectCourseQuestionsViewer');
 
     var txtStatusBar = document.getElementById('status_bar');
 
+    // ============================================================================================
+    // TESTING - TO BE REMOVED
+
+    var btnXXXXX = document.getElementById('XXXXXXXXXXXXXX');
+    btnXXXXX.addEventListener('click', onClickEventTEST);
+
+    // GEHT !!!
+    // function onClickEventTEST() {
+    //     'use strict';
+    //     return FirebaseQuestionsModule.getQuestions().then((listOfQuestions) => {
+    //         for (var i = 0; i < listOfQuestions.length; i++) {
+    //             var question = listOfQuestions[i];
+    //             console.log("Question:");
+    //             console.log("  Text: " + question.question);
+    //             console.log("  NumAnswers: " + question['num-answers']);
+    //         }
+    //     }).catch((msg) => {
+    //         // log error message to status line
+    //         console.log(" ERROR");
+    //     }).finally(() => {
+
+    //         console.log("Success");
+    //     });
+    // }
+
+    // GEHT
+    // function onClickEventTEST() {
+    //     'use strict';
+    //     return FirebaseQuestionsModule.getQuestionTexts().then((listOfQuestions) => {
+
+    //     }).catch((msg) => {
+    //         // log error message to status line
+    //         console.log(" ERROR");
+    //     }).finally(() => {
+
+    //         console.log("Success");
+    //     });
+    // }
+
+    function onClickEventTEST() {
+        'use strict';
+        return FirebaseQuestionsModule.getQuestionTextsOfCourse('bla').then((listOfQuestions) => {
+            console.log(" Found quesions: " + listOfQuestions.length);
+        }).catch((msg) => {
+            // log error message to status line
+            console.log(" ERROR");
+        }).finally(() => {
+
+            console.log("Success");
+        });
+    }
+
+    // ============================================================================================
+    // initialization
+
     // miscellaneous data
-    var isActive;         // needed to prevent double clicks
-    var currentSubject;   // needed to assign question input to this subject (survey)  // TODO : Wird das noch gebraucht ????
+    // var currentSubject;   // needed to assign question input to this subject (survey)  // TODO : Wird das noch gebraucht ????
+
+    // TODO : Geht das nicht ohne diese Variable !!!
+
+    // TODO: BISLANG BESTEHT BEIM VIEWER KEINE NOTWENDIGKEIT, Kurse und Fragen in globalen Listen abzuspeichern !!!
+
+
     var rowCounter;       // needed to create unique id for each table row
 
     var coursesSelectedIndex;   // needed to assign question input to this course (admin)
@@ -32,7 +92,7 @@ var HtmlTabQuestionsViewerModule = (function () {
 
     function init() {
         // questions
-        currentSubject = null;
+        // currentSubject = null;
 
         // connect ui elements with event handlers
         bindUIActions();
@@ -42,8 +102,8 @@ var HtmlTabQuestionsViewerModule = (function () {
         'use strict';
         tabQuestionsSurvey.addEventListener('click', () => {
             'use strict';
-            onUpdateDropDownListOfCourses();
-            onLoadQuestionsSurvey();
+            onLoadCourses();
+            onLoadQuestionsEx();
         });
 
         selectCourseQuestionsAdmin.addEventListener('change', onChangeEvent);
@@ -61,59 +121,179 @@ var HtmlTabQuestionsViewerModule = (function () {
 
         // store currently selected class (index of this class) in closure
         coursesSelectedIndex = parseInt(reminder);
+
+        console.log(coursesSelectedIndex);
+
+        if (coursesSelectedIndex === 0) {
+            onLoadQuestionsEx();
+        }
+        else {
+            var course = courses[coursesSelectedIndex - 1];
+            onLoadQuestionsOfCourseEx(course.key);
+        }
+
+        // var keyOfCourse = entry[''];
+        // var nameOfSubject = FirebaseCoursesModule.getNameOfCourse(keyOfCourse);
     }
 
     // ============================================================================================
     // questions
 
     /*
-     *  reading list of questions asynchronously
+     *  reading list of questions asynchronously - ALTE Version mit Callbacks
      */
 
-    function onLoadQuestionsSurvey() {
-        'use strict';
-        console.log("onLoadQuestionsSurvey");
-        updateTableOfQuestions();
-    }
+    // function onLoadQuestionsSurvey() {
+    //     'use strict';
+    //     console.log("onLoadQuestionsSurvey");
+    //     updateTableOfQuestions();
+    // }
 
-    function updateTableOfQuestions() {
-        'use strict';
-        updateTableOfQuestionsBegin();
-        FirebaseQuestionsModule.readListOfQuestions(updateTableOfQuestionsNext, updateTableOfQuestionsDone);
-    }
+    // function updateTableOfQuestions() {
+    //     'use strict';
+    //     updateTableOfQuestionsBegin();
+    //     FirebaseQuestionsModule.readListOfQuestions(updateTableOfQuestionsNext, updateTableOfQuestionsDone);
+    // }
 
-    function updateTableOfQuestionsBegin() {
-        'use strict';
-        if (isActive === true) {
-            console.log("Another asynchronous invocation still pending ... just ignoring click event!");
-            return;
-        }
+    // function updateTableOfQuestionsBegin() {
+    //     'use strict';
+    //     if (isActive === true) {
+    //         console.log("Another asynchronous invocation still pending ... just ignoring click event!");
+    //         return;
+    //     }
 
-        isActive = true;
-        console.log("updateTableOfQuestionsBegin");
-        rowCounter = 1;
+    //     isActive = true;
+    //     console.log("updateTableOfQuestionsBegin");
+    //     rowCounter = 1;
+    //     tableQuestionsBody.innerHTML = '';
+    //     componentHandler.upgradeDom();
+    // }
+
+    // function updateTableOfQuestionsNext(counter, question) {
+    //     'use strict';
+    //     addEntryToQuestionsTable(counter, question);
+    // }
+
+    // function updateTableOfQuestionsDone() {
+    //     'use strict';
+    //     isActive = false;
+    //     console.log('done................................');
+    // }
+
+    // ============================================================================================
+    // questions
+
+    /*
+     *  reading list of questions asynchronously - NEU
+     */
+
+    function onLoadQuestionsEx() {
+        'use strict';
+        console.log("[Html] > onLoadQuestionsEx");
+
         tableQuestionsBody.innerHTML = '';
-        componentHandler.upgradeDom();
+        return FirebaseQuestionsModule.getQuestions().then((listOfQuestions) => {
+            for (var i = 0; i < listOfQuestions.length; i++) {
+                var question = listOfQuestions[i]
+                addQuestionToTableEx(tableQuestionsBody, i, question);
+            }
+            return listOfQuestions.length;
+        }).then((number) => {
+            // refresh status line
+            txtStatusBar.value = number + ' questions.';
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
+        }).finally(() => {
+            componentHandler.upgradeDom();
+            console.log("[Html] < onLoadQuestionsEx");
+        });
     }
 
-    function updateTableOfQuestionsNext(counter, question) {
+    function onLoadQuestionsOfCourseEx(courseKey) {
         'use strict';
-        addEntryToQuestionsTable(counter, question);
-    }
+        console.log("[Html] > onLoadQuestionsOfCourseEx");
 
-    function updateTableOfQuestionsDone() {
-        'use strict';
-        isActive = false;
-        console.log('done................................');
+        tableQuestionsBody.innerHTML = '';
+        return FirebaseQuestionsModule.getQuestionsOfCourse(courseKey).then((listOfQuestions) => {
+            for (var i = 0; i < listOfQuestions.length; i++) {
+                var question = listOfQuestions[i]
+                addQuestionToTableEx(tableQuestionsBody, i, question);
+            }
+            return listOfQuestions.length;
+        }).then((number) => {
+            // refresh status line
+            txtStatusBar.value = number + ' questions.';
+        }).catch((msg) => {
+            // log error message to status line
+            txtStatusBar.value = msg;
+        }).finally(() => {
+            componentHandler.upgradeDom();
+            console.log("[Html] < onLoadQuestionsOfCourseEx");
+        });
     }
 
     // ============================================================================================
     // private helper functions (viewer)
 
-    function addEntryToQuestionsTable(counter, entry) {
+    // function addQuestionToTable(tablebody, counter, entry) {
+    //     'use strict';
+
+    //     console.log('addEntryToQuestionsTable .................');
+
+    //     // adding dynamically a 'material design lite' node to a table, for example
+    //     //
+    //     // <tr>
+    //     //     <td>Frage 1</td>
+    //     //     <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word;  white-space: normal;">
+    //     //         Tables are a ubiquitous feature of most user interfaces, regardless of a ...
+    //     //     </td>
+    //     //     <td>Mathe</td>
+    //     // </tr>
+    //     //     <tr>
+    //     //         <td>Anwort 1</td>
+    //     //         <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word;  white-space: normal;">
+    //     //             Nein
+    //     //         </td>
+    //     //         <td>
+    //     //             <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+    //     //                 <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+    //     //             </label>
+    //     //         </td>
+    //     //     </tr>
+
+    //     // add single row for question itself
+
+    //     var keyOfCourse = entry['course'];
+    //     var nameOfSubject = FirebaseCoursesModule.getNameOfCourse(keyOfCourse);
+    //     var node = createQuestion(counter, entry.question, nameOfSubject);
+    //     tablebody.appendChild(node);
+
+    //     // add rows for answers
+    //     var numAnswers = entry['num-answers'];
+    //     var numCorrectAnswers = entry['num-correct-answers'];
+    //     var useRadioButton = (numCorrectAnswers === 1);
+
+    //     for (var row = 0; row < numAnswers; row++) {
+
+    //         var nodeAnswer = createAnswer(
+    //             row,
+    //             entry.answers[row],
+    //             useRadioButton,
+    //             entry['correct-answers'][row]
+    //         );
+
+    //         tablebody.appendChild(nodeAnswer);
+    //     }
+    //     componentHandler.upgradeDom();
+    // }
+
+    // ============================================================================================
+
+    function addQuestionToTableEx(tablebody, counter, entry) {
         'use strict';
 
-        console.log('addEntryToQuestionsTable .................');
+        console.log('addQuestionToTableEx .................');
 
         // adding dynamically a 'material design lite' node to a table, for example
         //
@@ -124,42 +304,13 @@ var HtmlTabQuestionsViewerModule = (function () {
         //     </td>
         //     <td>Mathe</td>
         // </tr>
-        //     <tr>
-        //         <td>Anwort 1</td>
-        //         <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word;  white-space: normal;">
-        //             Nein
-        //         </td>
-        //         <td>
-        //             <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
-        //                 <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
-        //             </label>
-        //         </td>
-        //     </tr>
 
-        // add single row for question itself
+        // add single row for question
 
-        var keyOfSubject = entry['subject-key'];
-        var nameOfSubject = FirebaseCoursesModule.getNameOfCourse(keyOfSubject);
+        var keyOfCourse = entry[''];
+        var nameOfSubject = FirebaseCoursesModule.getNameOfCourse(keyOfCourse);
         var node = createQuestion(counter, entry.question, nameOfSubject);
-        tableQuestionsBody.appendChild(node);
-
-        // add rows for answers
-        var numAnswers = entry['num-answers'];
-        var numCorrectAnswers = entry['num-correct-answers'];
-        var useRadioButton = (numCorrectAnswers === 1);
-
-        for (var row = 0; row < numAnswers; row++) {
-
-            var nodeAnswer = createAnswer(
-                row,
-                entry.answers[row],
-                useRadioButton,
-                entry['correct-answers'][row]
-            );
-
-            tableQuestionsBody.appendChild(nodeAnswer);
-        }
-        componentHandler.upgradeDom();
+        tablebody.appendChild(node);
     }
 
     // ============================================================================================
@@ -181,7 +332,7 @@ var HtmlTabQuestionsViewerModule = (function () {
         td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td3.setAttribute('style', 'text-align:right;');  // set attribute
 
-        var header = 'Frage ' + counter + ':';
+        var header = 'Frage ' + (counter + 1) + ':';
         var textnode1 = document.createTextNode(header); // create first text node
         var textnode2 = document.createTextNode(text);   // create second text node
         var textnode3 = document.createTextNode(name);   // create third text node
@@ -327,10 +478,10 @@ var HtmlTabQuestionsViewerModule = (function () {
     // ============================================================================================
     // reading list of courses
 
-    function onUpdateDropDownListOfCourses() {
+    function onLoadCourses() {
         'use strict';
 
-        console.log("[Html] > onUpdateDropDownListOfCourses");
+        console.log("[Html] > onLoadCourses");
         FirebaseCoursesModule.getCourses().then((coursesList) => {
 
             courses = coursesList;  // store list of courses in closure
@@ -346,12 +497,11 @@ var HtmlTabQuestionsViewerModule = (function () {
             console.log('[Html] Reading list of courses failed !');
             console.log('    ' + err);
         }).finally(() => {
-            isActive = false;
-            console.log("[Html] > onUpdateDropDownListOfCourses");
+            console.log("[Html] > onLoadCourses");
         });
     }
 
-        // ============================================================================================
+    // ============================================================================================
     // private helper functions (ui - courses drop down menu - admin tab)  
 
     function fillClassesDropDownList(selectElem, entries) {

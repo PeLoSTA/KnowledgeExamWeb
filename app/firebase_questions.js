@@ -62,13 +62,20 @@ var FirebaseQuestionsModule = (function () {
         });
     }
 
+    // ============================================================================================
+    // NEU - based on Promise
+
     function addQuestion(text, courseKey, answers, correctAnswers) {
         'use strict';
 
         // build JSON object
         var question = {};
         question['/question'] = text;
-        question['/course'] = courseKey;
+
+        // TODO: course in courseKey umbenennen !!!
+        // TODo 2: dann muss man auch bei den Regeln eine Index-Umnbenennung vornehmen !!!
+
+        question['/course-key'] = courseKey;
         question['/num-answers'] = answers.length;
 
         for (var i = 0; i < answers.length; i++) {
@@ -90,6 +97,62 @@ var FirebaseQuestionsModule = (function () {
         // write data into firebase
         var ref = database.ref(refQuestions).push();
         return ref.update(question);
+    }
+
+    // ============================================================================================
+    // NEU - based on Promise
+
+    function getQuestions() {
+        'use strict';
+        return database.ref(refQuestions).once('value')
+            .then((snapshot) => {
+                questionsList = [];
+                let localList = [];
+                snapshot.forEach(function (childSnapshot) {
+                    var snap = childSnapshot.val();
+
+                    // let classs = {
+                    //     name: snap.name,
+                    //     description: snap.description,
+                    //     key: childSnapshot.key
+                    // };
+
+                    var question = readQuestion(snap);
+
+                    console.log("[Fire] -> Question Text: " + snap.question + ", NumAnswers = " + snap['num-answers']);
+                    questionsList.push(question);
+                    localList.push(question);
+                });
+                return localList;
+            }).catch((err) => {
+                let msg = "FirebaseQuestionsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('[Fire] getQuestions failed! ' + msg);
+                throw msg;
+            });
+    }
+
+    function getQuestionsOfCourse(courseKey) {
+        'use strict';
+        return database.ref(refQuestions).orderByChild('course-key').equalTo(courseKey).once('value')
+            .then((snapshot) => {
+                questionsList = [];
+                let localList = [];
+                snapshot.forEach(function (childSnapshot) {
+                    var snap = childSnapshot.val();
+
+                    var question = readQuestion(snap);
+
+                    console.log("[Fire] -> Question Text: " + snap.question + ", NumAnswers = " + snap['num-answers']);
+                    questionsList.push(question);
+                    localList.push(question);
+                });
+                console.log("[Fire] -> being here?!?!?!?!");
+                return localList;
+            }).catch((err) => {
+                let msg = "FirebaseQuestionsModule: ERROR " + err.code + ", Message: " + err.message;
+                console.log('[Fire] getQuestionTexts failed! ' + msg);
+                throw msg;
+            });
     }
 
     // ============================================================================================
@@ -116,9 +179,7 @@ var FirebaseQuestionsModule = (function () {
             question['correct-answers'].push(correctAnswers['answer' + (k + 1)]);
         }
 
-        // NEU
-        // TODO: Im Firebase question JSON Object sollte das subject besser subject-key heißen 
-        question['subject-key'] = snapshot['subject'];
+        question['course-key'] = snapshot['course-key'];
 
         return question;
     }
@@ -130,6 +191,9 @@ var FirebaseQuestionsModule = (function () {
         init: init,
         readListOfQuestions: readListOfQuestions,
         readListOfQuestionsFromSubject: readListOfQuestionsFromSubject,
-        addQuestion: addQuestion
+        addQuestion: addQuestion,
+
+        getQuestions: getQuestions,
+        getQuestionsOfCourse: getQuestionsOfCourse
     };
 })();
