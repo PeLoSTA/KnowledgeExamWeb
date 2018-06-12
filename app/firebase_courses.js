@@ -13,7 +13,7 @@ var FirebaseCoursesModule = (function () {
     // public functions
 
     function init() {
-
+        'use strict';
         database = firebase.database();  // get a reference to the database service
         coursesList = [];                // empty list of courses
     }
@@ -129,7 +129,7 @@ var FirebaseCoursesModule = (function () {
 
         return '';
     }
-    3
+
     // ============================================================================================
     // public interface
 

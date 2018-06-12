@@ -366,6 +366,7 @@
                     <a id="#questions-panel-admin" href="#questions-panel-admin" class="mdl-tabs__tab">Questions Administration (Fragen)</a>
                     <a id="#questions-panel-survey" href="#questions-panel-survey" class="mdl-tabs__tab">Questions Survey (Fragen)</a>
                     <a id="#create-exam-panel" href="#create-exam-panel" class="mdl-tabs__tab">Create Exam</a>
+                    <a id="#exams-viewer-panel" href="#exams-viewer-panel" class="mdl-tabs__tab">Existing Exams</a>
                     <a id="#results-of-exam-panel" href="#results-of-exam-panel" class="mdl-tabs__tab">Results of Exam</a>
                 </div>
 
@@ -562,13 +563,53 @@
                 <!-- tab 'create exam' -->
                 <div class="mdl-tabs__panel" id="create-exam-panel">
                     <br/>
-                    <p>Yeahh - To be Done ....</p>
+
+                    <div class="section__text mdl-cell mdl-cell--12-col">
+                        <h6>Create a new Exam:</h6>
+                    </div>
+
+                    <div class="section__text mdl-cell mdl-cell--12-col">
+                        <h7 style="display:inline-block; margin-right: 5mm">Short Description:</h7>
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" id="sample1">
+                            <label class="mdl-textfield__label" for="sample1">Description</label>
+                        </div>
+                    </div>
+
+                    <div class="section__text mdl-cell mdl-cell--12-col">
+                        <h7 style="display:inline-block; margin-right: 5mm">Enter unique PIN:</h7>
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" id="sample1">
+                            <label class="mdl-textfield__label" for="sample1">Pin</label>
+                        </div>
+                    </div>
+
+                    <div class="section__text mdl-cell mdl-cell--12-col">
+                        <h7 style="display:inline-block; margin-right: 5mm">Select Course:</h7>
+                    </div>
+
+                    <div class="section__text mdl-cell mdl-cell--12-col">
+                        <h7 style="display:inline-block; margin-right: 5mm">Select Questions:</h7>
+                    </div>
+
                 </div>
+
                 <!-- tab 'results of exam' -->
-                <div class="mdl-tabs__panel" id="results-of-exam-panel">
+                <div class="mdl-tabs__panel" id="exams-viewer-panel">
                     <br/>
                     <p>Yeahh - Also to be Done ....</p>
                 </div>
+
+
+                <!-- tab 'results of exam' -->
+                <div class="mdl-tabs__panel" id="results-of-exam-panel">
+                    <br/>
+                    <p>Yeahh - Also also to be Done ....</p>
+                </div>
+
+
+
+
             </div>
 
             <!-- status bar at bottom of window -->
@@ -601,12 +642,14 @@
     <script type="text/javascript" src="app/firebase_courses.js"></script>
     <script type="text/javascript" src="app/firebase_students.js"></script>
     <script type="text/javascript" src="app/firebase_questions.js"></script>
+    <script type="text/javascript" src="app/firebase_exams.js"></script>
 
     <script type="text/javascript" src="app/tab_classes.js"></script>
     <script type="text/javascript" src="app/tab_courses.js"></script>
     <script type="text/javascript" src="app/tab_students.js"></script>
     <script type="text/javascript" src="app/tab_questions_admin.js"></script>
     <script type="text/javascript" src="app/tab_questions_viewer.js"></script>
+    <script type="text/javascript" src="app/tab_exams_admin.js"></script>
 
     <script type="text/javascript" src="index.js"></script>
 </body>

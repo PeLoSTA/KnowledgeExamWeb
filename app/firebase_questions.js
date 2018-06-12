@@ -10,7 +10,7 @@ var FirebaseQuestionsModule = (function () {
     // public functions
 
     function init() {
-
+        'use strict';
         database = firebase.database();  // get a reference to the database service
     }
 
