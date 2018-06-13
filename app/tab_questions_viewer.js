@@ -41,7 +41,7 @@ var HtmlTabQuestionsViewerModule = (function () {
         tabQuestionsSurvey.addEventListener('click', () => {
             'use strict';
             onLoadCourses();
-            onLoadQuestionsEx();
+            onLoadQuestions();
         });
 
         tableQuestionsBody.addEventListener('click', (ev) => {
@@ -51,7 +51,7 @@ var HtmlTabQuestionsViewerModule = (function () {
             var index = ev.target.parentElement.rowIndex;
 
             var question = questions[index - 1];
-            addAnswersToTableEx(tableAnswersBody, question);
+            addAnswersToTable(tableAnswersBody, question);
         });
 
         selectCourses.addEventListener('change', onChangeEvent);
@@ -70,11 +70,11 @@ var HtmlTabQuestionsViewerModule = (function () {
         // store currently selected class (index of this class) in closure
         var index = parseInt(reminder);
         if (index === 0) {
-            onLoadQuestionsEx();
+            onLoadQuestions();
         }
         else {
             var course = courses[index - 1];
-            onLoadQuestionsOfCourseEx(course.key);
+            onLoadQuestionsOfCourse(course.key);
         }
 
         clearAnswersTable(tableAnswersBody);
@@ -106,9 +106,9 @@ var HtmlTabQuestionsViewerModule = (function () {
         });
     }
 
-    function onLoadQuestionsEx() {
+    function onLoadQuestions() {
         'use strict';
-        console.log("[Html] > onLoadQuestionsEx");
+        console.log("[Html] > onLoadQuestions");
 
         tableQuestionsBody.innerHTML = '';
         return FirebaseQuestionsModule.getQuestions().then((listOfQuestions) => {
@@ -117,7 +117,7 @@ var HtmlTabQuestionsViewerModule = (function () {
 
             for (var i = 0; i < listOfQuestions.length; i++) {
                 var question = listOfQuestions[i]
-                addQuestionToTableEx(tableQuestionsBody, i, question);
+                addQuestionToTable(tableQuestionsBody, i, question);
             }
             return listOfQuestions.length;
         }).then((number) => {
@@ -128,13 +128,13 @@ var HtmlTabQuestionsViewerModule = (function () {
             txtStatusBar.value = msg;
         }).finally(() => {
             componentHandler.upgradeDom();
-            console.log("[Html] < onLoadQuestionsEx");
+            console.log("[Html] < onLoadQuestions");
         });
     }
 
-    function onLoadQuestionsOfCourseEx(courseKey) {
+    function onLoadQuestionsOfCourse(courseKey) {
         'use strict';
-        console.log("[Html] > onLoadQuestionsOfCourseEx");
+        console.log("[Html] > onLoadQuestionsOfCourse");
 
         tableQuestionsBody.innerHTML = '';
         return FirebaseQuestionsModule.getQuestionsOfCourse(courseKey).then((listOfQuestions) => {
@@ -143,7 +143,7 @@ var HtmlTabQuestionsViewerModule = (function () {
 
             for (var i = 0; i < listOfQuestions.length; i++) {
                 var question = listOfQuestions[i]
-                addQuestionToTableEx(tableQuestionsBody, i, question);
+                addQuestionToTable(tableQuestionsBody, i, question);
             }
             return listOfQuestions.length;
         }).then((number) => {
@@ -154,7 +154,7 @@ var HtmlTabQuestionsViewerModule = (function () {
             txtStatusBar.value = msg;
         }).finally(() => {
             componentHandler.upgradeDom();
-            console.log("[Html] < onLoadQuestionsOfCourseEx");
+            console.log("[Html] < onLoadQuestionsOfCourse");
         });
     }
 
@@ -204,10 +204,10 @@ var HtmlTabQuestionsViewerModule = (function () {
     // ============================================================================================
     // private helper functions - higher level
 
-    function addQuestionToTableEx(tablebody, counter, entry) {
+    function addQuestionToTable(tablebody, counter, entry) {
         'use strict';
 
-        console.log('addQuestionToTableEx');
+        console.log('addQuestionToTable');
 
         // adding dynamically a 'material design lite' node to a table, for example
         //
@@ -227,10 +227,10 @@ var HtmlTabQuestionsViewerModule = (function () {
         tablebody.appendChild(node);
     }
 
-    function addAnswersToTableEx(tablebody, entry) {
+    function addAnswersToTable(tablebody, entry) {
         'use strict';
 
-        console.log('addAnswersToTableEx');
+        console.log('addAnswersToTable');
 
         // adding dynamically a 'material design lite' node to a table, for example
         //
