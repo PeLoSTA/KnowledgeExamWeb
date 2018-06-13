@@ -10,13 +10,19 @@ var HtmlTabExamsModule = (function () {
     // retrieve HTML elements according to 'questions viewer' tab
     var tabExamsAdmin = document.getElementById('#create-exam-panel');
 
+    var btnCreateExam = document.getElementById('btnCreateExam');
+
     var tableQuestionsBody = document.getElementById('tableQuestionsExamsAdminBody');
 
     var selectCourses = document.getElementById('selectCourseExamsAdmin');
     var txtStatusBar = document.getElementById('status_bar');
 
-    var courses;             // list of courses
-    var questions;           // list of questions
+    // miscellaneous data
+    const prefix_checkboxes = 'row_exams_admin_';   // need unique id's for automatically generated checkboxes
+    const prefix_label = 'label_exams_admin_';      // need unique id's for automatically generated labels
+
+    var courses;      // list of courses
+    var questions;    // list of questions
 
     // ============================================================================================
     // initialization
@@ -40,6 +46,21 @@ var HtmlTabExamsModule = (function () {
         });
 
         selectCourses.addEventListener('change', onChangeEvent);
+        btnCreateExam.addEventListener('click', onClickEvent);
+    }
+
+    // ============================================================================================
+    // click event dispatching routine: buttons
+
+    function onClickEvent() {
+        'use strict';
+        var sender = this.id;
+
+        switch (sender) {
+            case "btnCreateExam":
+                console.log('WEITER MIT DER AUSWERTUNG DER CHECK BOXES');
+                break;
+        }
     }
 
     // ============================================================================================
@@ -169,28 +190,64 @@ var HtmlTabExamsModule = (function () {
     // ============================================================================================
     // private helper functions - lower level
 
+    // function createQuestion(counter, text, name) {
+
+    //     var node = document.createElement('tr');    // create <tr> node
+    //     var td1 = document.createElement('td');     // create first <td> node
+    //     var td2 = document.createElement('td');     // create second <td> node
+    //     var td3 = document.createElement('td');     // create third <td> node
+
+    //     td1.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+    //     td1.setAttribute('style', 'text-align:left;');  // set attribute
+
+    //     td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+    //     td2.setAttribute('style', 'text-align:left;');  // set attribute
+
+    //     td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
+    //     td3.setAttribute('style', 'text-align:right;');  // set attribute
+
+    //     var header = 'Frage ' + (counter + 1) + ':';
+    //     var textnode1 = document.createTextNode(header); // create first text node
+    //     var textnode2 = document.createTextNode(text);   // create second text node
+    //     var textnode3 = document.createTextNode(name);   // create third text node
+
+    //     td1.appendChild(textnode1);   // append text to <td>
+    //     td2.appendChild(textnode2);   // append text to <td>
+    //     td3.appendChild(textnode3);   // append text to <td>
+
+    //     node.appendChild(td1);  // append <td> to <tr>
+    //     node.appendChild(td2);  // append <td> to <tr>
+    //     node.appendChild(td3);  // append <td> to <tr>
+
+    //     return node;
+    // }
+
     function createQuestion(counter, text, name) {
 
-        var node = document.createElement('tr');    // create <tr> node
-        var td1 = document.createElement('td');     // create first <td> node
-        var td2 = document.createElement('td');     // create second <td> node
-        var td3 = document.createElement('td');     // create third <td> node
+        var node = document.createElement('tr');           // create <tr> node
 
-        td1.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-        td1.setAttribute('style', 'text-align:left;');  // set attribute
+        var td1 = document.createElement('td');            // create first <td> node
+        var label = document.createElement('label');       // create <label> node
+        var uniqueId = prefix_checkboxes + counter;        // need unique checkbox id for entire document
+        label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
+        label.setAttribute('for', uniqueId);               // set attribute
+        label.setAttribute('id', prefix_label + counter);  // set attribute
+        var input = document.createElement('input');       // create <input> node
+        input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
+        input.setAttribute('type', 'checkbox');            // set attributes
+        input.setAttribute('id', uniqueId);                // set attribute
+        input.addEventListener('click', checkboxHandler);
+        label.appendChild(input);
+        td1.appendChild(label);
 
+        var td2 = document.createElement('td');          // create second <td> node
+        var td3 = document.createElement('td');          // create third <td> node
         td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-        td2.setAttribute('style', 'text-align:left;');  // set attribute
-
+        td2.setAttribute('style', 'text-align:left;');   // set attribute
         td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td3.setAttribute('style', 'text-align:right;');  // set attribute
-
-        var header = 'Frage ' + (counter + 1) + ':';
-        var textnode1 = document.createTextNode(header); // create first text node
         var textnode2 = document.createTextNode(text);   // create second text node
         var textnode3 = document.createTextNode(name);   // create third text node
-
-        td1.appendChild(textnode1);   // append text to <td>
         td2.appendChild(textnode2);   // append text to <td>
         td3.appendChild(textnode3);   // append text to <td>
 
@@ -199,6 +256,11 @@ var HtmlTabExamsModule = (function () {
         node.appendChild(td3);  // append <td> to <tr>
 
         return node;
+    }
+
+    function checkboxHandler() {
+        'use strict';
+        console.log('[Html] clicked at checkbox: ' + this.id + ' [checkbox is checked: ' + this.checked + ' ]');
     }
 
     // ============================================================================================

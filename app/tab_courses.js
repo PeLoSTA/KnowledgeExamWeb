@@ -359,25 +359,25 @@ var HtmlTabCoursesModule = (function () {
         //      <td class="mdl-data-table__cell--non-numeric">...</td>
         //  </tr>
 
-        var node = document.createElement('tr');       // create <tr> node
-        var td1 = document.createElement('td');        // create first <td> node
-        var label = document.createElement('label');   // create <label> node
+        var node = document.createElement('tr');         // create <tr> node
+        var td1 = document.createElement('td');          // create first <td> node
+        var label = document.createElement('label');     // create <label> node
 
-        var uniqueId = prefix_checkboxes + index;      // need unique checkbox id for entire document
+        var uniqueId = prefix_checkboxes + index;        // need unique checkbox id for entire document
 
         label.setAttribute('class', 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select');  // set attribute
-        label.setAttribute('for', uniqueId);           // set attribute
-        label.setAttribute('id', prefix_label + index);    // set attribute
-        var input = document.createElement('input');   // create <input> node
+        label.setAttribute('for', uniqueId);             // set attribute
+        label.setAttribute('id', prefix_label + index);  // set attribute
+        var input = document.createElement('input');     // create <input> node
         input.setAttribute('class', 'mdl-checkbox__input checkbox_select_course');  // set attribute
-        input.setAttribute('type', 'checkbox');        // set attributes
-        input.setAttribute('id', uniqueId);            // set attribute
+        input.setAttribute('type', 'checkbox');          // set attributes
+        input.setAttribute('id', uniqueId);              // set attribute
         input.addEventListener('click', checkboxHandler);
         label.appendChild(input);
         td1.appendChild(label);
 
-        var td2 = document.createElement('td');     // create second <td> node
-        var td3 = document.createElement('td');     // create third <td> node
+        var td2 = document.createElement('td');          // create second <td> node
+        var td3 = document.createElement('td');          // create third <td> node
         td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
         var textnode1 = document.createTextNode(entry.name);             // create second text node
