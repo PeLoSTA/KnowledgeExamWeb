@@ -1,8 +1,6 @@
 /*global FirebaseCoursesModule */
 /*global FirebaseQuestionsModule */
-
 /*global HtmlTabMiscModule */
-
 /*global dialogPolyfill */
 /*global componentHandler */
 
@@ -285,7 +283,7 @@ var HtmlTabQuestionsAdminModule = (function () {
 
             courses = coursesList;  // store list of courses in closure
 
-            HtmlTabMiscModule.fillClassesDropDownList(selectCourseQuestionsAdmin, courses);
+            HtmlTabMiscModule.fillCoursesDropDownList(selectCourseQuestionsAdmin, courses);
 
             if (courses.length === 0) {
                 txtStatusBar.value = 'No Courses found!';

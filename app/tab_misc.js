@@ -3,7 +3,7 @@ var HtmlTabMiscModule = (function () {
     // ============================================================================================
     // public interface
 
-    function fillClassesDropDownList(selectElem, entries) {
+    function fillCoursesDropDownList(selectElem, entries) {
         'use strict';
 
         /*
@@ -44,7 +44,7 @@ var HtmlTabMiscModule = (function () {
     }
 
     return {
-        fillClassesDropDownList: fillClassesDropDownList
+        fillCoursesDropDownList: fillCoursesDropDownList
     }
 
 })();
