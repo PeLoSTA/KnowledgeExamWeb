@@ -71,24 +71,7 @@ var FirebaseStudentsModule = (function () {
     function deleteStudent(index) {
         'use strict';
 
-        // search class to delete
-        // var refDeleteString = '';
-        // var keyOfStudent = '';
-        // for (var k = 0; k < studentsList.length; k++) {
-
-        //     if (studentsList[k].name === name) {
-
-        //         keyOfClass = classesList[k].key;
-        //         refDeleteString = refClasses + '/' + keyOfClass;
-        //         break;
-        //     }
-        // }
-        // if (refDeleteString === '') {
-        //     let msg = "FirebaseClassesModule: INTERNAL ERROR: class " + name + " not found!";
-        //     console.log('[Fire] deleteClass failed! ' + msg);
-        //     return Promise.reject(msg);
-        // }
-
+        // retrieve key of student to delete
         var key = studentsList[index].key;
         var refDelete = refStudents + '/' + key;
 

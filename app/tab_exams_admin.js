@@ -1,8 +1,8 @@
 
 /*global FirebaseCoursesModule */
 /*global FirebaseQuestionsModule */
+/*global FirebaseExamsModule */
 /*global HtmlTabMiscModule */
-/*global dialogPolyfill */
 /*global componentHandler */
 
 var HtmlTabExamsModule = (function () {
@@ -57,31 +57,52 @@ var HtmlTabExamsModule = (function () {
 
     function onClickEvent() {
         'use strict';
+        console.log("[Html] > onClickEvent");
         var sender = this.id;
 
         switch (sender) {
             case "btnCreateExam":
-                console.log('WEITER MIT DER AUSWERTUNG');
 
-                var boxes = document.querySelectorAll('input[id^=' + prefix_checkboxes + ']');
+                var description = txtExamShortDescription.value;
+                var pin = txtExamSimplePin.value;
 
-                // for (var i = 0; i < boxes.length; i++) {
-
-                //     if (boxes[i].checked) {
-                //         console.log('Index: ' + i + ' - Checked');
-                //     }
-                //     else {
-                //         console.log('Index: ' + i + ' - Unchecked');
-                //     }
-                // }
-
-                if (txtExamShortDescription.value === '' || txtExamSimplePin.value === '') {
+                if (description === '' || pin === '') {
                     window.alert("Description of Exam or Pin missing!");
                     return;
                 }
 
-                console.log('txtExamShortDescription: ' + txtExamShortDescription.value);
-                console.log('txtExamSimplePin: ' + txtExamSimplePin.value);
+                console.log('Description: ' + description);
+                console.log('Pin: ' + pin);
+
+                // create array of selected questions
+                var boxes = document.querySelectorAll('input[id^=' + prefix_checkboxes + ']');
+                var selectedQuestions = [];
+                for (var i = 0; i < boxes.length; i++) {
+
+                    if (boxes[i].checked) {
+                        console.log('Index: ' + i + ' - Checked');
+                        selectedQuestions.push(questions[i].key);
+                    }
+                }
+
+                if (selectedQuestions.length === 0) {
+                    window.alert("No question selected!");
+                    return;
+                }
+
+                FirebaseExamsModule.addExam(txtExamShortDescription.value, txtExamSimplePin.value, selectedQuestions)
+                    .then((key) => {
+                        // log key to status bar
+                        txtStatusBar.value = 'Added Exam with pin ' + pin + ' to Repository !';
+                    }).catch((msg) => {
+                        // log error message to status line
+                        txtStatusBar.value = msg;
+                    }).finally(() => {
+                        txtExamShortDescription.value = '';
+                        txtExamSimplePin.value = '';
+
+                        console.log("[Html] < onClickEvent");
+                    });
 
                 break;
         }
