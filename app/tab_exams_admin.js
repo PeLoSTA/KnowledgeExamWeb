@@ -10,6 +10,9 @@ var HtmlTabExamsModule = (function () {
     // retrieve HTML elements according to 'questions viewer' tab
     var tabExamsAdmin = document.getElementById('#create-exam-panel');
 
+    var txtExamShortDescription = document.getElementById('txtExamShortDescription');
+    var txtExamSimplePin = document.getElementById('txtExamSimplePin');
+
     var btnCreateExam = document.getElementById('btnCreateExam');
 
     var tableQuestionsBody = document.getElementById('tableQuestionsExamsAdminBody');
@@ -58,7 +61,28 @@ var HtmlTabExamsModule = (function () {
 
         switch (sender) {
             case "btnCreateExam":
-                console.log('WEITER MIT DER AUSWERTUNG DER CHECK BOXES');
+                console.log('WEITER MIT DER AUSWERTUNG');
+
+                var boxes = document.querySelectorAll('input[id^=' + prefix_checkboxes + ']');
+
+                // for (var i = 0; i < boxes.length; i++) {
+
+                //     if (boxes[i].checked) {
+                //         console.log('Index: ' + i + ' - Checked');
+                //     }
+                //     else {
+                //         console.log('Index: ' + i + ' - Unchecked');
+                //     }
+                // }
+
+                if (txtExamShortDescription.value === '' || txtExamSimplePin.value === '') {
+                    window.alert("Description of Exam or Pin missing!");
+                    return;
+                }
+
+                console.log('txtExamShortDescription: ' + txtExamShortDescription.value);
+                console.log('txtExamSimplePin: ' + txtExamSimplePin.value);
+
                 break;
         }
     }
@@ -189,38 +213,6 @@ var HtmlTabExamsModule = (function () {
 
     // ============================================================================================
     // private helper functions - lower level
-
-    // function createQuestion(counter, text, name) {
-
-    //     var node = document.createElement('tr');    // create <tr> node
-    //     var td1 = document.createElement('td');     // create first <td> node
-    //     var td2 = document.createElement('td');     // create second <td> node
-    //     var td3 = document.createElement('td');     // create third <td> node
-
-    //     td1.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-    //     td1.setAttribute('style', 'text-align:left;');  // set attribute
-
-    //     td2.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-    //     td2.setAttribute('style', 'text-align:left;');  // set attribute
-
-    //     td3.setAttribute('class', 'mdl-data-table__cell--non-numeric');  // set attribute
-    //     td3.setAttribute('style', 'text-align:right;');  // set attribute
-
-    //     var header = 'Frage ' + (counter + 1) + ':';
-    //     var textnode1 = document.createTextNode(header); // create first text node
-    //     var textnode2 = document.createTextNode(text);   // create second text node
-    //     var textnode3 = document.createTextNode(name);   // create third text node
-
-    //     td1.appendChild(textnode1);   // append text to <td>
-    //     td2.appendChild(textnode2);   // append text to <td>
-    //     td3.appendChild(textnode3);   // append text to <td>
-
-    //     node.appendChild(td1);  // append <td> to <tr>
-    //     node.appendChild(td2);  // append <td> to <tr>
-    //     node.appendChild(td3);  // append <td> to <tr>
-
-    //     return node;
-    // }
 
     function createQuestion(counter, text, name) {
 
